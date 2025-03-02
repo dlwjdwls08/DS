@@ -11,7 +11,7 @@ export default function Home() {
     axios.get(`/api`)
     .then((res) => res.data)
     .then((data) => setData(data))
-  })
+  }, []);
   
   async function addUser() {
     axios.post(`/api`, {
