@@ -25,7 +25,7 @@ export default function Home() {
     <div>
       {data}
       <button onClick={addUser}>
-
+				인구 추가
       </button>
     </div>
   );
