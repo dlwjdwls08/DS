@@ -16,9 +16,10 @@ export default function Home() {
   async function addUser() {
     axios.post(`/api`, {
       name: "이재빈",
-      emial: "gamil"
+      email: "gamil"
     })
-    .then((res) => res.data);
+		.then((res) => res.data)
+		.then((data) => console.log(data));
   }
 
   return (
