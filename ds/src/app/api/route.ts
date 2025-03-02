@@ -11,5 +11,6 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const newUser = await prisma.user.create({ data: body });
-  return NextResponse.json(newUser);
+  return NextResponse.json(body);
+  // return NextResponse.json(newUser);
 }

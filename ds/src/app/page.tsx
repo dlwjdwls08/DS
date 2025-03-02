@@ -4,8 +4,13 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+interface User {
+	name: string;
+	email: string;
+}
+
 export default function Home() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Array<User>>([]);
 
   useEffect(() => {
     axios.get(`/api`)
@@ -24,7 +29,12 @@ export default function Home() {
 
   return (
     <div>
-      {data}
+      {data.map((user, index) => (
+				<div key={index}>
+					<p>name: {user.name}</p>
+					<p>email: {user.email}</p>
+				</div>
+			))}
       <button onClick={addUser}>
 				인구 추가
       </button>
