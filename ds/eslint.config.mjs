@@ -13,16 +13,15 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
-      "no-unused-vars": [
+      "@typescript-eslint/no-unused-vars": [
         "warn",
         {
           "vars": "all",
-          "args": "after-used",
+          "args": "after-used", // 사용되지 않은 인자 중 마지막 이후만 체크
+          "argsIgnorePattern": "^_", // 밑줄(_)로 시작하는 변수는 무시
           "ignoreRestSiblings": true,
-          "varsIgnorePattern": "^_", // 밑줄(_)로 시작하는 변수는 무시
         },
       ],
-      "unused-imports/no-unused-imports": "off", // 불필요한 import 에러 끄기
     },
   },
 ];
