@@ -1,23 +1,66 @@
 .sub-title-text {
-    font-size: 2em;
-    font-weight: 500;
+  font-size: 2em;
+  font-weight: 500;
 }
 
 #main-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#left-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 7;
+  background: linear-gradient(to right, ivory, white);
+  height: 100vh;
+}
+
+#right-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 3;
 }
 
 #title-container {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 
-    flex-grow: 1;
+  line-height: 1;
 
-    line-height: 1;
+  font-size: 4em;
+  font-weight: 700;
+}
 
-    font-size: 4em;
-    font-weight: 700;
+#login-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  background-color: blue;
+
+  color: white;
+  font-weight: 700;
+  font-size: 12pt;
+
+  height: 40px;
+  width: 200px;
+
+  border-radius: 15px;
+  
+  transition: all 0.2s ease-out;
+
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+
+  cursor: pointer;
+}
+
+#login-button:hover {
+  background-color: rgba(60, 60, 255, 1);
 }
