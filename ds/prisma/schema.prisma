@@ -18,3 +18,11 @@ model User {
   name  String
   email String
 }
+
+model Review {
+  id      Int     @id @default(autoincrement())
+  subject String
+  content String
+}
+
+// npx prisma migrate dev --name name
