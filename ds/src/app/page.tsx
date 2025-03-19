@@ -10,11 +10,6 @@ export default function Home() {
   const router = useRouter();
   const { data: session, status } = useSession();
 
-  useEffect(() => {
-    if (status == "unauthenticated") {
-      router.replace("/landing");
-    }
-  })
   
   return (
     <div>

@@ -2,7 +2,8 @@
 
 import { Geist, Geist_Mono, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
-import { SessionProvider } from "next-auth/react";
+import { getSession, SessionProvider } from "next-auth/react";
+import Navbar from "@/components/navbar"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,13 +25,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
+  const session = getSession();
+
   return (
     <html lang="ko">
       <body
         className={`${notoSansKr.className} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <Navbar></Navbar>
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );
