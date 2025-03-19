@@ -1,18 +1,13 @@
 "use client";
 
-import { signOut, useSession } from "next-auth/react";
+import { getSession, signOut, useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function AuthErrorPage() {
-  const router = useRouter();
-
-  const { data: session } = useSession();
-
-  console.log(session);
   useEffect(() => {
-    signOut({ redirect: false }).then(() => {
-      //router.replace("/"); // 로그인 페이지 또는 홈으로 이동
+    signOut({ callbackUrl: "/" }).then(() => {
+      console.log("a");
     });
   }, []);
 

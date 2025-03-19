@@ -12,7 +12,7 @@ export default function Page() {
     return (
         <div>
             <h1>로그인 페이지</h1>
-            <button onClick={() => signIn("google", { callbackUrl: "/" })} type="button">로그인</button>
+            <button onClick={() => signIn("google")} type="button">로그인</button>
         </div>
     )
 }
