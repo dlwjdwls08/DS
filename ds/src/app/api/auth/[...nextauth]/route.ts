@@ -24,17 +24,11 @@ const handler = NextAuth({
         return false; // 로그인 차단
       }
       return true; // 로그인 허용
-    },
-    // async session({ session }) {
-    //   if (!session.user?.email || !emailRegex.test(session.user.email!)) {
-    //     return null;
-    //   }
-    //   return session;
-    // },
+    }
   },
   pages: {
-    error: "/auth/error",
-  },
+    error: "/landing"
+  }
 });
 
 export { handler as GET, handler as POST };
