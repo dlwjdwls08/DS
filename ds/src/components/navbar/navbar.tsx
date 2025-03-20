@@ -5,8 +5,10 @@ import './style.css'
 import { signOut, useSession } from 'next-auth/react'
 
 export default function Navbar() {
+  const { data: session } = useSession();
+
   return (
-    <nav>
+    <nav id="navbar">
       <div
       style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
         <Link id="logo"
@@ -19,12 +21,14 @@ export default function Navbar() {
         </Link>
       </div>
       <div
-      style={{display:"flex",alignItems:"center"}}>
-
+      style={{display:"flex",alignItems:"center",padding:"20px"}}>
+        <div className="menu">
+          
+        </div>
       </div>
       <div
       style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
-        <button onClick={() => signOut({callbackUrl:"/landing"})}>로그아웃</button>
+        <div id="logout" onClick={() => signOut({callbackUrl:"/landing"})}>로그아웃</div>
       </div>
     </nav>
   )

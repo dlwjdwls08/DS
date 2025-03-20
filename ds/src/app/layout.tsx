@@ -34,8 +34,12 @@ export default function RootLayout({
         className={`${notoSansKr.className} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProvider>
-          {pathname !== "/landing" && <Navbar></Navbar>}
-          {children}
+          <div
+          style={{display:"grid",gridTemplateRows:"auto auto"}}>
+            {pathname !== "/landing" && <Navbar></Navbar>}
+            {children}
+          </div>
+          
         </SessionProvider>
       </body>
     </html>

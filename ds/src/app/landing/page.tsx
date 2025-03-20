@@ -12,7 +12,7 @@ export default function LandingPage() {
 
   useEffect(() => {
     if (status == "authenticated") {
-      router.push("/");
+      router.replace("/");
     }
   })
 
@@ -41,7 +41,6 @@ export default function LandingPage() {
       <div id="right-container">
 				<div>
           <div id="login-button" onClick={() => signIn("google")}>KSA 계정으로 로그인</div>
-          {status}
         </div>
       </div>
     </div>
