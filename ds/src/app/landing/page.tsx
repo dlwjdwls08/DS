@@ -22,18 +22,11 @@ export default function LandingPage() {
         <div
         style={{display:"flex",flexDirection:"column",gap:"30px"}}>
           <div id="title-container">
-            <div style={{color: "blue"}}>
-            KSA
-            </div>
-            <div 
-            style={{display: "flex"}}>
-            <div style={{color: "blue"}}>IN</div>
-            <div style={{color: "black"}}>SIGHT</div>
-            </div>
+            <div style={{color:"blue"}}>KSA</div><div>TTEND</div>
           </div>
           <div>
             <div className="sub-title-text">
-              한국과학영재학교 학업봉사부
+              한국과학영재학교 정보부
             </div>
           </div>
         </div>

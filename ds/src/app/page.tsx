@@ -14,27 +14,13 @@ export default function Home() {
 
   const userInfo = {
     like: 125,
-    star: 7
+    star: 7,
+    ranking: 3,
   }
   
   return (
     <div id="main-container">
-      <div id="profile">
-        <img id="profile-image" src={session?.user?.image!}></img>
-        <div id="profile-info">
-          <div id="profile-info-name">
-            {session?.user?.name}
-          </div>
-          <div id="profile-info-like">
-            <Heart color="red" fill="red"/> 
-            <div>{userInfo.like}</div> 
-          </div>
-          <div id="profile-info-star">
-            <Star color="yellowgreen" fill="yellow" />
-            <div>{userInfo.star}</div>
-          </div>
-        </div>
-      </div>
+            
     </div>
   )
 }

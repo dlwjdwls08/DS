@@ -1,23 +1,31 @@
 #main-container {
-    background-color: ivory;
-
-    width: 100%;
     height: 100%;
+
+    padding: 0 30px;
 }
 
 #profile {
     display: flex;
+    flex-direction: column;
     gap: 20px;
 
     font-size: 12pt;
-    font-weight: 600;
+    font-weight: 500;
+
+    width: 150px;
+
+    border: 1px solid black;
 }
 
 #profile-image {
-    width: 10em;
-    height: 10em;
+    width: 6em;
+    height: 6em;
 
-    border-radius: 3em;
+    border-radius: 2em;
+}
+
+#profile-info-name {
+    font-weight: 700;
 }
 
 #profile-info {
@@ -28,8 +36,9 @@
     padding: 20px 0;
 }
 
-#profile-info-like, #profile-info-star {
+#profile-info-like, #profile-info-star, #profile-info-ranking {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 10px;
 }

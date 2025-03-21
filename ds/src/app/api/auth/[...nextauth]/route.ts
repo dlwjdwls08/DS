@@ -1,7 +1,10 @@
+import { PrismaClient } from "@prisma/client";
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
 const emailRegex = /\d{2}-\d{3}@ksa\.hs\.kr$/;
+
+const prisma = new PrismaClient();
 
 const handler = NextAuth({
   providers: [
@@ -19,11 +22,18 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user, account, profile }) {
       if (!user.email || !emailRegex.test(user.email!)) {
         return false; // 로그인 차단
       }
-      return true; // 로그인 허용
+
+      const student_id = user.email.slice(0, 5);
+      
+      const userType = await prisma.user.findUnique({
+        where: {
+          email: user.email
+        }
+      })
     }
   },
   pages: {

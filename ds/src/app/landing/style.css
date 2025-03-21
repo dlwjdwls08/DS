@@ -17,18 +17,19 @@
   flex-grow: 7;
   background: linear-gradient(to right, ivory, white);
   height: 100vh;
+
+  user-select: none;
 }
 
 #right-container {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-grow: 3;
 }
 
 #title-container {
   display: flex;
-  flex-direction: column;
 
   line-height: 1;
 
