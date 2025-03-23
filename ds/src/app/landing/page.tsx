@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import "./style.css";
 import { useRouter } from "next/navigation";
+import Button from "@mui/material/Button";
 
 
 export default function LandingPage() {
@@ -33,7 +34,8 @@ export default function LandingPage() {
       </div>
       <div id="right-container">
 				<div>
-          <div id="login-button" onClick={() => signIn("google")}>KSA 계정으로 로그인</div>
+          <div id="student-login-button" onClick={() => signIn("google")}>학생 로그인</div>
+          <div id="teacher-login-button" onClick={() => router.push("/teacher/login")}>교사 로그인</div>
         </div>
       </div>
     </div>
