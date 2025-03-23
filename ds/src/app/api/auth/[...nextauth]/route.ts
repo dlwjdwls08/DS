@@ -27,13 +27,24 @@ const handler = NextAuth({
         return false; // 로그인 차단
       }
 
-      const student_id = user.email.slice(0, 5);
-      
-      const userType = await prisma.user.findUnique({
+      const userObject = await prisma.user.findUnique({
         where: {
           email: user.email
-        }
+        },
       })
+      
+      const redirection = {
+        "student": "/student",
+        "teacher": "/teacher",
+        "staff": "/staff"
+      }
+
+      if (userObject) {
+        return redirection[userObject.type as keyof typeof redirection];
+      }
+      else {
+        return false;
+      }
     }
   },
   pages: {
