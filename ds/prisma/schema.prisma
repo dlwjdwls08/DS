@@ -19,11 +19,5 @@ model User {
   type String
 }
 
-model Review {
-  id      Int     @id @default(autoincrement())
-  subject String
-  content String
-}
-
 // npx prisma generate
 // npx prisma migrate dev --name name
