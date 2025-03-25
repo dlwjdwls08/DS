@@ -33,9 +33,9 @@ export default function LandingPage() {
         </div>
       </div>
       <div id="right-container">
-				<div>
-          <div id="student-login-button" onClick={() => signIn("google")}>학생 로그인</div>
-          <div id="teacher-login-button" onClick={() => router.push("/teacher/login")}>교사 로그인</div>
+				<div
+        style={{display:"flex",flexDirection:"column",gap:"20px"}}>
+          <div id="login-button" onClick={() => signIn("google")}>구글 계정으로 로그인</div>
         </div>
       </div>
     </div>
