@@ -26,7 +26,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
 
   return (
     <html lang="ko">
@@ -34,12 +33,7 @@ export default function RootLayout({
         className={`${notoSansKr.className} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProvider>
-          <div
-          style={{display:"grid",gridTemplateRows:"auto auto"}}>
-            {pathname !== "/landing" && <Navbar></Navbar>}
-            {children}
-          </div>
-          
+          {children}
         </SessionProvider>
       </body>
     </html>

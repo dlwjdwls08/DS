@@ -25,5 +25,12 @@ model Class {
   type  Int
 }
 
+model Student {
+  id        Int     @id @default(autoincrement())
+  name      String
+  studentID String
+  classID   Int
+}
+
 // npx prisma generate
 // npx prisma migrate dev --name name

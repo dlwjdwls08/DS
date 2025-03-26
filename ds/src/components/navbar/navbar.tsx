@@ -8,8 +8,6 @@ import { IconButton } from '@mui/material'
 import { useDrawerState } from '@/store/store'
 
 export default function Navbar() {
-  const { data: session } = useSession();
-
   const { flip } = useDrawerState()
 
   return (
