@@ -32,5 +32,31 @@ model Student {
   classID   Int
 }
 
+model NightClass {
+  id        Int     @id @default(autoincrement())
+  studentID String
+  className String
+  day       Int
+  time      Int
+}
+
+model ClassTeacher {
+  id      Int     @id @default(autoincrement())
+  classID Int
+  name    String
+}
+
+model LeaveList {
+  id      Int     @id @default(autoincrement())
+  start   DateTime
+  end     DateTime
+}
+
+model AbsenceLog {
+  id          Int     @id @default(autoincrement())
+  studentID   String
+  date        DateTime
+}
+
 // npx prisma generate
 // npx prisma migrate dev --name name

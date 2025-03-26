@@ -15,7 +15,7 @@ export default function Drawer() {
   const { classID, change } = useClassState()
 
   const [classes, setClasses] = useState<Class[]>()
-
+  
   useEffect(() => {
     axios.get("/api/class")
     .then((res) => res.data)
@@ -39,7 +39,9 @@ export default function Drawer() {
       sx={{ width: "300px" }}>
       <List>
         <ListItem
-          >
+          sx={{
+            height: "80px"
+          }}>
           {today}
         </ListItem>
         <Divider />
