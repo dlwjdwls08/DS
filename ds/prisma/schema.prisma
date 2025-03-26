@@ -15,8 +15,14 @@ datasource db {
 
 model User {
   id    Int     @id @default(autoincrement())
-  email String @unique
-  type String
+  email String  @unique
+  type  String
+}
+
+model Class {
+  id    Int     @id @default(autoincrement())
+  name  String
+  type  Int
 }
 
 // npx prisma generate

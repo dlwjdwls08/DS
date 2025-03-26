@@ -3,22 +3,22 @@
 import Link from 'next/link'
 import './style.css'
 import { signOut, useSession } from 'next-auth/react'
+import { Menu } from '@mui/icons-material'
+import { IconButton } from '@mui/material'
+import { useDrawerState } from '@/store/store'
 
 export default function Navbar() {
   const { data: session } = useSession();
+
+  const { flip } = useDrawerState()
 
   return (
     <nav id="navbar">
       <div
       style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
-        <Link id="logo"
-        style={{display:"flex"}}
-        href="/">
-          <div
-          style={{color: "blue"}}>KSA IN</div>
-          <div
-          style={{color: "black"}}>SIGHT</div>
-        </Link>
+        <IconButton onClick={flip}>
+          <Menu />
+        </IconButton>
       </div>
       <div
       style={{display:"flex",alignItems:"center",padding:"20px"}}>

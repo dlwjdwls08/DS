@@ -6,16 +6,13 @@ import axios from "axios";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-import "./style.css";
-import { Drawer } from "@mui/material";
-
+import { SwipeableDrawer } from "@mui/material";
+import { useDrawerState } from "@/store/store";
 
 export default function TeacherPage() {
 	return (
-		<>
-			<Drawer anchor="left">
-
-			</Drawer>
-		</>
-	)
+    <>
+      무언가
+    </>
+  )
 }
