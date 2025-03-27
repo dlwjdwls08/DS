@@ -26,7 +26,7 @@ export async function POST(req: NextRequest, {params} : {params: {id: string, da
 			data: { studentID: id, date: date2 }
 		});		  
 	}
-	else {
+	else if (add == "Remove") {
 		await prisma.absenceLog.deleteMany({
 			where: {studentID: id, date: date2 }
 		});

@@ -36,8 +36,8 @@ model NightClass {
   id        Int     @id @default(autoincrement())
   studentID String
   className String
-  day       Int
-  time      Int
+  day       Int // 1,2,3,4
+  time      Int // 10, 11 
 }
 
 model ClassTeacher {
@@ -47,9 +47,10 @@ model ClassTeacher {
 }
 
 model LeaveList {
-  id      Int     @id @default(autoincrement())
-  start   DateTime
-  end     DateTime
+  id        Int     @id @default(autoincrement())
+  studentID String
+  start     DateTime
+  end       DateTime
 }
 
 model AbsenceLog {
