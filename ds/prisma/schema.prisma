@@ -26,27 +26,31 @@ model Class {
 }
 
 model Student {
-  id        Int     @id @default(autoincrement())
-  name      String
-  studentID String
-  classID   Int
+  id            Int     @id @default(autoincrement())
+  name          String
+  studentID     String
+  room          String
+  class         String
+  grade         Int
 }
 
 model NightClass {
   id        Int     @id @default(autoincrement())
   studentID String
   className String
-  day       Int // 1,2,3,4
-  time      Int // 10, 11 
+  day       Int // 0,1,2,3,4,5,6
+  start     Int
+  end       Int
 }
 
 model ClassTeacher {
   id      Int     @id @default(autoincrement())
-  classID Int
+  class   String
   name    String
+  grade   Int
 }
 
-model LeaveList {
+model Leave {
   id        Int     @id @default(autoincrement())
   studentID String
   start     DateTime

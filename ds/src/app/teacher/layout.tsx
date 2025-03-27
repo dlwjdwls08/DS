@@ -1,7 +1,7 @@
 'use client'
 
-import Navbar from "@/components/navbar/navbar";
-import Drawer from "@/components/drawer/drawer";
+import Navbar from "@/components/teacher/navbar/navbar";
+import Drawer from "@/components/teacher/drawer/drawer";
 
 export default function teacherLayout({
   children,
