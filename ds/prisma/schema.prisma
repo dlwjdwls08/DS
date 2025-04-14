@@ -27,20 +27,23 @@ model Class {
 
 model Student {
   id            Int     @id @default(autoincrement())
+  number        Int
   name          String
-  studentID     String
+  studentID     String  @unique
   room          String
   class         String
   grade         Int
+  nightClass    NightClass[]
 }
 
 model NightClass {
   id        Int     @id @default(autoincrement())
   studentID String
   className String
-  day       Int // 0,1,2,3,4,5,6
+  day       String
   start     Int
   end       Int
+  student   Student @relation(fields: [studentID], references: [studentID])
 }
 
 model ClassTeacher {

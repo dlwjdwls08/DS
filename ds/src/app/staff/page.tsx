@@ -3,8 +3,10 @@
 import { Settings } from "@mui/icons-material"
 import { Box, Button, Container, Paper, Typography } from "@mui/material"
 import axios from "axios"
+import { useRouter } from "next/router"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import * as XLSX from "xlsx"
+import PageButton from "@/components/staff/pagebutton/pagebutton"
 
 
 export default function StaffPage() {
@@ -41,52 +43,19 @@ export default function StaffPage() {
       gap="30px"
       width="100%"
       height="100%">
-      <Paper
-        sx={{
-          display: "grid",
-          gridTemplate: "auto",
-          width: "200px",
-          height: "200px",
-          
-        }}>
-        <Button
-          color="error"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "20px",
-          }}>
-          <Settings fontSize={"large"}/>
-          <Typography variant="h5">
-            초기 설정
-          </Typography>
-        </Button>
-      </Paper>
-      <Paper
-        sx={{
-          display: "grid",
-          gridTemplate: "auto",
-          width: "200px",
-          height: "200px",
-          
-        }}>
-        <Button
-          color="error"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "20px",
-          }}>
-          <Settings fontSize={"large"}/>
-          <Typography variant="h5">
-            초기 설정
-          </Typography>
-        </Button>
-      </Paper>
+      
+      <PageButton
+        title="야간 수업"
+        url="/staff/setting/night_class" />
+      <PageButton
+        title="학생 목록" 
+        url="/staff/setting/students" />
+      <PageButton
+        title="교사 목록"
+        url="/staff/setting/teacher" />
+      <PageButton
+        title="자습 이석"
+        url="/staff/setting/leave" />
     </Box>
   )
 }

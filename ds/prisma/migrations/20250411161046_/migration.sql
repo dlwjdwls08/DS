@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "NightClass" ALTER COLUMN "day" SET DATA TYPE TEXT;
