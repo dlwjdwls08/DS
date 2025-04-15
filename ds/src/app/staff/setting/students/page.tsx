@@ -1,31 +1,41 @@
 'use client'
 
-import { CloudUpload, Save, UploadFile } from "@mui/icons-material";
-import { Box, Button, Card, Input, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
+import { Check, CloudUpload, Save, UploadFile } from "@mui/icons-material";
+import { Box, Button, Card, Input, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
 import axios from "axios";
 import { Rows } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as XLSX from "xlsx";
 
 type StudentData = {
+    grade: number,
+    classNo: string,
     studentID: string,
     name: string,
-    grade: number,
-    class: number,
-    room: string
+    room: string,
+    seat?: number
 }
 
-type NightClassRawData = {
+type StudentRawData = {
+  classNo: string,
+  no: number,
   id: string,
   name: string,
-  class: string,
-  day: string,
-  time: string
+  room: string
 }
 
 export default function NightClassSettingPage() {
   const [getData, setData] = useState<StudentData[]>([])
   const [page, setPage] = useState(0)
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [snackbarMessage, setSnackbarMessage] = useState("")
+
+  const router = useRouter()
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false)
+  }
 
   const visibleData = useMemo(
     () => 
@@ -54,21 +64,25 @@ export default function NightClassSettingPage() {
       const data = new Uint8Array(event.target?.result as ArrayBuffer)
       const workbook = XLSX.read(data, { type: "array" })
 
-      const sheetName = workbook.SheetNames[0]
-      const worksheet = workbook.Sheets[sheetName]
-      const jsonData:NightClassRawData[] = XLSX.utils.sheet_to_json(worksheet, { header: ["classNo", "no", "id", "name", "room"] })
-      console.log(jsonData)
-      const fixedData: NightClassData[] = []
-      const rows = jsonData.slice(1)
-      for (const row of rows) {
-        fixedData.push({
-            studentID: row.id,
-            className: row.class,
-            studentName: row.name,
-            day: row.day,
-            start: Number(start),
-            end: Number(end)
-          })
+      const fixedData: StudentData[] = []
+      for (const sheetName of workbook.SheetNames) {
+        const sheetNameList = ["first_year", "second_year 2", "third_year 2"]
+        const grade = sheetNameList.findIndex((v, i) => v == sheetName) + 1
+        if (grade == 0) continue
+        console.log(sheetName)
+        const worksheet = workbook.Sheets[sheetName]
+        const jsonData:StudentRawData[] = XLSX.utils.sheet_to_json(worksheet, { header: ["classNo", "no", "id", "name", "room"] })
+        const rows = jsonData.slice(1)
+        for (const row of rows) {
+          fixedData.push({
+              grade: grade,
+              classNo: String(row.classNo),
+              studentID: row.id,
+              name: row.name,
+              room: row.room,
+              seat: Number(row.no)
+            })
+        }
       }
       setData(fixedData)
     }
@@ -77,8 +91,18 @@ export default function NightClassSettingPage() {
   }
 
   const handleSubmit = () => {
-    axios.post("/api/staff/night_class", getData)
-    .catch((error) => console.error(error))
+    axios.post("/api/staff/students", getData)
+    .then((res) => res.data)
+    .then((data) => {
+      setSnackbarMessage("저장되었습니다.")
+    })
+    .catch((error) => {
+      console.error(error)
+      setSnackbarMessage("에러가 발생했습니다.")
+    })
+    .finally(() => {
+      setSnackbarOpen(true)
+    })
   }
 
   return (
@@ -90,23 +114,33 @@ export default function NightClassSettingPage() {
       <Box
         display="flex"
         justifyContent="space-between">
+        <Box
+          display="flex"
+          gap="20px">
+          <Button
+            variant="outlined"
+            component="label"
+            startIcon={<CloudUpload />}>
+            파일 업로드
+            <input 
+              type="file"
+              accept=".xlsx, .xls"
+              onChange={handleFileUpload}
+              hidden
+            />
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={handleSubmit}
+            startIcon={<Save />}>
+            저장
+          </Button>
+        </Box>
         <Button
           variant="outlined"
-          component="label"
-          startIcon={<CloudUpload />}>
-          파일 업로드
-          <input 
-            type="file"
-            accept=".xlsx, .xls"
-            onChange={handleFileUpload}
-            hidden
-          />
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={handleSubmit}
-          startIcon={<Save />}>
-          저장
+          onClick={() => router.push("/staff")}
+          startIcon={<Check />}>
+          완료
         </Button>
       </Box>
       <Card>
@@ -114,8 +148,8 @@ export default function NightClassSettingPage() {
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell>학년</TableCell>
                 <TableCell>반</TableCell>
-                <TableCell>번호</TableCell>
                 <TableCell>학번</TableCell>
                 <TableCell>이름</TableCell>
                 <TableCell>교실</TableCell>
@@ -125,11 +159,11 @@ export default function NightClassSettingPage() {
               {visibleData?.map((row, index) => (
                 <TableRow
                   key={index}>
+                  <TableCell>{row.grade}</TableCell>
+                  <TableCell>{row.classNo}</TableCell>
                   <TableCell>{row.studentID}</TableCell>
-                  <TableCell>{row.studentName}</TableCell>
-                  <TableCell>{row.className}</TableCell>
-                  <TableCell>{row.day}</TableCell>
-                  <TableCell>{row.start}</TableCell>
+                  <TableCell>{row.name}</TableCell>
+                  <TableCell>{row.room}</TableCell>
                 </TableRow>
               ))}
               {emptyRows > 0 && (
@@ -151,7 +185,12 @@ export default function NightClassSettingPage() {
           onPageChange={(e, newPage) => setPage(newPage)}
           rowsPerPageOptions={[]} />
       </Card>
-      
+      <Snackbar
+        open={snackbarOpen}
+        onClose={handleSnackbarClose}
+        autoHideDuration={3000}
+        message={snackbarMessage}
+        anchorOrigin={{vertical:"bottom", horizontal:"right"}}/>
     </Box>
   )
 }

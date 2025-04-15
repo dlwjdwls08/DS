@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,50 +8,48 @@ datasource db {
 }
 
 model Student {
-  id            Int     @id @default(autoincrement())
-  grade         Int
-  classNo       String
-  seat          Int
-  name          String
-  studentID     String  @unique
-  room          String
-  nightClass    NightClass[]
+  id         Int          @id @default(autoincrement())
+  name       String
+  studentID  String       @unique
+  grade      Int
+  room       String
+  classNo    String
+  seat       Int
 }
 
 model NightClass {
-  id            Int     @id @default(autoincrement())
-  studentID     String
-  studentName   String
-  className     String
-  day           String
-  start         Int
-  end           Int
-  student       Student @relation(fields: [studentID], references: [studentID])
+  id          Int     @id @default(autoincrement())
+  studentID   String
+  className   String
+  day         String
+  end         DateTime
+  start       DateTime
+  studentName String
 }
 
 model Teacher {
-  id      Int     @id @default(autoincrement())
+  id      Int    @id @default(autoincrement())
   grade   Int
-  classNo   String
+  classNo String
   name    String
 
   @@unique([grade, classNo])
 }
 
 model Leave {
-  id            Int     @id @default(autoincrement())
-  studentID     String
-  studentName   String
-  start         DateTime
-  end           DateTime
+  id          Int      @id @default(autoincrement())
+  studentID   String
+  start       DateTime
+  end         DateTime
+  studentName String
 }
 
 model AbsenceLog {
-  id          Int     @id @default(autoincrement())
-  studentID   String
-  date        DateTime
-  state       Boolean //False: absence
+  id        Int      @id @default(autoincrement())
+  studentID String
+  date      DateTime
+  state     Boolean
 }
 
-// npx prisma generate
-// npx prisma migrate dev --name name
+//npx prisma generate
+//npx prisma migrate dev
