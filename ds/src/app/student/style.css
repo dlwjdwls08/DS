@@ -13,3 +13,14 @@
     flex-direction: column;
     gap: 30px;
 }
+
+#previous{
+    width: 300px;
+    height: 250px;
+    border-radius: 50px;
+}
+
+#prev-date-list{
+    height: 150px;
+    overflow: scroll;
+}
