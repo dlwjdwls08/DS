@@ -1,0 +1,21 @@
+#layout-box{
+    width: 400px;
+    height: 550px;
+    margin: 30px;
+    border-radius: 50px;
+    position: relative;
+}
+
+#title{
+    font-weight: bold;
+    font-size: 70px;
+    justify-content: center;
+    text-align: center;
+}
+
+#user-info{
+    position: absolute;
+    right: 40px;
+    bottom: 0;
+    font-size: 20px;
+}

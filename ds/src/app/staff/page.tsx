@@ -6,7 +6,7 @@ import axios from "axios"
 import { useRouter } from "next/router"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import * as XLSX from "xlsx"
-import PageButton from "@/components/staff/pagebutton/pagebutton"
+import PageButton from "@/components/pagebutton/pagebutton"
 
 
 export default function StaffPage() {

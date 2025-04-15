@@ -20,7 +20,6 @@ export default function PageButton({ title, url } : PageButtonParams) {
         gridTemplate: "auto",
         width: "200px",
         height: "200px",
-        
       }}>
       <Button
         color="inherit"
