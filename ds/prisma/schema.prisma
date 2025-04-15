@@ -13,57 +13,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  type  String
-}
-
-model Class {
-  id    Int     @id @default(autoincrement())
-  name  String
-  type  Int
-}
-
 model Student {
   id            Int     @id @default(autoincrement())
-  number        Int
+  grade         Int
+  classNo       String
+  seat          Int
   name          String
   studentID     String  @unique
   room          String
-  class         String
-  grade         Int
   nightClass    NightClass[]
 }
 
 model NightClass {
-  id        Int     @id @default(autoincrement())
-  studentID String
-  className String
-  day       String
-  start     Int
-  end       Int
-  student   Student @relation(fields: [studentID], references: [studentID])
+  id            Int     @id @default(autoincrement())
+  studentID     String
+  studentName   String
+  className     String
+  day           String
+  start         Int
+  end           Int
+  student       Student @relation(fields: [studentID], references: [studentID])
 }
 
-model ClassTeacher {
+model Teacher {
   id      Int     @id @default(autoincrement())
-  class   String
-  name    String
   grade   Int
+  classNo   String
+  name    String
+
+  @@unique([grade, classNo])
 }
 
 model Leave {
-  id        Int     @id @default(autoincrement())
-  studentID String
-  start     DateTime
-  end       DateTime
+  id            Int     @id @default(autoincrement())
+  studentID     String
+  studentName   String
+  start         DateTime
+  end           DateTime
 }
 
 model AbsenceLog {
   id          Int     @id @default(autoincrement())
   studentID   String
   date        DateTime
+  state       Boolean //False: absence
 }
 
 // npx prisma generate
