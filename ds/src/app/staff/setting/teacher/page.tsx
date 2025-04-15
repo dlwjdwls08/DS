@@ -8,25 +8,20 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as XLSX from "xlsx";
 
-type NightClassData = {
-  studentID: string,
-  className: string,
-  studentName: string,
-  day: string,
-  start: Date,
-  end: Date
+type TeacherData = {
+    grade: number,
+    classNo: string,
+    name: string
 }
 
-type NightClassRawData = {
-  id: string,
-  name: string,
+type TeacherRawData = {
+  year: number,
   class: string,
-  day: string,
-  time: string
+  teacher: string
 }
 
 export default function NightClassSettingPage() {
-  const [getData, setData] = useState<NightClassData[]>([])
+  const [getData, setData] = useState<TeacherData[]>([])
   const [page, setPage] = useState(0)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState("")
@@ -47,14 +42,10 @@ export default function NightClassSettingPage() {
   const emptyRows = Math.max(0, (1 + page) * 10 - getData.length)
 
   useEffect(() => {
-    axios.get("/api/staff/night_class")
+    axios.get("/api/staff/teacher")
     .then((res) => res.data)
-    .then((data: any[]) => {
-      setData(data.map(item => ({
-        ...item,
-        start: new Date(item.start),
-        end: new Date(item.end)
-      })))
+    .then((data) => {
+      setData(data)
     })
   }, [])
 
@@ -68,21 +59,16 @@ export default function NightClassSettingPage() {
       const data = new Uint8Array(event.target?.result as ArrayBuffer)
       const workbook = XLSX.read(data, { type: "array" })
 
-      const sheetName = workbook.SheetNames[0]
-      const worksheet = workbook.Sheets[sheetName]
-      const jsonData:NightClassRawData[] = XLSX.utils.sheet_to_json(worksheet, { header: ["id", "name", "class", "day", "time"] })
-      const fixedData: NightClassData[] = []
+      const fixedData: TeacherData[] = []
+      
+      const worksheet = workbook.Sheets["class_teacher"]
+      const jsonData:TeacherRawData[] = XLSX.utils.sheet_to_json(worksheet, { header: ["year", "class", "teacher"] })
       const rows = jsonData.slice(1)
       for (const row of rows) {
-        const start = String(row.time).split(",").at(0)
-        const end = String(row.time).split(",").at(-1)
         fixedData.push({
-            studentID: row.id,
-            className: row.class,
-            studentName: row.name,
-            day: row.day,
-            start: new Date("1970-01-01T" + (start == "10" ? "19:30+09:00" : "20:30:00+09:00")),
-            end: new Date("1970-01-01T" + (end == "10" ? "20:30+09:00" : "21:30:00+09:00"))
+            grade: row.year,
+            classNo: String(row.class),
+            name: row.teacher
           })
       }
       setData(fixedData)
@@ -92,12 +78,13 @@ export default function NightClassSettingPage() {
   }
 
   const handleSubmit = () => {
-    axios.post("/api/staff/night_class", getData)
+    axios.post("/api/staff/teacher", getData)
     .then((res) => res.data)
     .then((data) => {
       setSnackbarMessage("저장되었습니다.")
     })
     .catch((error) => {
+      console.error(error)
       setSnackbarMessage("에러가 발생했습니다.")
     })
     .finally(() => {
@@ -137,10 +124,10 @@ export default function NightClassSettingPage() {
           </Button>
         </Box>
         <Button
-            variant="outlined"
-            onClick={() => router.push("/staff")}
-            startIcon={<Check />}>
-            완료
+          variant="outlined"
+          onClick={() => router.push("/staff")}
+          startIcon={<Check />}>
+          완료
         </Button>
       </Box>
       <Card>
@@ -148,24 +135,18 @@ export default function NightClassSettingPage() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>학번</TableCell>
+                <TableCell>학년</TableCell>
+                <TableCell>반</TableCell>
                 <TableCell>이름</TableCell>
-                <TableCell>수업</TableCell>
-                <TableCell>요일</TableCell>
-                <TableCell>시작 시각</TableCell>
-                <TableCell>종료 시각</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {visibleData?.map((row, index) => (
                 <TableRow
                   key={index}>
-                  <TableCell>{row.studentID}</TableCell>
-                  <TableCell>{row.studentName}</TableCell>
-                  <TableCell>{row.className}</TableCell>
-                  <TableCell>{row.day}</TableCell>
-                  <TableCell>{row.start.toLocaleTimeString('ko-KR', {hour: '2-digit', minute: '2-digit', hour12: false})}</TableCell>
-                  <TableCell>{row.end.toLocaleTimeString('ko-KR', {hour: '2-digit', minute: '2-digit', hour12: false})}</TableCell>
+                  <TableCell>{row.grade}</TableCell>
+                  <TableCell>{row.classNo}</TableCell>
+                  <TableCell>{row.name}</TableCell>
                 </TableRow>
               ))}
               {emptyRows > 0 && (

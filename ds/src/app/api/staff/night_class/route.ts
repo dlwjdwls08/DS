@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { NightClass, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient()
 
@@ -7,52 +7,36 @@ export async function GET(req: NextRequest) {
   const nightClass = await prisma.nightClass.findMany({
     select: {
         studentID: true,
+        studentName: true,
         className: true,
         day: true,
         start: true,
-        end: true,
-        student: {
-            select: {
-                name: true
-            }
-        }
+        end: true
     }
   });
   return NextResponse.json(nightClass)
 }
 
-type NightClassData = {
-  studentID: string,
-  className: string,
-  studentName: string,
-  day: string,
-  start: number,
-  end: number
-}
-
 export async function POST(req: NextRequest) {
   try {
-    const body: NightClassData[] = await req.json()
-    console.log(body)
-    await prisma.nightClass.deleteMany()
-    for (const item of body) {
-      const {studentID, className, day, start, end} = item
-      if (!studentID || !className || !day || !start || !end) {
-        return NextResponse.json({ error: "Wrong format"})
-      }
-      await prisma.nightClass.create({
-        data: {
-          studentID,
-          className,
-          day,
-          start,
-          end
-        }
-      })
-    }
-    return NextResponse.json({}, { status: 201 })
+    const body: NightClass[] = await req.json()
+    await prisma.$executeRawUnsafe(`TRUNCATE TABLE "NightClass" RESTART IDENTITY CASCADE`);
+    // await prisma.nightClass.createMany({
+    //   data: body
+    // })
+    await prisma.nightClass.createMany({
+      data: body
+    })
+    return NextResponse.json(
+      {},
+      { status: 201 }
+    )
   }
-  catch {
-    return NextResponse.json({ error: "DB Error"})
+  catch (e) {
+    console.log(e)
+    return NextResponse.json(
+      { error: "DB Error"},
+      { status: 500 }
+    )
   }
 }
