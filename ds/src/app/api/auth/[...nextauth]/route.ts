@@ -1,12 +1,12 @@
 import { PrismaClient } from "@prisma/client";
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
 const emailRegex = /\d{2}-\d{3}@ksa\.hs\.kr$/;
 
 const prisma = new PrismaClient();
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -21,6 +21,10 @@ const handler = NextAuth({
       },
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    error: "/landing"
+  },
   callbacks: {
     async signIn({ user, account, profile }) {
       if (!user.email || !emailRegex.test(user.email!)) {
@@ -29,10 +33,9 @@ const handler = NextAuth({
 
       return true
     }
-  },
-  pages: {
-    error: "/landing"
   }
-});
+}
+
+const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST };

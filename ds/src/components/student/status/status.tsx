@@ -28,7 +28,7 @@ export default function StatusDiv(){
 	useEffect(() => {
 		if (sessionStatus !== "authenticated") return
 		const studentID = session?.user?.email?.slice(0, 6)
-		axios.get("/api/student/state/"+studentID)
+		axios.get("/api/student/state")
 		.then((res) => res.data)
 		.then((data) => {
 			setLeaveData(data.leaveData)

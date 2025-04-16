@@ -1,19 +1,20 @@
 import { PrismaClient } from "@prisma/client";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 
 const prisma = new PrismaClient()
 
-export async function GET(req: NextRequest, { params }: { params: { id: string }}) {
+export async function GET(req: NextRequest) {
 	try {
-		const studentID = (await params).id
+		const session = await getServerSession(authOptions)
+		const studentID = session?.user?.email?.slice(0, 6)
 		const now = new Date()
 		const nowKR = new Date(now.toLocaleString('en-US', {
 			timeZone: "Asia/Seoul"
 		}))
-		console.log(now.getUTCHours(), now.getUTCMinutes())
 		const time = new Date(Date.UTC(1970, 0, 1, now.getUTCHours(), now.getUTCMinutes()))
 		const day = "일월화수목금토"[nowKR.getDay()]
-		console.log(time)
 		const nightClass = await prisma.nightClass.findFirst({
 			select: {
 				className: true,
