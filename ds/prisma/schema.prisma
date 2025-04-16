@@ -42,6 +42,7 @@ model Leave {
   start       DateTime
   end         DateTime
   studentName String
+  reason      String
 }
 
 model AbsenceLog {

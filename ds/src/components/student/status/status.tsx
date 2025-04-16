@@ -5,31 +5,79 @@ import './style.css'
 import { signOut, useSession } from 'next-auth/react'
 import { IconButton, Box, Paper } from '@mui/material'
 import { stat } from 'fs'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { Leave, NightClass } from '@prisma/client'
+
+type ClassData = Pick<NightClass, "start" | "end" | "className">
+
+type LeaveData = Pick<Leave, "start" | "end" | "reason">
+
 
 export default function StatusDiv(){
 
-	const { data: session } = useSession()
-	const emali = session?.user?.email
+	const { data: session, status: sessionStatus } = useSession()
+	const email = session?.user?.email
 	const name = session?.user?.name
 
+	
+	const [classData, setClassData] = useState<ClassData | null>()
+	const [leaveData, setLeaveData] = useState<LeaveData[] | null>()
+	const [getStatus, setStatus] = useState<string>("자습중")
+
+	useEffect(() => {
+		if (sessionStatus !== "authenticated") return
+		const studentID = session?.user?.email?.slice(0, 6)
+		axios.get("/api/student/state/"+studentID)
+		.then((res) => res.data)
+		.then((data) => {
+			setLeaveData(data.leaveData)
+			if (data.leaveData) {
+				setStatus("자습 이석")
+			}
+			setClassData(data.classData)
+			if (data.classData) {
+				setStatus("수업중")
+			}
+		})
+		.catch((error) => {
+			console.error(error)
+		})
+	}, [sessionStatus])
+
 	// 나중에 API로 상태 받아오기
-	var status = '자습중'
-	if(false){
-		status = '이석'
-	}
-	if(false){
-		status = '결석' 
-	}
 
 
 	return(
 	<Paper id='layout-box' elevation={3}>
-		<Box>
-			<h1 id='title'> {status} </h1>
-			<p style={{textAlign:'center'}}>여기다가 예쁜 그래픽 넣기~</p>
-
+		<Box
+			display="grid"
+			gridTemplateRows="auto auto 50px">
+			<h1 id='title'> {getStatus} </h1>
+			<Box
+				display="flex"
+				flexDirection="column"
+				padding="0 20px">
+				{classData && (
+				<Box>
+					<h3>수업</h3>
+					<Box>
+						<Box>{classData.className}</Box>
+						<Box>{new Date(classData.start).toLocaleTimeString("ko-KR", { hour: '2-digit', minute: '2-digit'})} - {new Date(classData.end).toLocaleTimeString("ko-KR", { hour: '2-digit', minute: '2-digit'})}</Box>
+					</Box>
+				</Box>
+				)}
+				{leaveData && 
+				leaveData.map((leave, idx) => (
+					<Box
+						key={idx}>
+						<Box>{leave.reason}</Box>
+						<Box>{new Date(leave.start).toLocaleTimeString("ko-KR", { hour: '2-digit', minute: '2-digit' })} - {new Date(leave.end).toLocaleTimeString("ko-KR", { hour: '2-digit', minute: '2-digit' })}</Box>
+					</Box>
+				))
+				}
+			</Box>
 			<div id='user-info'>
-					<p>{emali?.slice(0,6)} {name}</p>
 			</div>
 		</Box>
 	</Paper>

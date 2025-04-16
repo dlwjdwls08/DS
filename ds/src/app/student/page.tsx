@@ -10,12 +10,20 @@ import './style.css'
 import PageButton from "@/components/pagebutton/pagebutton"
 import StatusDiv from "@/components/student/status/status";
 import { Paper } from "@mui/material";
+import { Leave, NightClass } from "@prisma/client";
+
+
+
+
 export default function StudentPage() {
+	const session = useSession()
+	const studentID = session.data?.user?.email?.slice(0,6)
+	
+
 	return (
     <>
 			<div id='large-div'>
 				<StatusDiv/>
-
 				<div id='button-div'>
 					<div id='profile-div'>
 						<PageButton
