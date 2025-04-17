@@ -12,6 +12,7 @@ import StatusDiv from "@/components/student/status/status";
 import { Paper } from "@mui/material";
 import { Leave, NightClass } from "@prisma/client";
 import AbsenceDiv from "@/components/student/absence/absence";
+import MemoDiv from "@/components/student/absence/memo";
 
 
 
@@ -25,11 +26,7 @@ export default function StudentPage() {
 			<div id='large-div'>
 				<StatusDiv/>
 				<div id='button-div'>
-					<div id='profile-div'>
-						<PageButton
-							title="선생님께 연락"
-							url="/student/chatting" />
-					</div>
+					<MemoDiv />
 					
 					<AbsenceDiv />
 				</div>

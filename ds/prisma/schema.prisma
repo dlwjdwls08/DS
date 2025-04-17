@@ -52,5 +52,12 @@ model AbsenceLog {
   state     Boolean
 }
 
+model Memo {
+  id          Int   @id @default(autoincrement())
+  studentID   String
+  content     String
+  time        DateTime
+}
+
 //npx prisma generate
 //npx prisma migrate dev
