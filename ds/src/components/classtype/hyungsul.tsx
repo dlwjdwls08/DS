@@ -5,6 +5,7 @@ import { Student, User } from "@prisma/client"
 import axios from "axios"
 import { useEffect, useState } from "react"
 import StudentCard from "../studentCard/StudentCard"
+import { Placeholder, Door } from "../studentCard/Card"
 
 export default function Hyungsul({ students }: { students: Student[] }) {
 

@@ -28,6 +28,9 @@ export default function Drawer() {
       { id: 1, name: "클래스 1" } as Class,
       { id: 2, name: "클래스 2" } as Class,
       { id: 3, name: "클래스 3" } as Class,
+      { id: 4, name: "클래스 4" } as Class,
+      { id: 5, name: "클래스 5" } as Class,
+      { id: 6, name: "클래스 6" } as Class,
     ];
     setClasses(dummyClasses);
   }, []);

@@ -4,18 +4,20 @@ import { Container, Grid2, Box } from "@mui/material"
 import { Student } from "@prisma/client"
 import axios from "axios"
 import { useEffect, useState } from "react"
-import StudentCard, { Placeholder } from "../studentCard/StudentCard"
+import StudentCard from "../studentCard/StudentCard"
+import { Placeholder, Door } from "../studentCard/Card"
 import { arrayBuffer } from "stream/consumers"
 import React from "react"
 
 export default function EOZ({ students, floor }: { students: Student[], floor: number }) {
 
-  const startNo = floor=== 3 ? 73 : 101;
+  // 시작 좌석 번호
+  const startNo = floor=== 3 ? 1 /*73*/: 101;
 
   return (
     <Box sx={{
       width: '100vw',
-      height: '100vh',
+      height: '75vh',
       overflowX: 'auto',
       overflowY: 'hidden',
       whiteSpace: 'nowrap',
@@ -25,15 +27,15 @@ export default function EOZ({ students, floor }: { students: Student[], floor: n
     >
       <Box sx={{
         width: '200vw',
+        height: '60%',
         flexShrink: 0,
-        height: '100%',
       }}>
         <Grid2 container gap={0} rowGap={2}>
-          
+                    
           {/* student.seat에 따라서 학생 배치 */}
           {Array.from({ length: 22 }, (_, i) => {
-            const student = students.find((student) => student.seat === (startNo + i + 1))
-            return <Grid2 key={i} size={0.6}>
+            const student = students.find((student) => student.seat === (startNo + i))
+            return <Grid2 key={i} size={0.6} gap={1}>
               {student ? (
                 <StudentCard key={i} student={student} />
               ) : (
@@ -41,7 +43,6 @@ export default function EOZ({ students, floor }: { students: Student[], floor: n
               )}
             </Grid2>
           })}
-
 
             {Array.from({ length: 3 }, (_, outerIdx) => (
               <React.Fragment key={outerIdx}>
@@ -53,7 +54,7 @@ export default function EOZ({ students, floor }: { students: Student[], floor: n
                 ))}
 
                 {Array.from({ length: 2 }, (_, innerIdx) => {
-                  const student = students.find((s) => s.seat === (startNo + 22 + outerIdx*2 + innerIdx + 1))
+                  const student = students.find((s) => s.seat === (startNo + 22 + outerIdx*2 + innerIdx))
                   return (
                     <Grid2 key={`student-${outerIdx*2+innerIdx}`} size={0.6}>
                     {student ? (
@@ -70,21 +71,5 @@ export default function EOZ({ students, floor }: { students: Student[], floor: n
         </Grid2>
       </Box>
     </Box>
-    // <Container
-    // fixed
-    // sx={{
-    //   display: "flex",
-    //   flexWrap: "wrap",
-    //   justifyContent: "center",
-    //   gap: "20px",
-    //   margin: "50px auto"
-    //   }}>
-    //   {students.map((student, idx) => (
-    //     <StudentCard
-    //       key={idx}
-    //       student={student}>
-    //     </StudentCard>
-    //   ))}
-    // </Container>
   )
 }

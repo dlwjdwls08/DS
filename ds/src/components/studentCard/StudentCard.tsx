@@ -44,33 +44,3 @@ export default function StudentCard({ student }: { student: Student }) {
     </>
   )
 }
-
-export function Placeholder({transparent = false}: {transparent?: boolean}) {
-
-  return (
-    <>
-      <Paper
-        sx={{
-          display: "grid",
-          gridTemplate: "auto",
-          width: "100px",
-          height: "100px",
-          opacity: transparent ? 0 : 1,
-        }}
-        variant="outlined"
-        onClick={() => {}}>
-        <Button disabled
-          sx={{
-            display: "flex",
-            gap: "20px",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "white",
-            color: "black",
-          }}>
-        </Button>
-      </Paper>
-    </>
-  )
-}
