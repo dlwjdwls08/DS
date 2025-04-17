@@ -17,6 +17,11 @@ model Student {
   seat       Int
 }
 
+model Room {
+  id      Int    @id @default(autoincrement())
+  name    String @unique
+}
+
 model NightClass {
   id          Int     @id @default(autoincrement())
   studentID   String
