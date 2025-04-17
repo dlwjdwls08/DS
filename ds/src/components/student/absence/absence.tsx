@@ -17,13 +17,11 @@ export default function AbsenceDiv() {
         .then((res) => res.data)
         .then((data) => {
             setAbsenceData(data.absenceData)
-            console.log(data)
         })
     }, [])
 
     const onThumbClick = () => {
         if (thumbButton.current) {
-            console.log("a")
             thumbButton.current.animate([
                     { transform: "rotate(15deg) scale(1.1)"},
                     { transform: "rotate(-15deg) scale(1.1)"},

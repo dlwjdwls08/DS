@@ -1,8 +1,8 @@
 import { Check, Create, Send } from "@mui/icons-material";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Input, InputBase, List, ListItem, Paper, Stack, TextField } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Input, InputBase, List, ListItem, Paper, Stack, TextField, Typography } from "@mui/material";
 import { Memo } from "@prisma/client";
 import axios from "axios";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type MemoData = {
     content: string,
@@ -13,6 +13,9 @@ export default function MemoDiv() {
     const [memoData, setMemoData] = useState<MemoData[]>([])
     const [dialogOpen, setDialogOpen] = useState(false)
 
+    const [memoValue, setMemoValue] = useState<string>("")
+
+
     useEffect(() => {
         axios.get("/api/student/memo")
         .then((res) => res.data)
@@ -20,6 +23,19 @@ export default function MemoDiv() {
             setMemoData(data.memoData)
         })
     }, [])
+
+    const handleSendMemo = () => {
+        if (!memoValue) return
+        axios.post("/api/student/memo", { content: memoValue })
+        .then((res) => res.data)
+        .then((data) => {
+            setMemoData(prev => [{ content: data.memo.content, time: data.memo.time }, ...prev])
+            setMemoValue("")
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+    }
 
     return (
         <Paper elevation={3} style={{ borderRadius: '20px', padding: '20px', display: 'flex', flexDirection: 'column'}}>
@@ -35,13 +51,13 @@ export default function MemoDiv() {
                     justifyContent="center"
                     alignItems="center">
                     {memoData && (new Date(memoData[0]?.time) >= new Date(Date.now() - 10 * 60 * 1000)) ? (
-                    <h6>
+                    <Typography variant="h4">
                         {memoData[0].content}
-                    </h6>
+                    </Typography>
                     ): (
-                    <h2>
+                    <Typography variant="h4">
                         메모 없음
-                    </h2>
+                    </Typography>
                     )}
                 </Box>
                 <IconButton
@@ -55,13 +71,13 @@ export default function MemoDiv() {
                 <DialogTitle>메모</DialogTitle>
                 <DialogContent>
                     <List
-                        sx={{width: "500px", height: "400px"}}>
+                        sx={{width: "500px", height: "400px", maxHeight: "400px", overflowY: "scroll"}}>
                         {memoData.map((memo, idx) => (
                         <ListItem
                             key={idx}>
-                            <Stack>
-                                <h5>{memo.content}</h5>
-                                <h6>{new Date(memo.time).toLocaleTimeString("ko-KR", {year:"2-digit", month:"2-digit", day:"2-digit", hour: "2-digit", minute: "2-digit"})}</h6>
+                            <Stack gap="10px">
+                                <Typography fontSize="12pt">{memo.content}</Typography>
+                                <Typography fontSize="10pt" color="textDisabled">{new Date(memo.time).toLocaleTimeString("ko-KR", {year:"2-digit", month:"2-digit", day:"2-digit", hour: "2-digit", minute: "2-digit"})}</Typography>
                             </Stack>
                         </ListItem>
                         ))}
@@ -72,9 +88,12 @@ export default function MemoDiv() {
                             flex={1}>
                             <Input
                                 placeholder="해당 메시지는 모든 선생님이 확인할 수 있습니다."
-                                fullWidth />
+                                fullWidth
+                                value={memoValue}
+                                onChange={(e) => setMemoValue(e.target.value)} />
                         </Box>
-                        <IconButton>
+                        <IconButton
+                            onClick={handleSendMemo}>
                             <Send />
                         </IconButton>
                     </Stack>

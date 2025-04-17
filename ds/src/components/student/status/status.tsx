@@ -32,7 +32,7 @@ export default function StatusDiv(){
 		.then((res) => res.data)
 		.then((data) => {
 			setLeaveData(data.leaveData)
-			if (data.leaveData) {
+			if (data.leaveData.length) {
 				setStatus("자습 이석")
 			}
 			setClassData(data.classData)
