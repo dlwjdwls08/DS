@@ -16,11 +16,22 @@ export default function Drawer() {
 
   const [classes, setClasses] = useState<Class[]>()
   
+  // useEffect(() => {
+  //   axios.get("/api/class")
+  //   .then((res) => res.data)
+  //   .then((data) => setClasses(data))
+  // }, [])
+
+  // 가짜 데이터
   useEffect(() => {
-    axios.get("/api/class")
-    .then((res) => res.data)
-    .then((data) => setClasses(data))
-  }, [])
+    const dummyClasses: Class[] = [
+      { id: 1, name: "클래스 1" } as Class,
+      { id: 2, name: "클래스 2" } as Class,
+      { id: 3, name: "클래스 3" } as Class,
+    ];
+    setClasses(dummyClasses);
+  }, []);
+  // 가짜 데이터
 
 
   function handleChange(cls_id: number) {
