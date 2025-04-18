@@ -1,7 +1,7 @@
 'use client'
 
 import { Container, Grid2, Paper, Box } from "@mui/material"
-import { Student, User } from "@prisma/client"
+import { Student } from "@prisma/client"
 import axios from "axios"
 import { useEffect, useState } from "react"
 import StudentCard from "../studentCard/StudentCard"
@@ -29,7 +29,6 @@ export default function Hyungsul({ students }: { students: Student[] }) {
             display:"flex",
             flexWrap: "wrap",
             flexShrink: 0,
-            justifyContent: "space-between",
             gap: "20px",
             margin: "40px auto"
           }}>

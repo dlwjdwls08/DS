@@ -1,19 +1,26 @@
 'use client'
 
 import { Button, Dialog, DialogContent, DialogTitle, Paper, ToggleButton, ToggleButtonGroup, Box } from "@mui/material"
-import { Student } from "@prisma/client"
+import { Student, AbsenceLog } from "@prisma/client"
 import { useEffect, useState } from "react"
 
-export default function StudentCard({ student }: { student: Student }) {
-  const [state, setState] = useState<number | null>(null)
+export type StudentData = {
+  studentInfo: Student
+  state: boolean | null
+}
+
+export default function StudentCard({ student }: { student: StudentData }) {
+  const [state, setState] = useState<boolean | null>(student.state)
+
+  useEffect
 
   function handleStateChange() {
-    if (state === null) {
-      setState(1)
-      return state
-    }
-    setState((state+1)%3)
-    return state
+    if(state == null) setState(true);
+    else if(state) setState(false);
+    else setState(null);
+    
+    
+     
   }
 
   return (
@@ -34,11 +41,11 @@ export default function StudentCard({ student }: { student: Student }) {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: ["white","lightgreen","salmon"][state ? state : 0] as any,
+            backgroundColor: ["white","lightgreen","salmon"][state===null ? 0 : (state ? 1 : 2)] as any,
             color: "black",
           }}>
-          <div>{student.name}</div>
-          <div>{student.studentID}</div>
+          <div>{student.studentInfo.name}</div>
+          <div>{student.studentInfo.studentID}</div>
         </Button>
       </Paper>
     </>

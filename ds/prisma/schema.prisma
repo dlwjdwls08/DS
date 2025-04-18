@@ -20,6 +20,7 @@ model Student {
 model Room {
   id      Int    @id @default(autoincrement())
   name    String @unique
+  type    Int
 }
 
 model NightClass {

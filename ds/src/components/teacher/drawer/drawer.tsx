@@ -2,7 +2,7 @@
 
 import { useClassState, useDrawerState } from "@/store/store";
 import { ListItemButton, SwipeableDrawer, List, ListItem, Divider } from "@mui/material"
-import { Class } from "@prisma/client";
+import { Room } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -14,32 +14,18 @@ export default function Drawer() {
   const { isOpen, open, close } = useDrawerState()
   const { classID, change } = useClassState()
 
-  const [classes, setClasses] = useState<Class[]>()
+  const [rooms, setRooms] = useState<Room[]>()
   
-  // useEffect(() => {
-  //   axios.get("/api/class")
-  //   .then((res) => res.data)
-  //   .then((data) => setClasses(data))
-  // }, [])
-
-  // 가짜 데이터
   useEffect(() => {
-    const dummyClasses: Class[] = [
-      { id: 1, name: "클래스 1" } as Class,
-      { id: 2, name: "클래스 2" } as Class,
-      { id: 3, name: "클래스 3" } as Class,
-      { id: 4, name: "클래스 4" } as Class,
-      { id: 5, name: "클래스 5" } as Class,
-      { id: 6, name: "클래스 6" } as Class,
-    ];
-    setClasses(dummyClasses);
-  }, []);
-  // 가짜 데이터
+    axios.get("/api/room")
+    .then((res) => res.data)
+    .then((data) => setRooms(data.room))
+  }, [])
 
 
-  function handleChange(cls_id: number) {
-    change(cls_id)
-    router.push(`/teacher/class/${cls_id}`)
+  function handleChange(roomNo: number) {
+    change(roomNo)
+    router.push(`/teacher/class/${roomNo}`)
   }
 
   const today = new Date().toLocaleDateString('ko-kr');
@@ -59,14 +45,14 @@ export default function Drawer() {
           {today}
         </ListItem>
         <Divider />
-        {classes?.map((cls, idx) => (
+        {rooms?.map((room, idx) => (
           <ListItem
           disablePadding
           key={idx}>
             <ListItemButton
-              selected={classID === cls.id}
-              onClick={() => handleChange(cls.id)}>
-                {cls.name}
+              selected={classID === room.id}
+              onClick={() => handleChange(room.id)}>
+                {room.name}
             </ListItemButton>
           </ListItem>
         ))}
