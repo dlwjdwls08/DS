@@ -3,6 +3,7 @@
 import { Button, Dialog, DialogContent, DialogTitle, Paper, ToggleButton, ToggleButtonGroup, Box } from "@mui/material"
 import { Student, AbsenceLog } from "@prisma/client"
 import axios from "axios"
+import { stat } from "fs"
 import { useEffect, useState } from "react"
 
 export type StudentData = {
@@ -11,36 +12,47 @@ export type StudentData = {
 }
 
 export default function StudentCard({ student }: { student: Student }) {
-  const [state, setState] = useState<boolean | null>(false)
+  const [state, setState] = useState<boolean | null>(null)
   
   useEffect(()=>{ 
     axios.get(`/api/absence/${student.studentID}`)
     .then((res) => res.data)
     .then((data) => setState(data))
-  })
+  }, [student.studentID])
+
     
-    
-  function handleStateChange() {
-    axios.get(`/api/absence/${student.studentID}`)
+  async function handleStateChange() {
+    await axios.get(`/api/absence/${student.studentID}`)
     .then((res) => res.data)
     .then((data) => setState(data))
 
     if(state === null){
       setState(true)
+      await axios.post(`/api/absence/${student.studentID}`,{
+        date: new Date(),
+        state: true
+      })
     }
     else if(state === true){
       setState(false)
+      await axios.delete(`/api/absence/${student.studentID}`,{
+        data: {
+          date: new Date()
+        }
+      })
+      await axios.post(`/api/absence/${student.studentID}`,{
+        date: new Date(),
+        state: false
+      })
     }
     else {
       setState(null)
-    }
-    
-    if (state === null || state === false)
-      axios.post('/api/absence',{
-        id: student.id,
-        date: new Date(),
-        add: (state===null) ? "Add" : "Remove"
+      await axios.delete(`/api/absence/${student.studentID}`,{
+        data: {
+          date: new Date()
+        }
       })
+    }
     
     
      

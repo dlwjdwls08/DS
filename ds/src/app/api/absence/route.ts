@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import exp from "constants";
 
 const prisma = new PrismaClient();
 
@@ -15,22 +16,4 @@ export async function GET(req: NextRequest, {params} : {params : {date : Date}})
 		}
 	})
 	return NextResponse.json(users);
-}
-
-// update Student to Absecne List
-export async function POST(req: NextRequest, {params} : {params: {id: string, date: string, add: string }}) {
-	const{id, date, add} = await params;
-	const date2 = new Date(date);
-	if (add == "Add") {
-		await prisma.absenceLog.create({
-			data: { studentID: id, date: date2 }
-		});		  
-	}
-	else if (add == "Remove") {
-		await prisma.absenceLog.deleteMany({
-			where: {studentID: id, date: date2 }
-		});
-	}
-
-	return NextResponse.json({message: "Success"});
 }
