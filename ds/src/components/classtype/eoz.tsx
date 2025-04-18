@@ -4,7 +4,7 @@ import { Container, Grid2, Box } from "@mui/material"
 import { Student } from "@prisma/client"
 import axios from "axios"
 import { useEffect, useState } from "react"
-import StudentCard from "../studentCard/StudentCard"
+import StudentCard, {StudentData} from "../studentCard/StudentCard"
 import { Placeholder, Door } from "../studentCard/Card"
 import { arrayBuffer } from "stream/consumers"
 import React from "react"
@@ -37,7 +37,7 @@ export default function EOZ({ students, floor }: { students: Student[], floor: n
             const student = students.find((student) => student.seat === (startNo + i))
             return <Grid2 key={i} size={0.6} gap={1}>
               {student ? (
-                <StudentCard key={i} student={student} />
+                <StudentCard student={student} />
               ) : (
                 <Placeholder />
               )}

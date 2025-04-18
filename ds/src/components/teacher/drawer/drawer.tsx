@@ -19,7 +19,7 @@ export default function Drawer() {
   useEffect(() => {
     axios.get("/api/room")
     .then((res) => res.data)
-    .then((data) => setRooms(data.room))
+    .then((data) => {setRooms(data); console.log(data)})
   }, [])
 
 

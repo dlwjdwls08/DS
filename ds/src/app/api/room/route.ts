@@ -6,11 +6,11 @@ const prisma = new PrismaClient()
 
 export async function GET(req:NextRequest) {
     
-    const room = prisma.room.findMany({
+    const rooms = await prisma.room.findMany({
         orderBy: {
             id: "asc"
         }
     })
 
-    return NextResponse.json(room)
+    return NextResponse.json(rooms)
 }

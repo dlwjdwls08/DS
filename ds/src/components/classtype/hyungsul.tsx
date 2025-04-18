@@ -4,7 +4,7 @@ import { Container, Grid2, Paper, Box } from "@mui/material"
 import { Student } from "@prisma/client"
 import axios from "axios"
 import { useEffect, useState } from "react"
-import StudentCard from "../studentCard/StudentCard"
+import StudentCard, {StudentData} from "../studentCard/StudentCard"
 import { Placeholder, Door } from "../studentCard/Card"
 
 export default function Hyungsul({ students }: { students: Student[] }) {
@@ -35,9 +35,8 @@ export default function Hyungsul({ students }: { students: Student[] }) {
             {students.map((student, idx) => (
               <StudentCard
               key={idx}
-              student={student}>
-                </StudentCard>
-              ))}
+              student={student}/>
+            ))}
         </Container>
       </Box>
     </Box>

@@ -2,6 +2,7 @@
 
 import { Button, Dialog, DialogContent, DialogTitle, Paper, ToggleButton, ToggleButtonGroup, Box } from "@mui/material"
 import { Student, AbsenceLog } from "@prisma/client"
+import axios from "axios"
 import { useEffect, useState } from "react"
 
 export type StudentData = {
@@ -9,15 +10,37 @@ export type StudentData = {
   state: boolean | null
 }
 
-export default function StudentCard({ student }: { student: StudentData }) {
-  const [state, setState] = useState<boolean | null>(student.state)
-
-  useEffect
-
+export default function StudentCard({ student }: { student: Student }) {
+  const [state, setState] = useState<boolean | null>(false)
+  
+  useEffect(()=>{ 
+    axios.get(`/api/absence/${student.studentID}`)
+    .then((res) => res.data)
+    .then((data) => setState(data))
+  })
+    
+    
   function handleStateChange() {
-    if(state == null) setState(true);
-    else if(state) setState(false);
-    else setState(null);
+    axios.get(`/api/absence/${student.studentID}`)
+    .then((res) => res.data)
+    .then((data) => setState(data))
+
+    if(state === null){
+      setState(true)
+    }
+    else if(state === true){
+      setState(false)
+    }
+    else {
+      setState(null)
+    }
+    
+    if (state === null || state === false)
+      axios.post('/api/absence',{
+        id: student.id,
+        date: new Date(),
+        add: (state===null) ? "Add" : "Remove"
+      })
     
     
      
@@ -44,8 +67,8 @@ export default function StudentCard({ student }: { student: StudentData }) {
             backgroundColor: ["white","lightgreen","salmon"][state===null ? 0 : (state ? 1 : 2)] as any,
             color: "black",
           }}>
-          <div>{student.studentInfo.name}</div>
-          <div>{student.studentInfo.studentID}</div>
+          <div>{student.name}</div>
+          <div>{student.studentID}</div>
         </Button>
       </Paper>
     </>
