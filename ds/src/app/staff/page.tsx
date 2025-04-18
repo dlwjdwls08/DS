@@ -1,33 +1,43 @@
 'use client'
 
 import { Book, People, School, Settings } from "@mui/icons-material"
-import { Backdrop, Box, Button, Card, Container, Paper, SpeedDial, SpeedDialAction, SpeedDialIcon, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material"
+import { Backdrop, Box, Button, Card, Chip, Container, Paper, SpeedDial, SpeedDialAction, SpeedDialIcon, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material"
 import axios from "axios"
 import { useRouter } from "next/navigation"
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
+import { DatePicker } from "@mui/x-date-pickers/DatePicker"
 import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker"
 import { koKR } from "@mui/x-date-pickers/locales"
 import * as XLSX from "xlsx"
 import PageButton from "@/components/pagebutton/pagebutton"
-import dayjs from "dayjs"
+import dayjs, { Dayjs } from "dayjs"
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
 import "dayjs/locale/ko"
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar"
 import { AbsenceLog } from "@prisma/client"
+import { PickerValue } from "@mui/x-date-pickers/internals"
 
 type LogData = {
   grade: number,
-  classNo: string,
-  studentID: string,
+  classno: string,
+  studentid: string,
   name: string,
   date: string,
+  state: boolean | null,
   teacher: string
 }
 
+dayjs.locale("ko")
+dayjs.extend(utc)
+dayjs.extend(timezone)
+
 export default function StaffPage() {
   const [speedDialOpen, setSpeedDialOpen] = useState(false)
-  const [dayValue, setDayValue] = useState(dayjs(new Date()))
+  const [startDay, setStartDay] = useState(dayjs(new Date()).subtract(1, 'day'))
+  const [endDay, setEndDay] = useState(dayjs(new Date()).subtract(1, 'day'))
   const [getData, setData] = useState<LogData[]>([])
   const [page, setPage] = useState(0)
   
@@ -42,8 +52,32 @@ export default function StaffPage() {
 
   const router = useRouter()
 
-  dayjs.locale("ko")
 
+  useEffect(() => {
+    const yesterday = dayjs.utc(new Date()).subtract(1, 'day')
+    axios.get("/api/staff/absence", {
+      params: {
+        start: new Date(yesterday.year(), yesterday.month(), yesterday.date()),
+        end: new Date(yesterday.year(), yesterday.month(), yesterday.date() + 1),
+        range: false
+      }
+    })
+    .then((res) => res.data)
+    .then((data) => {
+      console.log(data)
+      setData(data.absenceData)
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+  }, [])
+
+  const handleDateChange = (setter:Dispatch<SetStateAction<Dayjs>>) => {
+    return (e: PickerValue) => {
+      setter(dayjs(e))
+
+    }
+  } 
 
   return (
     <Box
@@ -51,20 +85,27 @@ export default function StaffPage() {
       justifyContent="center"
       alignItems="center"
       gap="30px"
-      height="100%"
-      padding="0 30px">
-      <Stack direction="row" flex={1}>
-        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko-KR">
-          <DateCalendar
-            value={dayValue}
-            onChange={(e) => setDayValue(dayjs(e))}>
-
-          </DateCalendar>
+      padding="20px 30px 0">
+      <Stack direction="row" flex={1} gap="10px">
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
+          <Stack
+            gap="20px">
+            <DatePicker 
+              label="From"
+              value={startDay}
+              onChange={(e) => setStartDay(dayjs(e))}/>
+              <DatePicker 
+              label="To"
+              value={endDay}
+              onChange={(e) => setEndDay(dayjs(e))}/>
+          </Stack>
         </LocalizationProvider>
-        <Stack
+        <Box
+          display="flex"
           flex={1}
           gap="20px">
-          <Card>
+          <Card
+            sx={{flex: 1}}>
             <TableContainer>
               <Table>
                 <TableHead>
@@ -74,6 +115,7 @@ export default function StaffPage() {
                     <TableCell>담임교사</TableCell>
                     <TableCell>학번</TableCell>
                     <TableCell>이름</TableCell>
+                    <TableCell>상태</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -81,10 +123,15 @@ export default function StaffPage() {
                     <TableRow
                       key={index}>
                       <TableCell>{row.grade}</TableCell>
-                      <TableCell>{row.classNo}</TableCell>
+                      <TableCell>{row.classno}</TableCell>
                       <TableCell>{row.teacher}</TableCell>
-                      <TableCell>{row.studentID}</TableCell>
+                      <TableCell>{row.studentid}</TableCell>
                       <TableCell>{row.name}</TableCell>
+                      <TableCell>
+                        <Chip 
+                          label={row.state === null ? "미확인" : "결석"}
+                          clickable/>
+                      </TableCell>
                     </TableRow>
                   ))}
                   {emptyRows > 0 && (
@@ -101,7 +148,7 @@ export default function StaffPage() {
             <TablePagination
               component="div"
               count={getData.length!}
-              rowsPerPage={4}
+              rowsPerPage={10}
               page={page}
               onPageChange={(e, newPage) => setPage(newPage)}
               rowsPerPageOptions={[]} />
@@ -112,7 +159,7 @@ export default function StaffPage() {
               자습 이석 업로드
             </Button>
           </Box>
-        </Stack>
+        </Box>
       </Stack>
       <Backdrop
         open={speedDialOpen} />
