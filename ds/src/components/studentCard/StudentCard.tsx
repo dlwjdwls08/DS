@@ -35,29 +35,19 @@ export default function StudentCard({ student }: { student: Student }) {
     if(state === null){
       setState(true)
       await axios.post(`/api/absence/${student.studentID}`,{
-        date: new Date(),
         state: true
       })
     }
     else if(state === true){
       setState(false)
-      await axios.delete(`/api/absence/${student.studentID}`,{
-        data: {
-          date: new Date()
-        }
-      })
+      await axios.delete(`/api/absence/${student.studentID}`)
       await axios.post(`/api/absence/${student.studentID}`,{
-        date: new Date(),
         state: false
       })
     }
     else {
       setState(null)
-      await axios.delete(`/api/absence/${student.studentID}`,{
-        data: {
-          date: new Date()
-        }
-      })
+      await axios.delete(`/api/absence/${student.studentID}`)
     }
     
     

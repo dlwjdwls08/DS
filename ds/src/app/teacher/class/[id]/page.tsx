@@ -28,7 +28,7 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
       setStudents(data.students)
       console.log(data.room)
       setRoom(data.room)
-    })     
+    })
 
   }, [id])
 

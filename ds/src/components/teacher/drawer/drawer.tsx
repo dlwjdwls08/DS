@@ -7,6 +7,10 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+type ProgressData = {
+  name: string,
+  value: number
+}
 
 export default function Drawer() {
   const router = useRouter();
@@ -14,12 +18,30 @@ export default function Drawer() {
   const { isOpen, open, close } = useDrawerState()
   const { classID, change } = useClassState()
 
-  const [rooms, setRooms] = useState<Room[]>()
-  
+  const [rooms, setRooms] = useState<Room[]>([])
+
+  const [progressData, setProgressData] = useState<ProgressData[]>([])
+
   useEffect(() => {
     axios.get("/api/room")
     .then((res) => res.data)
-    .then((data) => {setRooms(data); console.log(data)})
+    .then((data) => {setRooms(data)})
+
+    axios.get("/api/room/progress")
+    .then(res => res.data)
+    .then((data) => {
+      const fixedData:ProgressData[] = []
+      for (const progress of data.progressData) {
+        fixedData.push({
+          name: progress.name,
+          value: progress.active_count / progress.total_count * 100
+        })
+      }
+      setProgressData(fixedData)
+    })
+    .catch((error) => {
+      console.error(error)
+    })
   }, [])
 
 
@@ -46,7 +68,7 @@ export default function Drawer() {
             {today}
           </ListItem>
           <Divider />
-          {rooms?.map((room, idx) => (
+          {rooms.map((room, idx) => (
             <ListItem
             disablePadding
             key={idx}>
@@ -55,13 +77,17 @@ export default function Drawer() {
                 <ListItemButton
                   selected={classID === room.id}
                   onClick={() => handleChange(room.id)}>
-                    <ListItemText inset primary={room.name} />
+                    <Stack
+                      padding="0 10px"
+                      width="100%">
+                      <ListItemText inset primary={room.name} />
+                      <LinearProgress
+                        variant="determinate"
+                        value={progressData.find((v, i) => v.name === room.name)?.value ?? 0}
+                        color={progressData.find((v, i) => v.name === room.name)?.value === 100 ? "success" : "primary"}
+                        sx={{borderRadius: 2, justifySelf:"stretch"}}/>
+                    </Stack>
                 </ListItemButton>
-                <LinearProgress
-                  variant="buffer"
-                  value={10}
-                  valueBuffer={20}
-                  sx={{height: 6, borderRadius: 2}}/>  
               </Stack>
             </ListItem>
           ))}
