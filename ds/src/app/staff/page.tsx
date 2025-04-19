@@ -1,6 +1,6 @@
 'use client'
 
-import { Book, People, School, Settings } from "@mui/icons-material"
+import { Book, People, Room, School, Settings } from "@mui/icons-material"
 import { Backdrop, Box, Button, Card, Chip, Container, Paper, SpeedDial, SpeedDialAction, SpeedDialIcon, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material"
 import axios from "axios"
 import { useRouter } from "next/navigation"
@@ -186,6 +186,12 @@ export default function StaffPage() {
           tooltipTitle="교사"
           tooltipPlacement="right"
           onClick={() => router.push("/staff/setting/teacher")} />
+        <SpeedDialAction 
+          icon={<Room />}
+          tooltipOpen
+          tooltipTitle="교실"
+          tooltipPlacement="right"
+          onClick={() => router.push("/staff/setting/room")} />
       </SpeedDial>
     </Box>
   )
