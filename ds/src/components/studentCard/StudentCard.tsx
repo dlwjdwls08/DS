@@ -17,9 +17,8 @@ export default function StudentCard({ student }: { student: Student }) {
   useEffect(()=>{ 
     axios.get(`/api/absence/${student.studentID}`)
     .then((res) => res.data)
-    .then((data) => {setState(data);
-      console.log("첫 로딩");
-      console.log(data)
+    .then((data) => {
+      setState(data.stateData);
     })
   }, [])
 
@@ -27,9 +26,8 @@ export default function StudentCard({ student }: { student: Student }) {
   async function handleStateChange() {
     await axios.get(`/api/absence/${student.studentID}`)
     .then((res) => res.data)
-    .then((data) => {setState(data);
-      console.log("두번쨰 로딩");
-      console.log(data)
+    .then((data) => {
+      setState(data.stateData);
     })
 
     if(state === null){
@@ -49,9 +47,6 @@ export default function StudentCard({ student }: { student: Student }) {
       setState(null)
       await axios.delete(`/api/absence/${student.studentID}`)
     }
-    
-    
-     
   }
 
   return (
