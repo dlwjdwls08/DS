@@ -17,14 +17,20 @@ export default function StudentCard({ student }: { student: Student }) {
   useEffect(()=>{ 
     axios.get(`/api/absence/${student.studentID}`)
     .then((res) => res.data)
-    .then((data) => setState(data))
-  }, [student.studentID])
+    .then((data) => {setState(data);
+      console.log("첫 로딩");
+      console.log(data)
+    })
+  }, [])
 
     
   async function handleStateChange() {
     await axios.get(`/api/absence/${student.studentID}`)
     .then((res) => res.data)
-    .then((data) => setState(data))
+    .then((data) => {setState(data);
+      console.log("두번쨰 로딩");
+      console.log(data)
+    })
 
     if(state === null){
       setState(true)
@@ -79,8 +85,8 @@ export default function StudentCard({ student }: { student: Student }) {
             backgroundColor: ["white","lightgreen","salmon"][state===null ? 0 : (state ? 1 : 2)] as any,
             color: "black",
           }}>
-          <div>{student.name}</div>
-          <div>{student.studentID}</div>
+          <Box sx={{lineHeight: '1.5em', maxHeight: '3em'}}>{student.name}</Box>
+          <Box>{student.studentID}</Box>
         </Button>
       </Paper>
     </>

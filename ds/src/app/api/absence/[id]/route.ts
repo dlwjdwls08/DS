@@ -11,7 +11,7 @@ export async function GET( { params }: { params: { id: string } }) {
 		const {id} = await params
 		const today = new Date()
 		const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-		const end = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+		const end = new Date(start.getTime() + 24*60*60*1000);
 
 		const info = await prisma.absenceLog.findFirst({
 			where: {
@@ -21,14 +21,14 @@ export async function GET( { params }: { params: { id: string } }) {
 					lt: end,
 				},
 			},
-		})  
+		})
 
 		return NextResponse.json(info?.state)
 
 	}
 	catch {
-			// return NextResponse.json({ error: "DB Error" }, { status: 500 })
-			return NextResponse.json(null)
+			return NextResponse.json({ error: "DB Error" }, { status: 500 })
+			// return NextResponse.json(null)
 	}
     
 }
@@ -75,10 +75,10 @@ export async function DELETE(req: NextRequest, {params}: {params: {id: string}})
 	const info = await prisma.absenceLog.findFirst({
 		where: {
 			studentID: id,
-			// date: {
-			// 	gte: start,
-			// 	lt: end,
-			// },
+			date: {
+				gte: start,
+				lt: end,
+			},
 		},
 	})  
 
@@ -89,10 +89,10 @@ export async function DELETE(req: NextRequest, {params}: {params: {id: string}})
 	await prisma.absenceLog.deleteMany({
 		where: {
 			studentID: id,
-			// date: {
-			// 	gte: start,
-			// 	lt: end,
-			// },
+			date: {
+				gte: start,
+				lt: end,
+			},
 		},
 	})
 
