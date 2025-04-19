@@ -55,10 +55,11 @@ export default function StaffPage() {
 
   useEffect(() => {
     const yesterday = dayjs.utc(new Date()).subtract(1, 'day')
+    const today = dayjs.utc(new Date())
     axios.get("/api/staff/absence", {
       params: {
         start: new Date(yesterday.year(), yesterday.month(), yesterday.date()),
-        end: new Date(yesterday.year(), yesterday.month(), yesterday.date() + 1),
+        end: new Date(today.year(), today.month(), today.date()),
         range: false
       }
     })
@@ -71,13 +72,6 @@ export default function StaffPage() {
       console.error(error)
     })
   }, [])
-
-  const handleDateChange = (setter:Dispatch<SetStateAction<Dayjs>>) => {
-    return (e: PickerValue) => {
-      setter(dayjs(e))
-
-    }
-  } 
 
   return (
     <Box

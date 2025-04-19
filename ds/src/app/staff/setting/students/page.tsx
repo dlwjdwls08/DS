@@ -25,7 +25,7 @@ type StudentRawData = {
   room: string
 }
 
-export default function NightClassSettingPage() {
+export default function StudentsSettingPage() {
   const [getData, setData] = useState<StudentData[]>([])
   const [page, setPage] = useState(0)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
@@ -79,7 +79,7 @@ export default function NightClassSettingPage() {
               classNo: String(row.classNo),
               studentID: row.id,
               name: row.name,
-              room: row.room,
+              room: row.room == "창8" ? Number(row.no) < 55 ? "창8-1" : "창8-2" : row.room,
               seat: Number(row.no)
             })
         }

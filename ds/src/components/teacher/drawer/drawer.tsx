@@ -1,7 +1,7 @@
 'use client'
 
 import { useClassState, useDrawerState } from "@/store/store";
-import { ListItemButton, SwipeableDrawer, List, ListItem, Divider } from "@mui/material"
+import { ListItemButton, SwipeableDrawer, List, ListItem, Divider, Box, Stack, ListItemText, LinearProgress } from "@mui/material"
 import { Room } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -35,28 +35,38 @@ export default function Drawer() {
       anchor="left"
       open={isOpen}
       onClose={close}
-      onOpen={open}
-      sx={{ width: "300px" }}>
-      <List>
-        <ListItem
-          sx={{
-            height: "80px"
-          }}>
-          {today}
-        </ListItem>
-        <Divider />
-        {rooms?.map((room, idx) => (
+      onOpen={open}>
+      <Box
+        width="200px">
+        <List>
           <ListItem
-          disablePadding
-          key={idx}>
-            <ListItemButton
-              selected={classID === room.id}
-              onClick={() => handleChange(room.id)}>
-                {room.name}
-            </ListItemButton>
+            sx={{
+              height: "80px"
+            }}>
+            {today}
           </ListItem>
-        ))}
-      </List>
+          <Divider />
+          {rooms?.map((room, idx) => (
+            <ListItem
+            disablePadding
+            key={idx}>
+              <Stack
+                width="100%">
+                <ListItemButton
+                  selected={classID === room.id}
+                  onClick={() => handleChange(room.id)}>
+                    <ListItemText inset primary={room.name} />
+                </ListItemButton>
+                <LinearProgress
+                  variant="buffer"
+                  value={10}
+                  valueBuffer={20}
+                  sx={{height: 6, borderRadius: 2}}/>  
+              </Stack>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
     </SwipeableDrawer>
   )
 }

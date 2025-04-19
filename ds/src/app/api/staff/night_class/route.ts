@@ -20,10 +20,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body: NightClass[] = await req.json()
-    await prisma.$executeRawUnsafe(`TRUNCATE TABLE "NightClass" RESTART IDENTITY CASCADE`);
-    // await prisma.nightClass.createMany({
-    //   data: body
-    // })
+    await prisma.$executeRawUnsafe(`TRUNCATE TABLE "NightClass" RESTART IDENTITY CASCADE`)
     await prisma.nightClass.createMany({
       data: body
     })

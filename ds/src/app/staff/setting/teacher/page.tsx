@@ -20,7 +20,7 @@ type TeacherRawData = {
   teacher: string
 }
 
-export default function NightClassSettingPage() {
+export default function TeacherSettingPage() {
   const [getData, setData] = useState<TeacherData[]>([])
   const [page, setPage] = useState(0)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
