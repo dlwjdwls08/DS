@@ -12,7 +12,7 @@ import StatusDiv from "@/components/student/status/status";
 import { Paper } from "@mui/material";
 import { Leave, NightClass } from "@prisma/client";
 import AbsenceDiv from "@/components/student/absence/absence";
-import MemoDiv from "@/components/student/absence/memo";
+import MemoDiv from "@/components/student/memo/memo";
 
 
 
