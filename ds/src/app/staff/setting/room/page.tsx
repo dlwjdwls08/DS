@@ -117,7 +117,8 @@ export default function RoomSettingPage() {
                         {roomType.map((t, idx) => (
                             <ToggleButton
                                 value={t.type}
-                                size="large">
+                                size="large"
+                                key={idx}>
                                 {t.name}
                             </ToggleButton>
                         ))}
