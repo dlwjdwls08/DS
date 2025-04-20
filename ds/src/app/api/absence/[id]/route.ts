@@ -11,9 +11,9 @@ const prisma = new PrismaClient();
 dayjs.extend(utc)
 
 // return the state of the student
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, context: { params: { id: string } }) {
 	try {
-		const {id} = await params
+		const {id} = await context.params
 		const today = dayjs.utc(new Date())
 		const start = new Date(today.year(), today.month(), today.date());
 		const tomorrow = today.add(1, 'day')

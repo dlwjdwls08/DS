@@ -5,9 +5,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient()
 
-export async function GET(req: NextRequest, {params}: {params: {id: string}}) {
+export async function GET(req: NextRequest, context: {params: {id: string}}) {
     try {
-        const { id } = await params
+        const { id } = await context.params
         const memos = await prisma.memo.findMany({
             select: {
                 content: true,

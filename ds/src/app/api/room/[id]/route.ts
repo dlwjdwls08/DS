@@ -4,10 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 const prisma = new PrismaClient()
 
 // get Students in the room
-export async function GET(req:NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req:NextRequest, context: { params: { id: string } }) {
     try {
         
-        const { id } = await params
+        const { id } = await context.params
         const room = await prisma.room.findUnique({ 
             where: {
                 id: Number(id)
