@@ -11,9 +11,9 @@ const prisma = new PrismaClient();
 dayjs.extend(utc)
 
 // return the state of the student
-export async function GET(req: NextRequest, context: { params: { id: string } }) {
+export async function GET(req: NextRequest, {params}: { params: Promise<{ id: string }> }) {
 	try {
-		const {id} = await context.params
+		const {id} = await params
 		const today = dayjs.utc(new Date())
 		const start = new Date(today.year(), today.month(), today.date());
 		const tomorrow = today.add(1, 'day')
@@ -42,7 +42,7 @@ export async function GET(req: NextRequest, context: { params: { id: string } })
 
 
 // update Student to Absecne List
-export async function POST(req: NextRequest, {params} : {params: {id: string}}) {
+export async function POST(req: NextRequest, {params} : {params: Promise<{id: string}>}) {
 	const {id} = await params
 
 	let body: {state: boolean}
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest, {params} : {params: {id: string}}) 
 	return NextResponse.json({message: "Success"});
 }
 
-export async function DELETE(req: NextRequest, {params}: {params: {id: string}}) {
+export async function DELETE(req: NextRequest, {params}: {params: Promise<{id: string}>}) {
 	const {id} = await params;
 	const today = dayjs.utc(new Date())
 	const start = new Date(today.year(), today.month(), today.date());
@@ -84,7 +84,7 @@ export async function DELETE(req: NextRequest, {params}: {params: {id: string}})
 
 }
 
-export async function PUT(req: NextRequest, {params}: {params: {id: string}}) {
+export async function PUT(req: NextRequest, {params}: {params: Promise<{id: string}>}) {
 	try {
 		const { id } = await params
 		const body = await req.json()
