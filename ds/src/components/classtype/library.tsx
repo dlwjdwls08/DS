@@ -41,35 +41,35 @@ export default function Library({ students }: { students: Student[] }) {
 
 			<Grid2 container sx={{ display: 'flex', flexDirection: 'column' }}>
 				{Array.from({ length: 3 }, (_, i) => {
-					const s1 = students.find((student) => student.seat === startNo + 6 + 4*i + 1);
-					const s2 = students.find((student) => student.seat === startNo + 6 + 4*i + 2);
-					const s3 = students.find((student) => student.seat === startNo + 6 + 4*i + 3);
-					const s4 = students.find((student) => student.seat === startNo + 6 + 4*i + 4);
+					const s1 = students.find((student) => student.seat === startNo + 6 + 4*i + 0);
+					const s2 = students.find((student) => student.seat === startNo + 6 + 4*i + 1);
+					const s3 = students.find((student) => student.seat === startNo + 6 + 4*i + 2);
+					const s4 = students.find((student) => student.seat === startNo + 6 + 4*i + 3);
 					return (
 						<Grid2 container key={`grid_${i}`} sx={{
 							width: 220,
 							height: 200,
 							marginBottom: '20px'
 						}}>
-							<Grid2 key={startNo + 6 + 4*i + 1}>
-								{s1 
-								 ? <StudentCard student={s1} />
-								 : <Placeholder/>
-								}
-							</Grid2>
-							<Grid2 key={startNo + 6 + 4*i + 2}>
+							<Grid2 key={startNo + 6 + 4*i + 0}>
 								{s2
 								 ? <StudentCard student={s2} />
 								 : <Placeholder/>
 								}
 							</Grid2>
-							<Grid2 key={startNo + 6 + 4*i + 3}>
+							<Grid2 key={startNo + 6 + 4*i + 1}>
+								{s1
+								 ? <StudentCard student={s1} />
+								 : <Placeholder/>
+								}
+							</Grid2>
+							<Grid2 key={startNo + 6 + 4*i + 2}>
 								{s3 
 								 ? <StudentCard student={s3} />
 								 : <Placeholder/>
 								}
 							</Grid2>
-							<Grid2 key={startNo + 6 + 4*i + 4}>
+							<Grid2 key={startNo + 6 + 4*i + 3}>
 								{s4
 								 ? <StudentCard student={s4} />
 								 : <Placeholder/>
