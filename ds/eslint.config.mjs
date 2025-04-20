@@ -22,6 +22,7 @@ const eslintConfig = [
           "ignoreRestSiblings": true,
         },
       ],
+      "@typescript-eslint/no-explicit-any": "off"
     },
   },
 ];

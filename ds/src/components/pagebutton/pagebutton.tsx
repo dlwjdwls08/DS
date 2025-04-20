@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { Url, UrlObject } from "url"
 
 type PageButtonParams = {
-    title: String,
+    title: string,
     url: string
 }
 

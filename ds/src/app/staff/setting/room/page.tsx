@@ -14,8 +14,8 @@ import { useEffect, useState } from "react";
 type RoomData = Pick<Room, "grade" | "type" | "name">
 
 type RoomType = {
-    type: Number,
-    name: String
+    type: number,
+    name: string
 }
 
 export default function RoomSettingPage() {
