@@ -14,6 +14,7 @@ export default function Navbar() {
     <nav id="navbar">
       <div
         style={{display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
+        <div></div>
         <div className="menu">  
           <span style={{ fontSize: '20px', fontWeight: 'bold', color: 'blue' }}>KSA</span>
           <span style={{ fontSize: '20px', fontWeight: 'bold', color: 'black' }}>TTEND</span>

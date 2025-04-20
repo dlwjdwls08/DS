@@ -1,10 +1,11 @@
 'use client'
 
-import { Button, Dialog, DialogContent, DialogTitle, Paper, ToggleButton, ToggleButtonGroup, Box } from "@mui/material"
+import { Message } from "@mui/icons-material"
+import { Button, Dialog, DialogContent, DialogTitle, Paper, ToggleButton, ToggleButtonGroup, Box, Typography, IconButton } from "@mui/material"
 import { Student, AbsenceLog } from "@prisma/client"
 import axios from "axios"
 import { stat } from "fs"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 export type StudentData = {
   studentInfo: Student
@@ -14,6 +15,10 @@ export type StudentData = {
 export default function StudentCard({ student }: { student: Student }) {
   const [state, setState] = useState<boolean | null>(null)
   
+  const nameTypo = useRef<HTMLPreElement>(null)
+
+  const [isAvailable, setAvailable] = useState<boolean>(true)
+
   useEffect(()=>{ 
     axios.get(`/api/absence/${student.studentID}`)
     .then((res) => res.data)
@@ -22,30 +27,39 @@ export default function StudentCard({ student }: { student: Student }) {
     })
   }, [])
 
-    
-  async function handleStateChange() {
-    await axios.get(`/api/absence/${student.studentID}`)
-    .then((res) => res.data)
-    .then((data) => {
-      setState(data.stateData);
-    })
+  useEffect(() => {
 
+  }, [nameTypo])  
+
+  async function handleStateChange() {
+    setAvailable(false)
     if(state === null){
       setState(true)
-      await axios.post(`/api/absence/${student.studentID}`,{
+      axios.post(`/api/absence/${student.studentID}`,{
         state: true
+      })
+      .then(res => res.data)
+      .then((data) => {
+        setAvailable(true)
       })
     }
     else if(state === true){
       setState(false)
-      await axios.delete(`/api/absence/${student.studentID}`)
-      await axios.post(`/api/absence/${student.studentID}`,{
+      axios.put(`/api/absence/${student.studentID}`,{
         state: false
+      })
+      .then(res => res.data)
+      .then((data) => {
+        setAvailable(true)
       })
     }
     else {
       setState(null)
-      await axios.delete(`/api/absence/${student.studentID}`)
+      axios.delete(`/api/absence/${student.studentID}`)
+      .then(res => res.data)
+      .then((data) => {
+        setAvailable(true)
+      })
     }
   }
 
@@ -57,21 +71,35 @@ export default function StudentCard({ student }: { student: Student }) {
           gridTemplate: "auto",
           width: "100px",
           height: "100px",
+          maxHeight: "100px"
         }}
-        variant="outlined"
-        onClick={handleStateChange}>
+        variant="outlined">
         <Button
           sx={{
             display: "flex",
-            gap: "20px",
+            gap: "10px",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: ["white","lightgreen","salmon"][state===null ? 0 : (state ? 1 : 2)] as any,
             color: "black",
-          }}>
-          <Box sx={{lineHeight: '1.5em', maxHeight: '3em'}}>{student.name}</Box>
-          <Box>{student.studentID}</Box>
+            width: "100px",
+            height: "100px",
+            maxHeight: "100px"
+          }}
+          onClick={handleStateChange}
+          disabled={!isAvailable}>
+          <Typography
+            ref={nameTypo}
+            sx={{
+              whiteSpace: "normal",
+              wordBreak: "break-word",
+              fontSize: "clamp(2pt, 1em, 1em)",
+              lineHeight: "1em"
+            }}>
+            {student.name}
+          </Typography>
+          <Typography>{student.studentID}</Typography>
         </Button>
       </Paper>
     </>

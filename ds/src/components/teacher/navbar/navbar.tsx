@@ -18,6 +18,7 @@ export default function Navbar() {
           <Menu />
         </IconButton>
       </div>
+      <div></div>
       <div
       style={{display:"flex",alignItems:"center", justifyContent:"center", padding:"20px"}}>
         <div className="menu">

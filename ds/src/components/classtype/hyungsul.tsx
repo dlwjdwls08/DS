@@ -11,8 +11,8 @@ export default function Hyungsul({ students }: { students: Student[] }) {
 
   return (
     <Box sx={{
-        width: '100vw',
-        height: '100vh',
+        width: '100%',
+        height: 'auto',
         overflowX: 'auto',
         overflowY: 'hidden',
         whiteSpace: 'nowrap',

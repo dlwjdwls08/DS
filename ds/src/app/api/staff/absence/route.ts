@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
             ON S."studentID" = AL."studentID" AND AL."date" >= ${new Date(start)} AND AL."date" <= ${new Date(end)}
             INNER JOIN "Teacher" as T
             ON S."classNo" = T."classNo" AND (S.grade = T.grade OR S."classNo" LIKE 'RAA%')
-            WHERE AL.state != true
+            WHERE AL.state IS NOT true
             `
             return NextResponse.json(
                 { absenceData: absences, range: false},

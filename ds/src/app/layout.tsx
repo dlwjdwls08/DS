@@ -5,6 +5,7 @@ import "./globals.css";
 import { getSession, SessionProvider } from "next-auth/react";
 import Navbar from "@/components/teacher/navbar/navbar"
 import { usePathname } from "next/navigation";
+import { Container } from "@mui/material";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
