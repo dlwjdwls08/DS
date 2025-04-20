@@ -17,9 +17,8 @@ export function Chang8_1({ students }: { students: Student[] }) {
   return (
     <Box sx={{
       width: '100vw',
-      height: '250vh',
       overflowX: 'auto',
-      overflowY: 'auto',
+      overflowY: 'scroll',
       "&::-webkit-scrollbar": {
         display: "none",
       },
