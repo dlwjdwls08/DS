@@ -14,7 +14,7 @@ dayjs.extend(utc)
 export async function GET(req: NextRequest, {params}: { params: Promise<{ id: string }> }) {
 	try {
 		const {id} = await params
-		const today = dayjs.utc(new Date())
+		const today = dayjs(new Date())
 		const start = new Date(today.year(), today.month(), today.date());
 		const tomorrow = today.add(1, 'day')
 		const end = new Date(tomorrow.year(), tomorrow.month(), tomorrow.date());
@@ -43,29 +43,40 @@ export async function GET(req: NextRequest, {params}: { params: Promise<{ id: st
 
 // update Student to Absecne List
 export async function POST(req: NextRequest, {params} : {params: Promise<{id: string}>}) {
-	const {id} = await params
-
-	let body: {state: boolean}
 	try {
-		body = await req.json()
-	} catch {
+		const {id} = await params
+		console.log(id)
+
+		let body: {state: boolean}
+		try {
+			body = await req.json()
+		} catch {
+			return NextResponse.json(
+				{ error: 'Invalid json form'},
+				{ status: 500 }
+			)
+		}
+
+		const {state} = body
+		await prisma.absenceLog.create({
+			data: { studentID: id, date: new Date(), state: state }
+		});		  
+
+		return NextResponse.json({message: "Success"});
+	}
+	catch (e) {
+		console.log(e)
 		return NextResponse.json(
-			{ error: 'Invalid json form'},
+			{ error: "DB Error" },
 			{ status: 500 }
 		)
 	}
-
-	const {state} = body
-	await prisma.absenceLog.create({
-		data: { studentID: id, date: new Date(), state: state }
-	});		  
-
-	return NextResponse.json({message: "Success"});
+	
 }
 
 export async function DELETE(req: NextRequest, {params}: {params: Promise<{id: string}>}) {
 	const {id} = await params;
-	const today = dayjs.utc(new Date())
+	const today = dayjs(new Date())
 	const start = new Date(today.year(), today.month(), today.date());
 	const tomorrow = today.add(1, 'day')
 	const end = new Date(tomorrow.year(), tomorrow.month(), tomorrow.date());
@@ -95,7 +106,7 @@ export async function PUT(req: NextRequest, {params}: {params: Promise<{id: stri
 			)
 		}
 		const { state } = body
-		const today = dayjs.utc(new Date())
+		const today = dayjs(new Date())
 		const start = new Date(today.year(), today.month(), today.date());
 		const tomorrow = today.add(1, 'day')
 		const end = new Date(tomorrow.year(), tomorrow.month(), tomorrow.date());
