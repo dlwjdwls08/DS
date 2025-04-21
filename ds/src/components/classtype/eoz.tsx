@@ -75,7 +75,7 @@ export default function EOZ({ students, floor }: { students: Student[], floor: n
               })}
 
               {outerIdx!=3 && Array.from({ length: 4 }, (_, innerIdx) => (
-                <Box sx={{width: '130px'}}>
+                <Box sx={{width: '130px'}} key={innerIdx}>
                   <Grid2 key={`placeholder-${outerIdx * 2 + innerIdx}`}>
                     <Placeholder transparent={true} />
                   </Grid2>
