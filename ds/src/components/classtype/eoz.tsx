@@ -21,7 +21,6 @@ export default function EOZ({ students, floor }: { students: Student[], floor: n
       overflowX: 'auto',
       overflowY: 'hidden',
       whiteSpace: 'nowrap',
-      display: 'flex',
       flexDirection: 'row',
       "&::-webkit-scrollbar": {
         display: "none",
@@ -32,46 +31,58 @@ export default function EOZ({ students, floor }: { students: Student[], floor: n
     >
       <Box sx={{
         margin: '20px',
-        width: '160vw',
+        width: '200vw',
         height: '60%',
         flexShrink: 0,
+        display: 'flex',
+        flexDirection:'column',
       }}>
-        <Grid2 container gap={0} rowGap={2}>
-                    
-          {/* student.seat에 따라서 학생 배치 */}
+        <Grid2 container wrap='nowrap' sx={{ p:2}}>
           {Array.from({ length: 20 }, (_, i) => {
             const student = students.find((student) => student.seat === (startNo + i))
-            return <Grid2 key={i} size={0.6} gap={1}>
+            return <Box sx={{width: '130px', flexShrink:0}}>
               {student ? (
                 <StudentCard student={student} />
               ) : (
                 <Placeholder />
               )}
-            </Grid2>
+            </Box>
           })}
-
+        </Grid2>
+      
+        <Grid2 container wrap='nowrap' sx={{p:2}}>
           {Array.from({ length: 4 }, (_, outerIdx) => (
-            <React.Fragment key={outerIdx}>
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              width: 130 * (outerIdx!=3 ? 6 : 3),
+              flexShrink: 0,
+            }}>
+            <Grid2 container> 
+
               {Array.from({ length: 2 }, (_, innerIdx) => {
                 const student = students.find((s) => s.seat === (startNo + 20 + 7 - ( outerIdx*2 + innerIdx )))
                 return (
-                  <Grid2 key={`student-${(outerIdx)*2+innerIdx}`} size={0.6}>
+                  <Box sx={{width: '130px'}}>
                   {student ? (
                     <StudentCard student={student} />
                   ) : (
                     <Placeholder />
                   )}
-                  </Grid2>
+                  </Box>
                 )
               })}
 
-              {Array.from({ length: 4 }, (_, innerIdx) => (
-                <Grid2 key={`placeholder-${outerIdx * 2 + innerIdx}`} size={0.6}>
-                  <Placeholder transparent={true} />
-                </Grid2>
+              {outerIdx!=3 && Array.from({ length: 4 }, (_, innerIdx) => (
+                <Box sx={{width: '130px'}}>
+                  <Grid2 key={`placeholder-${outerIdx * 2 + innerIdx}`}>
+                    <Placeholder transparent={true} />
+                  </Grid2>
+                </Box>
               ))}
 
-            </React.Fragment>
+            </Grid2>
+            </Box>
           ))}
 
       

@@ -63,7 +63,9 @@ export default function Drawer() {
         <List>
           <ListItem
             sx={{
-              height: "80px"
+              height: "80px",
+              justifyContent: 'center',
+              alignContent: "center"
             }}>
             {today}
           </ListItem>
@@ -80,7 +82,7 @@ export default function Drawer() {
                     <Stack
                       padding="0 10px"
                       width="100%">
-                      <ListItemText inset primary={room.name} />
+                      <ListItemText inset primary={room.name}/>
                       <LinearProgress
                         variant="determinate"
                         value={progressData.find((v, i) => v.name === room.name)?.value ?? 0}

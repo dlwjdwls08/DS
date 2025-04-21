@@ -40,7 +40,7 @@ export function Chang8_1({ students }: { students: Student[] }) {
 								if(j>=3) j-=1
 								const student = students.find((student) => student.seat === startNo + i*6+j)
 								return (
-									<Grid2 key={`${i}-${j}`} size={0.9}>
+									<Grid2 key={`${i}-${j}`} size={0.9} gap={1}>
 										{student ? (
 											<StudentCard key={j} student={student} />
 										) : (
