@@ -64,24 +64,71 @@ export default function StaffPage() {
 
 
   useEffect(() => {
-    const yesterday = dayjs.utc(new Date()).subtract(1, 'day')
-    const today = dayjs.utc(new Date())
+    const yesterday = dayjs(new Date()).subtract(1, 'day')
+    const today = dayjs(new Date())
     axios.get("/api/staff/absence", {
       params: {
         start: new Date(yesterday.year(), yesterday.month(), yesterday.date()),
         end: new Date(today.year(), today.month(), today.date()),
-        range: false
       }
     })
     .then((res) => res.data)
-    .then((data) => {
+    .then((data: {absenceData: LogData[]}) => {
       console.log(data)
+      data.absenceData.sort((x, y) => {
+        if (x.classno.startsWith("RAA")) {
+          if (y.classno.startsWith("RAA")) {
+            return Number(x.classno.at(-1)) - Number(y.classno.at(-1))
+          }
+          return 1
+        }
+        if (y.classno.startsWith("RAA")) {
+          return -1
+        }
+        if (x.grade == y.grade) {
+          return Number(x.classno) - Number(y.classno)
+        }
+        return x.grade - y.grade
+      })
       setData(data.absenceData)
     })
     .catch((error) => {
       console.error(error)
     })
   }, [])
+
+  const handleLoad = () => {
+    const end = endDay.add(1, 'day')
+    axios.get("/api/staff/absence", {
+      params: {
+        start: new Date(startDay.year(), startDay.month(), startDay.date()),
+        end: new Date(end.year(), end.month(), end.date()),
+      }
+    })
+    .then((res) => res.data)
+    .then((data: { absenceData: LogData[] }) => {
+      console.log(data)
+      data.absenceData.sort((x, y) => {
+        if (x.classno.startsWith("RAA")) {
+          if (y.classno.startsWith("RAA")) {
+            return Number(x.classno.at(-1)) - Number(y.classno.at(-1))
+          }
+          return 1
+        }
+        if (y.classno.startsWith("RAA")) {
+          return -1
+        }
+        if (x.grade == y.grade) {
+          return Number(x.classno) - Number(y.classno)
+        }
+        return x.grade - y.grade
+      })
+      setData(data.absenceData)
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+  }
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -113,6 +160,35 @@ export default function StaffPage() {
     reader.readAsArrayBuffer(file)
   }
 
+  const handleFileDownload = () => {
+    const worksheet = XLSX.utils.json_to_sheet(getData);
+
+    // 워크북 생성
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+    // 워크북을 바이너리 데이터로 변환
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+  
+    // 4. Blob 생성
+    const blob = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+  
+    // 5. 다운로드 링크 생성해서 강제 클릭
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${startDay.format("YYYY_MM_DD")}-${endDay.format("YYYY_MM_DD")}.xlsx`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <Box
       display="flex"
@@ -128,10 +204,14 @@ export default function StaffPage() {
               label="From"
               value={startDay}
               onChange={(e) => setStartDay(dayjs(e))}/>
-              <DatePicker 
+            <DatePicker 
               label="To"
               value={endDay}
               onChange={(e) => setEndDay(dayjs(e))}/>
+            <Button
+              onClick={handleLoad}>
+      `       로드
+            </Button>
           </Stack>
         </LocalizationProvider>
         <Box
@@ -163,7 +243,7 @@ export default function StaffPage() {
                       <TableCell>{row.name}</TableCell>
                       <TableCell>
                         <Chip 
-                          label={row.state === null ? "미확인" : "결석"}
+                          label="결석"
                           clickable/>
                       </TableCell>
                     </TableRow>
@@ -187,7 +267,8 @@ export default function StaffPage() {
               onPageChange={(e, newPage) => setPage(newPage)}
               rowsPerPageOptions={[]} />
           </Card>
-          <Box>
+          <Stack
+            gap="20px">
             <Button
               variant="outlined"
               component="label">
@@ -199,7 +280,13 @@ export default function StaffPage() {
               hidden
               />
             </Button>
-          </Box>
+            <Button
+              variant="outlined"
+              component="label"
+              onClick={handleFileDownload}>
+              엑셀로 다운로드
+            </Button>
+          </Stack>
         </Box>
       </Stack>
       <Backdrop
