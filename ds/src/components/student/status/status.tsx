@@ -11,8 +11,6 @@ import { Leave, NightClass } from '@prisma/client'
 
 type ClassData = Pick<NightClass, "start" | "end" | "className">
 
-type LeaveData = Pick<Leave, "start" | "end" | "reason">
-
 
 export default function StatusDiv(){
 
@@ -22,7 +20,7 @@ export default function StatusDiv(){
 
 	
 	const [classData, setClassData] = useState<ClassData | null>()
-	const [leaveData, setLeaveData] = useState<LeaveData[] | null>()
+	const [leaveData, setLeaveData] = useState<Leave[] | null>()
 	const [getStatus, setStatus] = useState<string>("자습중")
 
 	useEffect(() => {
@@ -67,15 +65,6 @@ export default function StatusDiv(){
 					</Box>
 				</Box>
 				)}
-				{leaveData && 
-				leaveData.map((leave, idx) => (
-					<Box
-						key={idx}>
-						<Box>{leave.reason}</Box>
-						<Box>{new Date(leave.start).toLocaleTimeString("ko-KR", { hour: '2-digit', minute: '2-digit' })} - {new Date(leave.end).toLocaleTimeString("ko-KR", { hour: '2-digit', minute: '2-digit' })}</Box>
-					</Box>
-				))
-				}
 			</Box>
 			<div id='user-info'>
 			</div>

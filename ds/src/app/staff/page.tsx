@@ -17,7 +17,7 @@ import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
 import "dayjs/locale/ko"
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar"
-import { AbsenceLog } from "@prisma/client"
+import { AbsenceLog, Leave } from "@prisma/client"
 import { PickerValue } from "@mui/x-date-pickers/internals"
 
 type LogData = {
@@ -28,14 +28,6 @@ type LogData = {
   date: string,
   state: boolean | null,
   teacher: string
-}
-
-type LeaveData = {
-  studentID: string,
-  start: Date,
-  end: Date,
-  studentName: string,
-  reason: string
 }
 
 type LeaveDataRaw = {
@@ -101,7 +93,7 @@ export default function StaffPage() {
       const data = new Uint8Array(event.target?.result as ArrayBuffer)
       const workbook = XLSX.read(data, { type: "array" })
 
-      const fixedData: LeaveData[] = []
+      const fixedData = []
       
       const worksheet = workbook.Sheets[workbook.SheetNames[0]]
       const rows:LeaveDataRaw[] = XLSX.utils.sheet_to_json(worksheet)
@@ -110,10 +102,7 @@ export default function StaffPage() {
         const end = dayjs.tz(`${row.end_date} ${row.end_time}`, 'Asia/Seoul').utc().toDate()
         fixedData.push({
           studentID: row.hakbun,
-          start: start,
-          end: end,
-          studentName: row.kor_nm,
-          reason: row.reason
+          studentName: row.kor_nm
         })
       }
       axios.post("/api/staff/leave", fixedData)

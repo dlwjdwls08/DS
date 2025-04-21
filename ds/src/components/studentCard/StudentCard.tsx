@@ -19,14 +19,12 @@ type MemoData = {
 
 type ClassData = Pick<NightClass, "start" | "end" | "className">
 
-type LeaveData = Pick<Leave, "start" | "end" | "reason">
-
 export default function StudentCard({ student }: { student: Student }) {
     const [state, setState] = useState<boolean | null>(null)
     const [isAvailable, setAvailable] = useState<boolean>(true)
     const [dialogOpen, setDialogOpen] = useState<boolean>(false)
     const [memoData, setMemoData] = useState<MemoData[]>([])
-    const [leaveData, setLeaveData] = useState<LeaveData[]>([])
+    const [leaveData, setLeaveData] = useState<Leave[]>([])
     const [nightClassData, setNightClassData] = useState<ClassData[]>([])
 
     const holdTimeOut = useRef<NodeJS.Timeout | null>(null)

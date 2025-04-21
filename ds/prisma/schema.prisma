@@ -52,10 +52,8 @@ model Teacher {
 model Leave {
   id          Int      @id @default(autoincrement())
   studentID   String
-  start       DateTime
-  end         DateTime
+  date        DateTime
   studentName String
-  reason      String
 }
 
 model AbsenceLog {

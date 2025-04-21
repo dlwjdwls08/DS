@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth"
+import dayjs from "dayjs";
 
 const prisma = new PrismaClient()
 
@@ -35,21 +36,14 @@ export async function GET(req: NextRequest, {params}: {params: Promise<{id: stri
                 }
             }
         })
+        const today = dayjs(now)
         const leave = await prisma.leave.findMany({
-            select: {
-                reason: true,
-                start: true,
-                end: true
-            },
             where: {
                 studentID: {
                     equals: id
                 },
-                start: {
-                    lte: now
-                },
-                end: {
-                    gte: now
+                date: {
+                    equals: new Date(today.year(), today.month(), today.date())
                 }
             }
         })
