@@ -40,7 +40,7 @@ export default function EOZ({ students, floor }: { students: Student[], floor: n
         <Grid2 container wrap='nowrap' sx={{ p:2}}>
           {Array.from({ length: 20 }, (_, i) => {
             const student = students.find((student) => student.seat === (startNo + i))
-            return <Box sx={{width: '130px', flexShrink:0}}>
+            return <Box sx={{width: '130px', flexShrink:0}} key={i}>
               {student ? (
                 <StudentCard student={student} />
               ) : (
@@ -57,13 +57,14 @@ export default function EOZ({ students, floor }: { students: Student[], floor: n
               flexDirection: 'row',
               width: 130 * (outerIdx!=3 ? 6 : 3),
               flexShrink: 0,
-            }}>
+            }}
+              key={outerIdx}>
             <Grid2 container> 
 
               {Array.from({ length: 2 }, (_, innerIdx) => {
                 const student = students.find((s) => s.seat === (startNo + 20 + 7 - ( outerIdx*2 + innerIdx )))
                 return (
-                  <Box sx={{width: '130px'}}>
+                  <Box sx={{width: '130px'}} key={innerIdx}>
                   {student ? (
                     <StudentCard student={student} />
                   ) : (
