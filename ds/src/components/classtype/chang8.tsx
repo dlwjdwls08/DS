@@ -16,7 +16,6 @@ export function Chang8_1({ students }: { students: Student[] }) {
 
   return (
     <Box sx={{
-      width: '100vw',
       overflowX: 'auto',
       overflowY: 'scroll',
       "&::-webkit-scrollbar": {
@@ -26,11 +25,11 @@ export function Chang8_1({ students }: { students: Student[] }) {
       msOverflowStyle: "none",
     }}  
     >
-			<Grid2 container wrap="wrap">
+			<Grid2 container wrap="wrap" gap={1}>
 				{Array.from({ length: 9 }, (_, i) => (
 
 				<Grid2 size={12} key={`${i}-0`} sx={{ mb: i % 2 === 1 ? 1 : 7 }}>
-					<Grid2 container key={`${i}-1`} columnGap={0} sx={{justifyContent:'center'}}>
+					<Grid2 container key={`${i}-1`} gap={1} sx={{justifyContent:'center'}}>
 						
 						{(i === 8) && (
 							<Door transparent={true}/>
@@ -40,7 +39,7 @@ export function Chang8_1({ students }: { students: Student[] }) {
 								if(j>=3) j-=1
 								const student = students.find((student) => student.seat === startNo + i*6+j)
 								return (
-									<Grid2 key={`${i}-${j}`} size={0.9} gap={1}>
+									<Grid2 key={`${i}-${j}`}>
 										{student ? (
 											<StudentCard key={j} student={student} />
 										) : (
@@ -70,8 +69,6 @@ export function Chang8_2({ students }: { students: Student[] }) {
 
   return (
     <Box sx={{
-      width: '100vw',
-      height: '250vh',
       overflowX: 'auto',
       overflowY: 'scorll',
     }}  
@@ -79,12 +76,12 @@ export function Chang8_2({ students }: { students: Student[] }) {
 			<Grid2 container wrap="wrap">
 				{Array.from({ length: 2 }, (_, i) => (
 					<Grid2 size={12} key={`${i}-0-0`} sx={{ mb: i % 2 === 0 ? 1 : 7 }}>
-						<Grid2 container key={`${i}-1`} columnGap={1} sx={{justifyContent:'center'}}>
+						<Grid2 container key={`${i}-1`} gap={1} wrap="nowrap" sx={{justifyContent:'center'}}>
 							
 							{Array.from({ length:9 }, (_, j) => {
 									if(j==4 || j<=1) {
 										return (
-										<Grid2 key={`${i}-${j}-2`} size={0.9}>
+										<Grid2 key={`${i}-${j}-2`}>
 											<Placeholder transparent={true} key={-j} />
 										</Grid2>
 										)
@@ -94,7 +91,7 @@ export function Chang8_2({ students }: { students: Student[] }) {
 
 									const student = students.find((student) => student.seat === startNo + i*6 + j)
 									return (
-										<Grid2 key={`${i}-${j}`} size={0.9}>
+										<Grid2 key={`${i}-${j}`}>
 											{student ? (
 												<StudentCard key={j} student={student} />
 											) : (
@@ -110,18 +107,18 @@ export function Chang8_2({ students }: { students: Student[] }) {
 				
 				{Array.from({ length: 8 }, (_, i) => (
 					<Grid2 size={12} key={`${i+2}-0`} sx={{ mb: i % 2 === 0 ? 1 : 7 }}>
-						<Grid2 container columnGap={1} key={`${i}-1`} sx={{justifyContent:'center'}}>
+						<Grid2 container gap={1} key={`${i}-1`} sx={{justifyContent:'center'}}>
 							
 							{Array.from({ length: 9 }, (_, j) => {
 									if(j==4) return (
-										<Grid2 key={`${i+2}-${j}-2`} size={0.9}>
+										<Grid2 key={`${i+2}-${j}-2`}>
 											<Placeholder transparent={true} key={7} />
 										</Grid2>
 									)
 									if(j>=5) j-=1
 									const student = students.find((student) => student.seat === startNo + 12 + i*8 + j)
 									return (
-										<Grid2 key={`${i}-${j}`} size={0.9}>
+										<Grid2 key={`${i}-${j}`} >
 											{student ? (
 												<StudentCard key={j} student={student} />
 											) : (
@@ -137,7 +134,7 @@ export function Chang8_2({ students }: { students: Student[] }) {
 
 				{Array.from({ length: 4 }, (_, i) => (
 					<Grid2 size={12} key={`${i}-0-0`} sx={{ mb: i % 2 === 0 ? 1 : 7 }}>
-						<Grid2 container columnGap={1} sx={{justifyContent:'center'}}>
+						<Grid2 container gap={1} sx={{justifyContent:'center'}}>
 							
 							{Array.from({ length:9 }, (_, j) => {
 									if(i==3 && j==2)	return(
@@ -154,7 +151,7 @@ export function Chang8_2({ students }: { students: Student[] }) {
 
 									if(j<=4 || j== 8 || i==3) {
 										return (
-										<Grid2 key={`${i}-${j}-2`} size={0.9}>
+										<Grid2 key={`${i}-${j}-2`}>
 											<Placeholder transparent={j>=5?false:true} key={-j} />
 										</Grid2>
 										)
@@ -162,7 +159,7 @@ export function Chang8_2({ students }: { students: Student[] }) {
 									j -= 4
 									const student = students.find((student) => student.seat === startNo + 75 + i*3 + j)
 									return (
-										<Grid2 key={`${i}-${j}`} size={0.9}>
+										<Grid2 key={`${i}-${j}`}>
 											{student ? (
 												<StudentCard key={j} student={student} />
 											) : (

@@ -16,7 +16,7 @@ export default function Drawer() {
   const router = useRouter();
   
   const { isOpen, open, close } = useDrawerState()
-  const { classID, change } = useClassState()
+  const { classID=1, change } = useClassState()
 
   const [rooms, setRooms] = useState<Room[]>([])
 
@@ -42,7 +42,7 @@ export default function Drawer() {
     .catch((error) => {
       console.error(error)
     })
-  }, [])
+  }, [ classID ])
 
 
   function handleChange(roomNo: number) {

@@ -25,9 +25,7 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
     axios.get(`/api/room/${id}`)
     .then((res) => res.data)
     .then((data) => {
-      console.log(data.students)
       setStudents(data.students)
-      console.log(data.room)
       setRoom(data.room)
     })
 
