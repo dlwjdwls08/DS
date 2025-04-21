@@ -4,7 +4,7 @@ import Link from 'next/link'
 import './style.css'
 import { signOut, useSession } from 'next-auth/react'
 import { Menu } from '@mui/icons-material'
-import { IconButton } from '@mui/material'
+import { Box, IconButton } from '@mui/material'
 import { useDrawerState } from '@/store/store'
 
 export default function Navbar() {
@@ -12,9 +12,9 @@ export default function Navbar() {
 
   return (
     <nav id="navbar">
+      <div></div>
       <div
         style={{display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
-        <div></div>
         <div className="menu">  
           <span style={{ fontSize: '20px', fontWeight: 'bold', color: 'blue' }}>KSA</span>
           <span style={{ fontSize: '20px', fontWeight: 'bold', color: 'black' }}>TTEND</span>

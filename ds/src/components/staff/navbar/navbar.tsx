@@ -12,6 +12,7 @@ export default function Navbar() {
 
   return (
     <nav id="navbar">
+      <div></div>
       <div
         style={{display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
         <div></div>

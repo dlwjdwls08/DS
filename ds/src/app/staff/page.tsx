@@ -30,6 +30,24 @@ type LogData = {
   teacher: string
 }
 
+type LeaveData = {
+  studentID: string,
+  start: Date,
+  end: Date,
+  studentName: string,
+  reason: string
+}
+
+type LeaveDataRaw = {
+  hakbun: string,
+  kor_nm: string,
+  reason: string,
+  start_date: string,
+  start_time: string,
+  end_date: string,
+  end_time: string
+}
+
 dayjs.locale("ko")
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -72,6 +90,41 @@ export default function StaffPage() {
       console.error(error)
     })
   }, [])
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+
+    reader.onload = (event) => {
+      const data = new Uint8Array(event.target?.result as ArrayBuffer)
+      const workbook = XLSX.read(data, { type: "array" })
+
+      const fixedData: LeaveData[] = []
+      
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]]
+      const rows:LeaveDataRaw[] = XLSX.utils.sheet_to_json(worksheet)
+      for (const row of rows) {
+        const start = dayjs.tz(`${row.start_date} ${row.start_time}`, 'Asia/Seoul').utc().toDate()
+        const end = dayjs.tz(`${row.end_date} ${row.end_time}`, 'Asia/Seoul').utc().toDate()
+        fixedData.push({
+          studentID: row.hakbun,
+          start: start,
+          end: end,
+          studentName: row.kor_nm,
+          reason: row.reason
+        })
+      }
+      axios.post("/api/staff/leave", fixedData)
+        .then(res => res.data)
+        .then((data) => {
+
+        })
+    }
+
+    reader.readAsArrayBuffer(file)
+  }
 
   return (
     <Box
@@ -149,8 +202,15 @@ export default function StaffPage() {
           </Card>
           <Box>
             <Button
-              variant="outlined">
+              variant="outlined"
+              component="label">
               자습 이석 업로드
+              <input 
+              type="file"
+              accept=".xlsx, .xls"
+              onChange={handleFileUpload}
+              hidden
+              />
             </Button>
           </Box>
         </Box>

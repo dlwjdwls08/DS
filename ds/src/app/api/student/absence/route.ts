@@ -16,6 +16,9 @@ export async function GET(req: NextRequest) {
             where: {
                 studentID: {
                     equals: studentID
+                },
+                state: {
+                    not: true
                 }
             }
         })

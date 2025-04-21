@@ -43,14 +43,14 @@ export default function StudentCard({ student }: { student: Student }) {
         axios.get(`/api/teacher/leave/${student.studentID}`)
             .then(res => res.data)
             .then((data) => {
-                setLeaveData(data.leaveData)
-                setNightClassData(data.classData)
+                setLeaveData(data.leaveData ?? [])
+                setNightClassData(data.classData ?? [])
             })
         axios.get(`/api/teacher/memo/${student.studentID}`)
             .then(res => res.data)
             .then((data) => {
-                setMemoData(data.memoData)
-            })
+                setMemoData(data.memoData ?? [])
+            })  
     }, [])
 
     function StartHold() {
@@ -90,6 +90,9 @@ export default function StudentCard({ student }: { student: Student }) {
     }
 
     function handleStateChange() {
+        if (nightClassData.length !== 0 || leaveData.length !== 0) {
+            return
+        }
         setAvailable(false)
         if (state === null) {
             setState(true)
@@ -144,7 +147,7 @@ export default function StudentCard({ student }: { student: Student }) {
                             flexDirection: "column",
                             justifyContent: "center",
                             alignItems: "center",
-                            backgroundColor: ["white", "lightgreen", "salmon"][state === null ? 0 : (state ? 1 : 2)] as any,
+                            backgroundColor: ["white", "lightgreen", "salmon", "lightblue"][nightClassData.length !== 0 || leaveData.length !== 0 ? 3 : state === null ? 0 : (state ? 1 : 2)] as any,
                             color: "black",
                             width: "100px",
                             height: "100px",
