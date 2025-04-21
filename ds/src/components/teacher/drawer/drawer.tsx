@@ -60,7 +60,14 @@ export default function Drawer() {
       onOpen={open}>
       <Box
         width="200px">
-        <List>
+        <List
+          sx={{
+            overflowY: 'auto',
+            scrollbarWidth: 'none', // Firefox
+            '&::-webkit-scrollbar': {
+              display: 'none', // Chrome, Safari
+            }
+          }}>
           <ListItem
             sx={{
               height: "80px",
@@ -81,8 +88,15 @@ export default function Drawer() {
                   onClick={() => handleChange(room.id)}>
                     <Stack
                       padding="0 10px"
-                      width="100%">
-                      <ListItemText inset primary={room.name}/>
+                      width="100%"
+                      justifyContent="center">
+                      <ListItemText sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center"
+                      }}>
+                        {room.name}
+                      </ListItemText>
                       <LinearProgress
                         variant="determinate"
                         value={progressData.find((v, i) => v.name === room.name)?.value ?? 0}
