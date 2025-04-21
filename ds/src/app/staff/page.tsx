@@ -98,8 +98,6 @@ export default function StaffPage() {
       const worksheet = workbook.Sheets[workbook.SheetNames[0]]
       const rows:LeaveDataRaw[] = XLSX.utils.sheet_to_json(worksheet)
       for (const row of rows) {
-        const start = dayjs.tz(`${row.start_date} ${row.start_time}`, 'Asia/Seoul').utc().toDate()
-        const end = dayjs.tz(`${row.end_date} ${row.end_time}`, 'Asia/Seoul').utc().toDate()
         fixedData.push({
           studentID: row.hakbun,
           studentName: row.kor_nm

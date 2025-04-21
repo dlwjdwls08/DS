@@ -1,14 +1,23 @@
-import { PrismaClient } from "@prisma/client";
+import { Leave, PrismaClient } from "@prisma/client";
+import dayjs from "dayjs";
 import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient()
 
 export async function POST(req: NextRequest) {
     try {
+        const today = dayjs(new Date())
         const body = await req.json()
-        console.log(body)
+        const data = []
+        for (const row of body) {
+            data.push({
+                studentID: row.studentID,
+                studentName: row.studentName,
+                date: new Date(today.year(), today.month(), today.date())
+            })
+        }
         await prisma.leave.createMany({
-            data: body
+            data: data
         })
         return NextResponse.json(
             {}

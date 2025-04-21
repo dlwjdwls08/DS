@@ -6,7 +6,7 @@ import Chang3 from "@/components/classtype/chang3"
 import Library from "@/components/classtype/library"
 import {Chang8_1, Chang8_2} from "@/components/classtype/chang8"
 
-import { Room, Student } from "@prisma/client"
+import { Leave, Memo, NightClass, Room, Student } from "@prisma/client"
 import axios from "axios"
 import { useEffect, useState, use } from "react"
 import { Box,Stack } from "@mui/material"
@@ -17,6 +17,9 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
   const [room, setRoom] = useState<Room>()
 
   const [students, setStudents] = useState<Student[]>([])
+  const [memos, setMemos] = useState<Memo[]>([])
+  const [leaves, setLeaves] = useState<Leave[]>([])
+  const [nightClasses, setNightClasses] = useState<NightClass[]>([])
 
   const { id } = use(params)
 
@@ -26,6 +29,9 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
     .then((res) => res.data)
     .then((data) => {
       setStudents(data.students)
+      setMemos(data.memos)
+      setLeaves(data.leaves)
+      setNightClasses(data.nightClasses)
       setRoom(data.room)
     })
 
