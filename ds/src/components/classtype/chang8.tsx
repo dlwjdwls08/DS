@@ -30,7 +30,7 @@ export function Chang8_1({ students }: { students: Student[] }) {
 				{Array.from({ length: 9 }, (_, i) => (
 
 				<Grid2 size={12} key={`${i}-0`} sx={{ mb: i % 2 === 1 ? 1 : 7 }}>
-					<Grid2 container columnGap={0} sx={{justifyContent:'center'}}>
+					<Grid2 container key={`${i}-1`} columnGap={0} sx={{justifyContent:'center'}}>
 						
 						{(i === 8) && (
 							<Door transparent={true}/>
@@ -79,7 +79,7 @@ export function Chang8_2({ students }: { students: Student[] }) {
 			<Grid2 container wrap="wrap">
 				{Array.from({ length: 2 }, (_, i) => (
 					<Grid2 size={12} key={`${i}-0-0`} sx={{ mb: i % 2 === 0 ? 1 : 7 }}>
-						<Grid2 container columnGap={1} sx={{justifyContent:'center'}}>
+						<Grid2 container key={`${i}-1`} columnGap={1} sx={{justifyContent:'center'}}>
 							
 							{Array.from({ length:9 }, (_, j) => {
 									if(j==4 || j<=1) {
@@ -110,7 +110,7 @@ export function Chang8_2({ students }: { students: Student[] }) {
 				
 				{Array.from({ length: 8 }, (_, i) => (
 					<Grid2 size={12} key={`${i+2}-0`} sx={{ mb: i % 2 === 0 ? 1 : 7 }}>
-						<Grid2 container columnGap={1} sx={{justifyContent:'center'}}>
+						<Grid2 container columnGap={1} key={`${i}-1`} sx={{justifyContent:'center'}}>
 							
 							{Array.from({ length: 9 }, (_, j) => {
 									if(j==4) return (
