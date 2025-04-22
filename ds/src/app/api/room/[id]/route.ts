@@ -79,7 +79,7 @@ export async function GET(req:NextRequest, {params}: { params: Promise<{ id: str
             },
             where: { 
                 studentID: {
-                    in: studentIDList
+                   in: studentIDList
                 }
             }
         })
@@ -106,7 +106,41 @@ export async function GET(req:NextRequest, {params}: { params: Promise<{ id: str
                 studentName: true,
                 start: true,
                 end: true
+            },
+            where: {
+                studentID: {
+                    in: studentIDList
+                },
+                start: {
+                    gte: new Date(today.year(), today.month(), today.date()),
+                    lte: new Date(today.year(), today.month(), today.date())
+                }
             }
+        })
+
+        const absences = await prisma.absenceLog.findMany({
+            select: {
+                studentID: true,
+                state: true,
+            },
+            where: {
+                studentID: {
+                    in: studentIDList
+                },
+                date:{
+                    equals: new Date(today.year(), today.month(), today.date())
+                }
+            }
+        })
+
+        console.log("API OUTPUT")
+        console.log({
+            room: room,
+            students: students,
+            memos: memos,
+            leaves: leaves,
+            nightClasses: nightClasses,
+            absences: absences
         })
 
         return NextResponse.json(
@@ -115,7 +149,8 @@ export async function GET(req:NextRequest, {params}: { params: Promise<{ id: str
                 students: students,
                 memos: memos,
                 leaves: leaves,
-                nightClasses: nightClasses
+                nightClasses: nightClasses,
+                absences: absences
             }
         )
     }

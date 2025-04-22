@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
             active_count: Number(item.active_count),
             total_count: Number(item.total_count)
         }))
-        console.log(`progressData : ${progressData}`)
+        // console.log(`progressData : ${progressData}`)
         return NextResponse.json(
             { progressData: progressData }
         )

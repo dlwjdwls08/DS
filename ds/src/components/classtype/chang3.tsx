@@ -8,9 +8,9 @@ import StudentCard from "../studentCard/StudentCard"
 import { Placeholder, Door } from "../studentCard/Card"
 import { arrayBuffer } from "stream/consumers"
 import React from "react"
-import { start } from "repl"
+import { StudentInfo } from "./type"
 
-export default function Chang3({ students }: { students: Student[] }) {
+export default function Chang3({ students }: { students: StudentInfo[] }) {
 
   const startNo = 1 
 
@@ -48,12 +48,12 @@ export default function Chang3({ students }: { students: Student[] }) {
             <Box key={`${i}`} sx={{flex:'0 0 auto', width: i%2===0 ? '180px' : '100px'}} >
               <Grid2 container rowGap={2} columnGap={1}> 
                 {Array.from({ length: 6 }, (_, j) => {
-                  const student = students.find((student) => student.seat === startNo + ((i%2===0 && i!=0) ? ((11-i)*6 + (5-j)+1) : ((11-i)*6 + j+1)) )
+                  const student = students.find((studentInfo) => studentInfo.student.seat === startNo + ((i%2===0 && i!=0) ? ((11-i)*6 + (5-j)+1) : ((11-i)*6 + j+1)) )
                   return (
                     <Grid2 key={i*6+j} margin={0} padding={0} size={8} rowGap="16px" columnGap="16px">
                       
                     {student ? (
-                      <StudentCard key={(11-i)*6 + j+1} student={student} />
+                      <StudentCard key={(11-i)*6 + j+1} studentInfo={student} />
                     ) : (
                       <Placeholder />
                     )}

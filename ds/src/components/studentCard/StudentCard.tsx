@@ -5,214 +5,213 @@ import { Button, Dialog, DialogContent, DialogTitle, Paper, ToggleButton, Toggle
 import { Student, AbsenceLog, Memo, NightClass, Leave } from "@prisma/client"
 import axios from "axios"
 import { stat } from "fs"
-import { TouchEvent, useEffect, useMemo, useRef, useState } from "react"
+import { memo, TouchEvent, useEffect, useMemo, useRef, useState } from "react"
+import { StudentInfo } from "../classtype/type"
+import { time } from "console"
 
 export type StudentData = {
-    studentInfo: Student
-    state: boolean | null
+  studentInfo: Student
+  state: boolean | null
 }
 
 type MemoData = {
-    content: string,
-    time: string
+  content: string,
+  time: string
 }
 
 type ClassData = Pick<NightClass, "start" | "end" | "className">
 
-export default function StudentCard({ student }: { student: Student }) {
-    const [state, setState] = useState<boolean | null>(null)
-    const [isAvailable, setAvailable] = useState<boolean>(true)
-    const [dialogOpen, setDialogOpen] = useState<boolean>(false)
-    const [memoData, setMemoData] = useState<MemoData[]>([])
-    const [leaveData, setLeaveData] = useState<Leave[]>([])
-    const [nightClassData, setNightClassData] = useState<ClassData[]>([])
+export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo }) {
+  const [state, setState] = useState<boolean | null>(null)
+  const [isAvailable, setAvailable] = useState<boolean>(true)
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false)
+  const [memoData, setMemoData] = useState<MemoData[]>([])
+  const [leaveData, setLeaveData] = useState<Leave>()
+  const [nightClassData, setNightClassData] = useState<ClassData>()
 
-    const holdTimeOut = useRef<NodeJS.Timeout | null>(null)
-    const holdThreshold = 1000
+  const holdTimeOut = useRef<NodeJS.Timeout | null>(null)
+  const holdThreshold = 1000
 
-    const buttonRef = useRef<HTMLButtonElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
 
-    useEffect(() => {
-        axios.get(`/api/absence/${student.studentID}`)
-            .then((res) => res.data)
-            .then((data) => {
-                setState(data.stateData)
-            })
-        axios.get(`/api/teacher/leave/${student.studentID}`)
-            .then(res => res.data)
-            .then((data) => {
-                setLeaveData(data.leaveData ?? [])
-                setNightClassData(data.classData ?? [])
-            })
-        axios.get(`/api/teacher/memo/${student.studentID}`)
-            .then(res => res.data)
-            .then((data) => {
-                setMemoData(data.memoData ?? [])
-            })  
-    }, [])
+  useEffect(() => {
+		setState(studentInfo.absence?.state ?? null)
+		setLeaveData(studentInfo.leave)
+		setNightClassData(studentInfo.class)
+    setMemoData(studentInfo.memo?.map(m => ({
+      content: m.content,
+      time: m.time.toString()
+    })) ?? [])
+  }, [])
 
-    function StartHold() {
-        holdTimeOut.current = setTimeout(() => {
-            holdTimeOut.current = null
-            axios.get(`/api/teacher/memo/${student.studentID}`)
-                .then(res => res.data)
-                .then((data) => {
-                    setMemoData(data.memoData)
-                })
-            setDialogOpen(true)
-        }, holdThreshold)
+	console.log(studentInfo)
+	console.log(state)
+	console.log(leaveData)
+	console.log(nightClassData)
+	console.log(memo)
+
+  function StartHold() {
+    holdTimeOut.current = setTimeout(() => {
+      holdTimeOut.current = null
+      axios.get(`/api/teacher/memo/${studentInfo.student.studentID}`)
+        .then(res => res.data)
+        .then((data) => {
+          setMemoData(data.memoData)
+        })
+      setDialogOpen(true)
+    }, holdThreshold)
+  }
+
+  function EndHold() {
+    if (holdTimeOut.current) {
+      clearTimeout(holdTimeOut.current)
+      handleStateChange()
     }
+  }
 
-    function EndHold() {
-        if (holdTimeOut.current) {
-            clearTimeout(holdTimeOut.current)
-            handleStateChange()
-        }
+  function CancelHold() {
+    if (holdTimeOut.current) {
+      clearTimeout(holdTimeOut.current)
     }
+  }
 
-    function CancelHold() {
-        if (holdTimeOut.current) {
-            clearTimeout(holdTimeOut.current)
-        }
+  function handleMove(e: TouchEvent) {
+    const touch = e.touches[0]
+    const bounds = buttonRef?.current?.getBoundingClientRect()
+
+    if (!bounds) return
+
+    if (touch.clientX < bounds.left || touch.clientX > bounds.right || touch.clientY < bounds.top || touch.clientY > bounds.bottom) {
+      CancelHold()
     }
+  }
 
-    function handleMove(e: TouchEvent) {
-        const touch = e.touches[0]
-        const bounds = buttonRef?.current?.getBoundingClientRect()
-
-        if (!bounds) return
-
-        if (touch.clientX < bounds.left || touch.clientX > bounds.right || touch.clientY < bounds.top || touch.clientY > bounds.bottom) {
-            CancelHold()
-        }
+  function handleStateChange() {
+    if (nightClassData || leaveData) {
+      return
     }
-
-    function handleStateChange() {
-        if (nightClassData.length !== 0 || leaveData.length !== 0) {
-            return
-        }
-        setAvailable(false)
-        if (state === null) {
-            setState(true)
-            axios.post(`/api/absence/${student.studentID}`, {
-                state: true
-            })
-                .then(res => res.data)
-                .then((data) => {
-                    setAvailable(true)
-                })
-        }
-        else if (state === true) {
-            setState(false)
-            axios.put(`/api/absence/${student.studentID}`, {
-                state: false
-            })
-                .then(res => res.data)
-                .then((data) => {
-                    setAvailable(true)
-                })
-        }
-        else {
-            setState(null)
-            axios.delete(`/api/absence/${student.studentID}`)
-                .then(res => res.data)
-                .then((data) => {
-                    setAvailable(true)
-                })
-        }
+    setAvailable(false)
+    if (state === null) {
+      setState(true)
+      axios.post(`/api/absence/${studentInfo.student.studentID}`, {
+        state: true
+      })
+        .then(res => res.data)
+        .then((data) => {
+          setAvailable(true)
+        })
     }
+    else if (state === true) {
+      setState(false)
+      axios.put(`/api/absence/${studentInfo.student.studentID}`, {
+        state: false
+      })
+        .then(res => res.data)
+        .then((data) => {
+          setAvailable(true)
+        })
+    }
+    else {
+      setState(null)
+      axios.delete(`/api/absence/${studentInfo.student.studentID}`)
+        .then(res => res.data)
+        .then((data) => {
+          setAvailable(true)
+        })
+    }
+  }
 
-    return (
-        <>
-             <Paper
-                sx={{
-                    display: "grid",
-                    gridTemplate: "auto",
-                    width: "100px",
-                    height: "100px",
-                    maxHeight: "100px"
-                }}
-                variant="outlined">
-                <Badge
-                    color="error"
-                    variant="dot"
-                    invisible={!memoData || !(new Date(memoData[0]?.time) >= new Date(Date.now() - 10 * 60 * 1000))}>    
+  return (
+    <>
+       <Paper
+        sx={{
+          display: "grid",
+          gridTemplate: "auto",
+          width: "100px",
+          height: "100px",
+          maxHeight: "100px"
+        }}
+        variant="outlined">
+        <Badge
+          color="error"
+          variant="dot"
+          invisible={!memoData || !(new Date(memoData[0]?.time) >= new Date(Date.now() - 10 * 60 * 1000))}>  
 
-                    <Button
-                        sx={{
-                            display: "flex",
-                            gap: "10px",
-                            flexDirection: "column",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: ["white", "lightgreen", "salmon", "lightblue"][nightClassData.length !== 0 || leaveData.length !== 0 ? 3 : state === null ? 0 : (state ? 1 : 2)] as any,
-                            color: "black",
-                            width: "100px",
-                            height: "100px",
-                            maxHeight: "100px",
-                            '& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible': {
-                                animationDuration: `${holdThreshold}ms`
-                            }
-                        }}
-                        ref={buttonRef}
-                        onMouseDown={StartHold}
-                        onMouseUp={EndHold}
-                        onTouchStart={StartHold}
-                        onTouchEnd={EndHold}
-                        onMouseLeave={CancelHold}
-                        onTouchCancel={CancelHold}
-                        onTouchMove={handleMove}
-                        disabled={!isAvailable}>
-                        <Typography
-                            sx={{
-                                whiteSpace: "normal",
-                                wordBreak: "break-word",
-                                fontSize: "clamp(2pt, 1em, 1em)",
-                                lineHeight: "1em"
-                            }}>
-                            {student.name}
-                        </Typography>
-                        <Typography>{student.studentID}</Typography>
-                    </Button>
-                </Badge>
-            </Paper>
-            <Dialog
-                open={dialogOpen}
-                onClose={() => setDialogOpen(false)}
-                maxWidth="md">
-                <DialogContent>
-                    <Stack direction="row" gap="10px" alignItems="center" justifyContent="center">
-                        <Card
-                            elevation={3}>
-                            <CardMedia
-                                component="img"
-                                image={`https://keis.ksa.hs.kr//uploadfiles/SCTSTUDENTN/${student.studentID}.jpg`}
-                                alt="로딩중"
-                                height="200" />
-                            <CardContent>
-                                <Stack gap="10px" justifyContent="center">
-                                    <Box>{student.studentID}</Box>
-                                    <Box>{student.name}</Box>
-                                    <Box>{student.grade}학년</Box>
-                                    <Box>{student.classNo}반</Box>
-                                </Stack>
-                            </CardContent>
-                        </Card>
-                        <List
-                            sx={{ width: "500px", height: "400px", maxHeight: "400px", overflowY: "scroll" }}>
-                            {memoData.map((memo, idx) => (
-                                <ListItem
-                                    key={idx}>
-                                    <Stack gap="10px">
-                                        <Typography fontSize="12pt">{memo.content}</Typography>
-                                        <Typography fontSize="10pt" color="textDisabled">{new Date(memo.time).toLocaleTimeString("ko-KR", { year: "2-digit", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</Typography>
-                                    </Stack>
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Stack>
-                </DialogContent>
-            </Dialog>
-        </>
-    )
+          <Button
+            sx={{
+              display: "flex",
+              gap: "10px",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: ["white", "lightgreen", "salmon", "lightblue"][(nightClassData || leaveData) ? 3 : state === null ? 0 : (state ? 1 : 2)] as any,
+              color: "black",
+              width: "100px",
+              height: "100px",
+              maxHeight: "100px",
+              '& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible': {
+                animationDuration: `${holdThreshold}ms`
+              }
+            }}
+            ref={buttonRef}
+            onMouseDown={StartHold}
+            onMouseUp={EndHold}
+            onTouchStart={StartHold}
+            onTouchEnd={EndHold}
+            onMouseLeave={CancelHold}
+            onTouchCancel={CancelHold}
+            onTouchMove={handleMove}
+            disabled={!isAvailable}>
+            <Typography
+              sx={{
+                whiteSpace: "normal",
+                wordBreak: "break-word",
+                fontSize: "clamp(2pt, 1em, 1em)",
+                lineHeight: "1em"
+              }}>
+              {studentInfo.student.name}
+            </Typography>
+            <Typography>{studentInfo.student.studentID}</Typography>
+          </Button>
+        </Badge>
+      </Paper>
+      <Dialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        maxWidth="md">
+        <DialogContent>
+          <Stack direction="row" gap="10px" alignItems="center" justifyContent="center">
+            <Card
+              elevation={3}>
+              <CardMedia
+                component="img"
+                image={`https://keis.ksa.hs.kr//uploadfiles/SCTSTUDENTN/${studentInfo.student.studentID}.jpg`}
+                alt="로딩중"
+                height="200" />
+              <CardContent>
+                <Stack gap="10px" justifyContent="center">
+                  <Box>{studentInfo.student.studentID}</Box>
+                  <Box>{studentInfo.student.name}</Box>
+                  <Box>{studentInfo.student.grade}학년</Box>
+                  <Box>{studentInfo.student.classNo}반</Box>
+                </Stack>
+              </CardContent>
+            </Card>
+            <List
+              sx={{ width: "500px", height: "400px", maxHeight: "400px", overflowY: "scroll" }}>
+              {memoData.map((memo, idx) => (
+                <ListItem
+                  key={idx}>
+                  <Stack gap="10px">
+                    <Typography fontSize="12pt">{memo.content}</Typography>
+                    <Typography fontSize="10pt" color="textDisabled">{new Date(memo.time).toLocaleTimeString("ko-KR", { year: "2-digit", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</Typography>
+                  </Stack>
+                </ListItem>
+              ))}
+            </List>
+          </Stack>
+        </DialogContent>
+      </Dialog>
+    </>
+  )
 }

@@ -58,8 +58,10 @@ export async function POST(req: NextRequest, {params} : {params: Promise<{id: st
 		}
 
 		const {state} = body
+		const now = new Date()
+		const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
 		await prisma.absenceLog.create({
-			data: { studentID: id, date: new Date(), state: state }
+			data: { studentID: id, date: today, state: state }
 		});		  
 
 		return NextResponse.json({message: "Success"});

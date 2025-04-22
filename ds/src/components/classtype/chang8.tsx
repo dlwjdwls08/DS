@@ -8,9 +8,9 @@ import StudentCard from "../studentCard/StudentCard"
 import { Placeholder, Door } from "../studentCard/Card"
 import { arrayBuffer } from "stream/consumers"
 import React from "react"
-import { Grid } from "lucide-react"
+import { StudentInfo } from "./type"
 
-export function Chang8_1({ students }: { students: Student[] }) {
+export function Chang8_1({ students }: { students: StudentInfo[] }) {
 
   const startNo = 1 
 
@@ -37,11 +37,11 @@ export function Chang8_1({ students }: { students: Student[] }) {
 						{Array.from({ length: 7 }, (_, j) => {
 								if(j==2) return <Placeholder transparent={true} key={7} />
 								if(j>=3) j-=1
-								const student = students.find((student) => student.seat === startNo + i*6+j)
+								const student = students.find((studentInfo) => studentInfo.student.seat === startNo + i*6+j)
 								return (
 									<Grid2 key={`${i}-${j}`}>
 										{student ? (
-											<StudentCard key={j} student={student} />
+											<StudentCard key={j} studentInfo={student} />
 										) : (
 											<Placeholder />
 										)}
@@ -63,7 +63,7 @@ export function Chang8_1({ students }: { students: Student[] }) {
 
 
 
-export function Chang8_2({ students }: { students: Student[] }) {
+export function Chang8_2({ students }: { students: StudentInfo[] }) {
 
   const startNo = 55
 
@@ -89,11 +89,11 @@ export function Chang8_2({ students }: { students: Student[] }) {
 									if(j<=3) j-=2
 									else if(j>=5) j-=3
 
-									const student = students.find((student) => student.seat === startNo + i*6 + j)
+									const student = students.find((studentInfo) => studentInfo.student.seat === startNo + i*6 + j)
 									return (
 										<Grid2 key={`${i}-${j}`}>
 											{student ? (
-												<StudentCard key={j} student={student} />
+												<StudentCard key={j} studentInfo={student} />
 											) : (
 												<Placeholder />
 											)}
@@ -116,11 +116,11 @@ export function Chang8_2({ students }: { students: Student[] }) {
 										</Grid2>
 									)
 									if(j>=5) j-=1
-									const student = students.find((student) => student.seat === startNo + 12 + i*8 + j)
+									const student = students.find((studentInfo) => studentInfo.student.seat === startNo + 12 + i*8 + j)
 									return (
 										<Grid2 key={`${i}-${j}`} >
 											{student ? (
-												<StudentCard key={j} student={student} />
+												<StudentCard key={j} studentInfo={student} />
 											) : (
 												<Placeholder />
 											)}
@@ -157,11 +157,11 @@ export function Chang8_2({ students }: { students: Student[] }) {
 										)
 									}
 									j -= 4
-									const student = students.find((student) => student.seat === startNo + 75 + i*3 + j)
+									const student = students.find((studentInfo) => studentInfo.student.seat === startNo + 75 + i*3 + j)
 									return (
 										<Grid2 key={`${i}-${j}`}>
 											{student ? (
-												<StudentCard key={j} student={student} />
+												<StudentCard key={j} studentInfo={student} />
 											) : (
 												<Placeholder />
 											)}

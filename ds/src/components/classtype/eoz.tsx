@@ -7,9 +7,10 @@ import { useEffect, useState } from "react"
 import StudentCard, {StudentData} from "../studentCard/StudentCard"
 import { Placeholder, Door } from "../studentCard/Card"
 import { arrayBuffer } from "stream/consumers"
+import { StudentInfo } from "./type"
 import React from "react"
 
-export default function EOZ({ students, floor }: { students: Student[], floor: number }) {
+export default function EOZ({ students, floor }: { students: StudentInfo[], floor: number }) {
 
   // 시작 좌석 번호
   const startNo = floor=== 3 ? 73: 101;
@@ -39,10 +40,10 @@ export default function EOZ({ students, floor }: { students: Student[], floor: n
       }}>
         <Grid2 container wrap='nowrap' sx={{ p:2}}>
           {Array.from({ length: 20 }, (_, i) => {
-            const student = students.find((student) => student.seat === (startNo + i))
+            const student = students.find((studentInfo) => studentInfo.student.seat === (startNo + i))
             return <Box sx={{width: '130px', flexShrink:0}} key={i}>
               {student ? (
-                <StudentCard student={student} />
+                <StudentCard studentInfo={student} />
               ) : (
                 <Placeholder />
               )}
@@ -62,11 +63,11 @@ export default function EOZ({ students, floor }: { students: Student[], floor: n
             <Grid2 container> 
 
               {Array.from({ length: 2 }, (_, innerIdx) => {
-                const student = students.find((s) => s.seat === (startNo + 20 + 7 - ( outerIdx*2 + innerIdx )))
+                const student = students.find((s) => s.student.seat === (startNo + 20 + 7 - ( outerIdx*2 + innerIdx )))
                 return (
                   <Box sx={{width: '130px'}} key={innerIdx}>
                   {student ? (
-                    <StudentCard student={student} />
+                    <StudentCard studentInfo={student} />
                   ) : (
                     <Placeholder />
                   )}

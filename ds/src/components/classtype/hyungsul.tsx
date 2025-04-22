@@ -6,8 +6,12 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import StudentCard, {StudentData} from "../studentCard/StudentCard"
 import { Placeholder, Door } from "../studentCard/Card"
+import { StudentInfo } from "./type"
 
-export default function Hyungsul({ students }: { students: Student[] }) {
+export default function Hyungsul({ students }: { students: StudentInfo[] }) {
+
+  console.log(`HYUNGSUL~~ :`)
+  console.log(students)
 
   return (
     <Box sx={{
@@ -32,11 +36,12 @@ export default function Hyungsul({ students }: { students: Student[] }) {
             gap: "20px",
             margin: "40px auto"
           }}>
-            {students.map((student, idx) => (
-              <StudentCard
-              key={idx}
-              student={student}/>
-            ))}
+            {students.map((studentInfo, idx) => {
+              console.log(studentInfo)
+              return <StudentCard
+                key={idx}
+                studentInfo={studentInfo}/>
+            })}
         </Container>
       </Box>
     </Box>
