@@ -19,7 +19,9 @@ export default function EOZ({ students, floor }: { students: StudentInfo[], floo
     <Box sx={{
       width: '100vw',
       height: '75vh',
-      overflowX: 'auto',
+      display:'flex',
+      alignContent:'end',
+      overflowX: 'scroll',
       overflowY: 'hidden',
       whiteSpace: 'nowrap',
       flexDirection: 'row',
@@ -31,17 +33,18 @@ export default function EOZ({ students, floor }: { students: StudentInfo[], floo
     }}  
     >
       <Box sx={{
-        margin: '20px',
-        width: '200vw',
+        // margin: '20px',
+        width: '1900px',
         height: '60%',
         flexShrink: 0,
         display: 'flex',
         flexDirection:'column',
       }}>
         <Grid2 container wrap='nowrap' sx={{ p:2}}>
+          <Door transparent={true}/>
           {Array.from({ length: 20 }, (_, i) => {
             const student = students.find((studentInfo) => studentInfo.student.seat === (startNo + i))
-            return <Box sx={{width: '130px', flexShrink:0}} key={i}>
+            return <Box sx={{width: '85px', flexShrink:0}} key={i}>
               {student ? (
                 <StudentCard studentInfo={student} />
               ) : (
@@ -49,14 +52,16 @@ export default function EOZ({ students, floor }: { students: StudentInfo[], floo
               )}
             </Box>
           })}
+          <Door transparent={true}/>
         </Grid2>
-      
+
         <Grid2 container wrap='nowrap' sx={{p:2}}>
+          <Door/>
           {Array.from({ length: 4 }, (_, outerIdx) => (
             <Box sx={{
               display: 'flex',
               flexDirection: 'row',
-              width: 130 * (outerIdx!=3 ? 6 : 3),
+              width: 85 * (outerIdx!=3 ? 6 : 2),
               flexShrink: 0,
             }}
               key={outerIdx}>
@@ -65,7 +70,7 @@ export default function EOZ({ students, floor }: { students: StudentInfo[], floo
               {Array.from({ length: 2 }, (_, innerIdx) => {
                 const student = students.find((s) => s.student.seat === (startNo + 20 + 7 - ( outerIdx*2 + innerIdx )))
                 return (
-                  <Box sx={{width: '130px'}} key={innerIdx}>
+                  <Box sx={{width: '85px'}} key={innerIdx}>
                   {student ? (
                     <StudentCard studentInfo={student} />
                   ) : (
@@ -76,7 +81,7 @@ export default function EOZ({ students, floor }: { students: StudentInfo[], floo
               })}
 
               {outerIdx!=3 && Array.from({ length: 4 }, (_, innerIdx) => (
-                <Box sx={{width: '130px'}} key={innerIdx}>
+                <Box sx={{width: '85px'}} key={innerIdx}>
                   <Grid2 key={`placeholder-${outerIdx * 2 + innerIdx}`}>
                     <Placeholder transparent={true} />
                   </Grid2>
@@ -86,11 +91,11 @@ export default function EOZ({ students, floor }: { students: StudentInfo[], floo
             </Grid2>
             </Box>
           ))}
-
-      
-
+          <Door/>
         </Grid2>
+
       </Box>
+
     </Box>
   )
 }

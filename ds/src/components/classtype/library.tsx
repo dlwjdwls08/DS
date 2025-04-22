@@ -9,6 +9,7 @@ import { Placeholder, Door } from "../studentCard/Card"
 import { arrayBuffer } from "stream/consumers"
 import React from "react"
 import { StudentInfo } from "./type"
+import { tree } from "next/dist/build/templates/app-page"
 
 export default function Library({ students }: { students: StudentInfo[] }) {
 
@@ -35,9 +36,13 @@ export default function Library({ students }: { students: StudentInfo[] }) {
 						) : (
 							<Placeholder/>
 						)}
-
             </Grid2>
         )})}
+
+				<Door transparent={true} garo={true} />
+				<Door transparent={true} garo={true} />
+				<Door transparent={true} garo={true} />
+				<Door garo={true} />
       </Grid2>
 
 			<Grid2 container sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -49,7 +54,7 @@ export default function Library({ students }: { students: StudentInfo[] }) {
 					return (
 						<Grid2 container key={`grid_${i}`} sx={{
 							width: 220,
-							height: 200,
+							height: 160,
 							marginBottom: '20px'
 						}}>
 							<Grid2 key={startNo + 6 + 4*i + 0}>

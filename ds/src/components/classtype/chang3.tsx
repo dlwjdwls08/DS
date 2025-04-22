@@ -17,7 +17,7 @@ export default function Chang3({ students }: { students: StudentInfo[] }) {
   return (
     <Box sx={{
       width: '100vw',
-      height: '120vh',
+      // height: '120vh',
       overflowX: 'auto',
       overflowY: 'hidden',
       whiteSpace: 'nowrap',
@@ -31,7 +31,6 @@ export default function Chang3({ students }: { students: StudentInfo[] }) {
     }}  
     >
       <Box sx={{
-        height: '100%',
         flexShrink: 0,
         margin: '20px',
       }}>
@@ -45,10 +44,10 @@ export default function Chang3({ students }: { students: StudentInfo[] }) {
           }}>
           {Array.from({ length: 12 }, (_, i) => {
             return (
-            <Box key={`${i}`} sx={{flex:'0 0 auto', width: i%2===0 ? '180px' : '100px'}} >
-              <Grid2 container rowGap={2} columnGap={1}> 
+            <Box key={`${i}`} sx={{flex:'0 0 auto', width: i%2===0 ? '120px' : '80px'}} >
+              <Grid2 container columnGap={0}> 
                 {Array.from({ length: 6 }, (_, j) => {
-                  const student = students.find((studentInfo) => studentInfo.student.seat === startNo + ((i%2===0 && i!=0) ? ((11-i)*6 + (5-j)+1) : ((11-i)*6 + j+1)) )
+                  const student = students.find((studentInfo) => studentInfo.student.seat === startNo + ((i%2===0 && i!=0) ? ((11-i)*6 + (5-j)) : ((11-i)*6 + j)) )
                   return (
                     <Grid2 key={i*6+j} margin={0} padding={0} size={8} rowGap="16px" columnGap="16px">
                       

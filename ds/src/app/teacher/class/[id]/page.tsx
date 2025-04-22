@@ -99,9 +99,14 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
 
   return (
     <Box>
-      <Stack>
+      <Box sx={{display:'flex', justifyContent:'center', alignContent:'center'}}>
         <h1 style={{ textAlign: 'center' }}>{room?.name}</h1>
-      </Stack>
+        { room?.type === 1 &&
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding:'20px' }}>
+            <h3 style={{ margin: 0 }}>( {students[0].classNo.startsWith('RAA') ? '' : '1-'}{students[0].classNo} )</h3>
+          </div>
+        }
+      </Box>
       {room?.type === 1 && <Hyungsul students={studentList} />}
       {room?.type === 2 && room?.name === "형3" && <EOZ students={studentList} floor={3}/>}
       {room?.type === 2 && room?.name === "형4" && <EOZ students={studentList} floor={4}/>}

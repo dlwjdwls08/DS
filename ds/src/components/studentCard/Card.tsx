@@ -13,8 +13,8 @@ export function Placeholder({transparent = false}: {transparent?: boolean}) {
         sx={{
           display: "grid",
           gridTemplate: "auto",
-          width: "100px",
-          height: "100px",
+          width: "80px",
+          height: "80px",
           opacity: transparent ? 0 : 1,
         }}
         variant="outlined"
@@ -44,10 +44,11 @@ export function Door({garo = false, transparent = false }: {garo?: boolean, tran
         sx={{
           display: "grid",
           gridTemplate: "auto",
-          width: garo ? "100px" : "50px",
-					height: garo ? "50px" : "100px",
+          width: garo ? "80px" : "40px",
+					height: garo ? "40px" : "80px",
 					opacity: transparent ? 0 : 1,
 					borderRadius: "10px",
+          flexShrink:0
 					
         }}
         variant="outlined"
