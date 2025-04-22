@@ -56,7 +56,7 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
       const list: StudentInfo[] = [];
       let j = 0, k = 0, l = 0, m = 0
       for (let i = 0; i < data.students.length; i++) {
-        var stdInfo = {} as StudentInfo
+        const stdInfo = {} as StudentInfo
         const std = data.students[i]
         stdInfo.student = std
         const studentID = std.studentID

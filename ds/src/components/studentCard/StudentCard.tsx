@@ -127,9 +127,9 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
         sx={{
           display: "grid",
           gridTemplate: "auto",
-          width: "100px",
-          height: "100px",
-          maxHeight: "100px"
+          width: "80px",
+          height: "80px",
+          maxHeight: "80px"
         }}
         variant="outlined">
         <Badge
@@ -140,15 +140,15 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
           <Button
             sx={{
               display: "flex",
-              gap: "10px",
+              gap: "8px",
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
               backgroundColor: ["white", "lightgreen", "salmon", "lightblue"][(nightClassData || leaveData) ? 3 : state === null ? 0 : (state ? 1 : 2)] as any,
               color: "black",
-              width: "100px",
-              height: "100px",
-              maxHeight: "100px",
+              width: "80px",
+              height: "80px",
+              maxHeight: "80px",
               '& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible': {
                 animationDuration: `${holdThreshold}ms`
               }
