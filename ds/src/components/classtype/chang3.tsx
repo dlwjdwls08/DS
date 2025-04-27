@@ -20,14 +20,17 @@ export default function Chang3({ students }: { students: StudentInfo[] }) {
       // height: '120vh',
       overflowX: 'auto',
       overflowY: 'hidden',
-      whiteSpace: 'nowrap',
+      // whiteSpace: 'nowrap',
       display: 'flex',
       flexDirection: 'row',
       "&::-webkit-scrollbar": {
-        display: "none",
+        height: '8px',
+        transform: 'scaleX(-1)'
       },
-      scrollbarWidth: "none",
-      msOverflowStyle: "none",
+      "&::-webkit-scrollbar-thumb": {
+        backgroundColor: '#333',
+        borderRadius: '4px'
+      }
     }}  
     >
       <Box sx={{
@@ -44,7 +47,7 @@ export default function Chang3({ students }: { students: StudentInfo[] }) {
           }}>
           {Array.from({ length: 12 }, (_, i) => {
             return (
-            <Box key={`${i}`} sx={{flex:'0 0 auto', width: i%2===0 ? '120px' : '80px'}} >
+            <Box key={`${i}`} sx={{flex:'0 0 auto', width: i%2===0 ? '120px' : '65px'}} >
               <Grid2 container columnGap={0}> 
                 {Array.from({ length: 6 }, (_, j) => {
                   const student = students.find((studentInfo) => studentInfo.student.seat === startNo + ((i%2===0 && i!=0) ? ((11-i)*6 + (5-j)) : ((11-i)*6 + j)) )

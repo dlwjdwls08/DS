@@ -23,9 +23,13 @@ export function Chang8_1({ students }: { students: StudentInfo[] }) {
       },
       scrollbarWidth: "none",
       msOverflowStyle: "none",
+			// width: '750px',
     }}  
     >
-			<Grid2 container wrap="wrap">
+			<Grid2 container wrap="wrap" 
+        justifyContent="center"
+        alignItems="center"
+        sx={{ width: "fit-content", minWidth:'750px', margin: "0 auto" }}>
 				{Array.from({ length: 9 }, (_, i) => (
 
 				<Grid2 size={12} key={`${i}-0`} sx={{ mb: i % 2 === 1 ? 0 : 3 }}>

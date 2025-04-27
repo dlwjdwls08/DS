@@ -133,15 +133,15 @@ export async function GET(req:NextRequest, {params}: { params: Promise<{ id: str
             }
         })
 
-        console.log("API OUTPUT")
-        console.log({
-            room: room,
-            students: students,
-            memos: memos,
-            leaves: leaves,
-            nightClasses: nightClasses,
-            absences: absences
-        })
+        // console.log("API OUTPUT")
+        // console.log({
+        //     room: room,
+        //     students: students,
+        //     memos: memos,
+        //     leaves: leaves,
+        //     nightClasses: nightClasses,
+        //     absences: absences
+        // })
 
         return NextResponse.json(
             {

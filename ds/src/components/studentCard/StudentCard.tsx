@@ -21,6 +21,32 @@ type MemoData = {
 
 type ClassData = Pick<NightClass, "start" | "end" | "className">
 
+function NameText({name}:{name:string}){
+  let fontSize: string;
+
+  if(name.length > 30){
+    fontSize = '7px'
+  }
+  else if(name.length > 20){
+    fontSize = '9px'
+  }
+  else if(name.length > 10){
+    fontSize = '11px'
+  }
+  else{
+    fontSize = '16px';
+  }
+  
+  
+  return <Typography
+    sx={{
+      fontSize: fontSize,
+      wordBreak: ''
+    }}>
+    {name}
+  </Typography>
+}
+
 export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo }) {
   const [state, setState] = useState<boolean | null>(null)
   const [isAvailable, setAvailable] = useState<boolean>(true)
@@ -44,11 +70,11 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
     })) ?? [])
   }, [])
 
-	console.log(studentInfo)
-	console.log(state)
-	console.log(leaveData)
-	console.log(nightClassData)
-	console.log(memo)
+  // console.log(studentInfo)
+  // console.log(state)
+  // console.log(leaveData)
+  // console.log(nightClassData)
+  // console.log(memo)
 
   function StartHold() {
     holdTimeOut.current = setTimeout(() => {
@@ -162,16 +188,21 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
             onTouchCancel={CancelHold}
             onTouchMove={handleMove}
             disabled={!isAvailable}>
+            {studentInfo.student.grade >= 1 && <Typography
+              sx={{
+              width: 'calc(100% - 4px)',
+              textAlign: 'left',
+              lineHeight: "1em",
+              fontSize: 11
+              }}>
+              {studentInfo.student.seat}  
+            </Typography>}
+            <NameText name={studentInfo.student.name}/>
             <Typography
               sx={{
-                whiteSpace: "normal",
-                wordBreak: "break-word",
-                fontSize: "clamp(2pt, 1em, 1em)",
-                lineHeight: "1em"
-              }}>
-              {studentInfo.student.name}
-            </Typography>
-            <Typography>{studentInfo.student.studentID}</Typography>
+                fontSize: 10
+              }}
+            >{studentInfo.student.studentID}</Typography>
           </Button>
         </Badge>
       </Paper>

@@ -18,24 +18,17 @@ export default function EOZ({ students, floor }: { students: StudentInfo[], floo
   return (
     <Box sx={{
       width: '100vw',
-      height: '75vh',
       display:'flex',
       alignContent:'end',
       overflowX: 'scroll',
       overflowY: 'hidden',
-      whiteSpace: 'nowrap',
+      // whiteSpace: 'nowrap',
       flexDirection: 'row',
-      "&::-webkit-scrollbar": {
-        display: "none",
-      },
-      scrollbarWidth: "none",
-      msOverflowStyle: "none",
     }}  
     >
       <Box sx={{
         // margin: '20px',
         width: '1900px',
-        height: '60%',
         flexShrink: 0,
         display: 'flex',
         flexDirection:'column',

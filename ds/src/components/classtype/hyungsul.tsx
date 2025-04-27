@@ -19,8 +19,10 @@ export default function Hyungsul({ students }: { students: StudentInfo[] }) {
         height: 'auto',
         overflowX: 'auto',
         overflowY: 'hidden',
-        whiteSpace: 'nowrap',
+        // whiteSpace: 'nowrap',
         display: 'flex',
+        justifyContent:"center",
+        alignItems:"center",
     }}>
       <Box sx={{
         width: '100%',
@@ -37,7 +39,6 @@ export default function Hyungsul({ students }: { students: StudentInfo[] }) {
             margin: "40px auto"
           }}>
             {students.map((studentInfo, idx) => {
-              console.log(studentInfo)
               return <StudentCard
                 key={idx}
                 studentInfo={studentInfo}/>
