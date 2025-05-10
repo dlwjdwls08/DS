@@ -10,6 +10,7 @@ import axios from "axios"
 import { useEffect, useState, use } from "react"
 import { Box, Button, Stack, Typography, Grid2 } from "@mui/material"
 import { StudentInfo } from "@/components/classtype/type"
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
 
 export default function ClassPage({ params }: { params: Promise<{ id: string }>}) {
   const [room, setRoom] = useState<Room>()
@@ -115,13 +116,28 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
 
       </Grid2>
       
-      {room?.type === 1 && <Hyungsul students={studentList} />}
-      {room?.type === 2 && room?.name === "형3" && <EOZ students={studentList} floor={3}/>}
-      {room?.type === 2 && room?.name === "형4" && <EOZ students={studentList} floor={4}/>}
-      {room?.type === 3 && <Chang3 students={studentList}/>}
-      {room?.type === 4 && <Library students={studentList}/>}
-      {room?.type === 5 && <Chang8_1 students={studentList}/>}
-      {room?.type === 6 && <Chang8_2 students={studentList}/>}
+      <Stack
+        flex={1}
+      >
+        <TransformWrapper>
+          <TransformComponent>
+            <Box
+              sx={{
+                transform: "scale(0.7)",
+                transformOrigin: "top center"
+              }}
+            >
+              {room?.type === 1 && <Hyungsul students={studentList} />}
+              {room?.type === 2 && room?.name === "형3" && <EOZ students={studentList} floor={3}/>}
+              {room?.type === 2 && room?.name === "형4" && <EOZ students={studentList} floor={4}/>}
+              {room?.type === 3 && <Chang3 students={studentList}/>}
+              {room?.type === 4 && <Library students={studentList}/>}
+              {room?.type === 5 && <Chang8_1 students={studentList}/>}
+              {room?.type === 6 && <Chang8_2 students={studentList}/>}
+            </Box>            
+          </TransformComponent>  
+        </TransformWrapper>
+      </Stack>
 
     </Box>
   )
