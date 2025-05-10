@@ -1,7 +1,7 @@
 'use client'
 
 import { useClassState, useDrawerState } from "@/store/store";
-import { ListItemButton, SwipeableDrawer, List, ListItem, Divider, Box, Stack, ListItemText, LinearProgress } from "@mui/material"
+import { ListItemButton, SwipeableDrawer, List, ListItem, Divider, Box, Stack, ListItemText, LinearProgress, Drawer, Button } from "@mui/material"
 import { Room } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,7 @@ type ProgressData = {
   value: number
 }
 
-export default function Drawer() {
+export default function ClassDrawer() {
   const router = useRouter();
   
   const { isOpen, open, close } = useDrawerState()
@@ -53,30 +53,32 @@ export default function Drawer() {
   const today = new Date().toLocaleDateString('ko-kr');
 
   return (
-    <SwipeableDrawer
+    <Drawer
       anchor="left"
       open={isOpen}
       onClose={close}
-      onOpen={open}>
-      <Box
-        width="200px">
+      variant="persistent"
+      sx={{
+        width: isOpen ? "200px" : "0",
+        height: "100vh"
+      }}
+      >
+      <Stack
+        width="200px"
+        height="100vh">
+        <Stack
+          height="80px"
+          justifyContent="center"
+          alignContent="center"
+          textAlign="center"
+        >
+          {today}
+        </Stack>
+        <Divider />
         <List
           sx={{
-            overflowY: 'auto',
-            scrollbarWidth: 'none', // Firefox
-            '&::-webkit-scrollbar': {
-              display: 'none', // Chrome, Safari
-            }
+            overflowY: 'scroll',
           }}>
-          <ListItem
-            sx={{
-              height: "80px",
-              justifyContent: 'center',
-              alignContent: "center"
-            }}>
-            {today}
-          </ListItem>
-          <Divider />
           {rooms.map((room, idx) => (
             <ListItem
             disablePadding
@@ -108,7 +110,7 @@ export default function Drawer() {
             </ListItem>
           ))}
         </List>
-      </Box>
-    </SwipeableDrawer>
+      </Stack>
+    </Drawer>
   )
 }

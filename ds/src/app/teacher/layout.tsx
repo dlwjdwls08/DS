@@ -1,8 +1,8 @@
 'use client'
 
 import Navbar from "@/components/teacher/navbar/navbar";
-import Drawer from "@/components/teacher/drawer/drawer";
-import { Box } from "@mui/material";
+import ClassDrawer from "@/components/teacher/drawer/drawer";
+import { Box, Stack } from "@mui/material";
 
 export default function teacherLayout({
   children,
@@ -10,15 +10,18 @@ export default function teacherLayout({
   children: React.ReactNode;
 }>) {
 	return (
-		<>
-			<Drawer />
+		<Stack
+      direction="row">
+			<ClassDrawer />
       <Box
         display={"grid"}
         gridTemplateRows={"auto 1fr"}
-        height={"100%"}>
+        height={"100%"}
+        flex={1}
+      >
         <Navbar />
         {children}
       </Box>
-    </>
+    </Stack>
 	)
 }
