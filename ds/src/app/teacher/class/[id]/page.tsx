@@ -8,7 +8,7 @@ import { Chang8_1, Chang8_2 } from "@/components/classtype/chang8"
 import { Leave, Memo, NightClass, Room, Student, AbsenceLog } from "@prisma/client"
 import axios from "axios"
 import { useEffect, useState, use } from "react"
-import { Box, Stack } from "@mui/material"
+import { Box, Button, Stack } from "@mui/material"
 import { StudentInfo } from "@/components/classtype/type"
 
 export default function ClassPage({ params }: { params: Promise<{ id: string }>}) {
@@ -29,12 +29,7 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
     if (!id) return
 
     async function fetchData() {
-      const { data } = await axios.get(`/api/room/${id}`)
-
-
-      console.log('API GET')
-      console.log(data)
-      
+      const { data } = await axios.get(`/api/room/${id}`)     
       
       // 데이터를 상태에 저장
       setStudents(data.students)
@@ -43,7 +38,6 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
       setNightClasses(data.nightClasses)
       setAbsences(data.absences)
 
-      // console.log(data.students)
       setRoom(data.room)
       
       // 정렬 
@@ -81,17 +75,17 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
       }
       setStudentList(list)
       setLoading(false)
-
-      console.log("students")
-      console.log(data.students)
-      console.log("studentList")
-      console.log(list)
-      console.log("absences")
-      console.log(data.absences)
     }
 
     fetchData()
   }, [id])
+
+  var curState = true
+  async function updateState() {
+    curState = !curState
+    axios.post(`/api/room/${id}/check/${false}`)
+  }
+
 
   if (loading) {
     return <Box sx={{justifySelf:'center', alignSelf:'center'}}>Loading...</Box>
@@ -106,6 +100,7 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
             <h3 style={{ margin: 0 }}>( {students[0].classNo.startsWith('RAA') ? '' : '1-'}{students[0].classNo} )</h3>
           </div>
         }
+        <Button onClick={updateState}>전체 출석</Button>
       </Box>
       {room?.type === 1 && <Hyungsul students={studentList} />}
       {room?.type === 2 && room?.name === "형3" && <EOZ students={studentList} floor={3}/>}
