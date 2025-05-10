@@ -34,20 +34,20 @@ export async function POST(req:NextRequest, {params}: { params: { id: string, St
 	const now = new Date();
 	const today = dayjs(now)
 
-	const targets = await prisma.absenceLog.findMany({
-		where:{
-			state: {not: targetState},
-			date: {
-				gte : new Date(today.year(), today.month(), today.date()),
-				lt : new Date(today.year(), today.month(), today.date()+1)
-			},
-			studentID: {in: studentIDs}
-		},
-	})
-
-	console.log("targets")
-	const targetRecords = await targets;
-	console.log(targetRecords.map(target => target.id));
+	// const targets = await prisma.absenceLog.findMany({
+	// 	where:{
+	// 		state: {not: targetState},
+	// 		date: {
+	// 			gte : new Date(today.year(), today.month(), today.date()),
+	// 			lt : new Date(today.year(), today.month(), today.date()+1)
+	// 		},
+	// 		studentID: {in: studentIDs}
+	// 	},
+	// })
+	// 
+	// console.log("targets")
+	// const targetRecords = await targets;
+	// console.log(targetRecords.map(target => target.id));
 
 	const {count} = await prisma.absenceLog.updateMany({
 		where:{
@@ -63,6 +63,6 @@ export async function POST(req:NextRequest, {params}: { params: { id: string, St
 			date: now
 		}
 	})
-	console.log(`update ${count} rows`)
+	// console.log(`update ${count} rows`)
 	return NextResponse.json({status:500})
 }

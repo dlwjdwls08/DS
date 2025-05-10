@@ -8,7 +8,7 @@ import { Chang8_1, Chang8_2 } from "@/components/classtype/chang8"
 import { Leave, Memo, NightClass, Room, Student, AbsenceLog } from "@prisma/client"
 import axios from "axios"
 import { useEffect, useState, use } from "react"
-import { Box, Button, Stack } from "@mui/material"
+import { Box, Button, Stack, Typography, Grid2 } from "@mui/material"
 import { StudentInfo } from "@/components/classtype/type"
 
 export default function ClassPage({ params }: { params: Promise<{ id: string }>}) {
@@ -80,10 +80,8 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
     fetchData()
   }, [id])
 
-  var curState = true
-  async function updateState() {
-    curState = !curState
-    axios.post(`/api/room/${id}/check/${false}`)
+  async function updateState(targetState:boolean) {
+    axios.post(`/api/room/${id}/check/${targetState}`)
   }
 
 
@@ -93,15 +91,30 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
 
   return (
     <Box>
-      <Box sx={{display:'flex', justifyContent:'center', alignContent:'center'}}>
-        <h1 style={{ textAlign: 'center' }}>{room?.name}</h1>
-        { room?.type === 1 &&
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding:'20px' }}>
-            <h3 style={{ margin: 0 }}>( {students[0].classNo.startsWith('RAA') ? '' : '1-'}{students[0].classNo} )</h3>
-          </div>
-        }
-        <Button onClick={updateState}>전체 출석</Button>
-      </Box>
+      <Grid2 container alignItems="center">
+
+        <Grid2 size={4} />
+
+        <Grid2 size={4} container justifyContent={"center"}>
+          { room?.type === 1 &&
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding:'20px' }}>
+              <Typography style={{ margin: 0 }}>( {students[0].classNo.startsWith('RAA') ? '' : '1-'}{students[0].classNo} )</Typography>
+            </div>
+          }
+          <h1 style={{ textAlign: 'center' }}>{room?.name}</h1>
+        </Grid2>
+
+        <Grid2 size={4} container justifyContent="flex-end" spacing={1} padding={'10px'}>
+          <Button onClick={() => updateState(true)} variant="outlined">
+            전체 출석
+          </Button>
+          <Button onClick={() => updateState(false)} variant="outlined">
+            전체 결석
+          </Button>
+        </Grid2>
+
+      </Grid2>
+      
       {room?.type === 1 && <Hyungsul students={studentList} />}
       {room?.type === 2 && room?.name === "형3" && <EOZ students={studentList} floor={3}/>}
       {room?.type === 2 && room?.name === "형4" && <EOZ students={studentList} floor={4}/>}
