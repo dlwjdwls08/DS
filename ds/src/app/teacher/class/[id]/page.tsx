@@ -91,7 +91,9 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
   }
 
   return (
-    <Box>
+    <Stack
+      flex={1}
+    >
       <Grid2 container alignItems="center">
 
         <Grid2 size={4} />
@@ -122,8 +124,10 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
         <TransformWrapper>
           <TransformComponent>
             <Box
+              justifySelf={"center"}
+              alignSelf={"center"}
               sx={{
-                transform: "scale(0.7)",
+                transform: "scale(0.6)",
                 transformOrigin: "top center"
               }}
             >
@@ -139,6 +143,6 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
         </TransformWrapper>
       </Stack>
 
-    </Box>
+    </Stack>
   )
 }

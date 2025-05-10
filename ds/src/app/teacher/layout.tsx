@@ -13,15 +13,21 @@ export default function teacherLayout({
 		<Stack
       direction="row">
 			<ClassDrawer />
-      <Box
+      <Stack
         display={"grid"}
         gridTemplateRows={"auto 1fr"}
-        height={"100%"}
+        height={"100vh"}
+        maxHeight={"100vh"}
         flex={1}
       >
         <Navbar />
-        {children}
-      </Box>
+        <Stack
+          flex="1 0 0"
+          overflow="hidden"
+        >
+          {children}
+        </Stack>
+      </Stack>
     </Stack>
 	)
 }
