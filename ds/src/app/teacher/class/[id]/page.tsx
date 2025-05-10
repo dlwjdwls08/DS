@@ -82,7 +82,7 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
   }, [id])
 
   async function updateState(targetState:boolean) {
-    axios.post(`/api/room/${id}/check/${targetState}`)
+    axios.post(`/api/absence/room/${id}/${targetState}`)
   }
 
 

@@ -48,7 +48,7 @@ function NameText({name}:{name:string}){
 }
 
 export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo }) {
-  const [state, setState] = useState<boolean | null>(null)
+  const [isPresent, setPresent] = useState<boolean | null>(null)
   const [isAvailable, setAvailable] = useState<boolean>(true)
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
   const [memoData, setMemoData] = useState<MemoData[]>([])
@@ -61,7 +61,7 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-		setState(studentInfo.absence?.state ?? null)
+		setPresent(studentInfo.absence?.state ?? null)
 		setLeaveData(studentInfo.leave)
 		setNightClassData(studentInfo.class)
     setMemoData(studentInfo.memo?.map(m => ({
@@ -117,8 +117,8 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
       return
     }
     setAvailable(false)
-    if (state === null) {
-      setState(true)
+    if (isPresent === null) {
+      setPresent(true)
       axios.post(`/api/absence/${studentInfo.student.studentID}`, {
         state: true
       })
@@ -127,8 +127,8 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
           setAvailable(true)
         })
     }
-    else if (state === true) {
-      setState(false)
+    else if (isPresent === true) {
+      setPresent(false)
       axios.put(`/api/absence/${studentInfo.student.studentID}`, {
         state: false
       })
@@ -138,7 +138,7 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
         })
     }
     else {
-      setState(null)
+      setPresent(null)
       axios.delete(`/api/absence/${studentInfo.student.studentID}`)
         .then(res => res.data)
         .then((data) => {
@@ -170,7 +170,7 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: ["white", "lightgreen", "salmon", "lightblue"][(nightClassData || leaveData) ? 3 : state === null ? 0 : (state ? 1 : 2)] as any,
+              backgroundColor: ["white", "lightgreen", "lightblue"][(nightClassData || leaveData) ? 2 : isPresent === null ? 0 : (isPresent ? 1 : 0)] as any,
               color: "black",
               width: "80px",
               height: "80px",
