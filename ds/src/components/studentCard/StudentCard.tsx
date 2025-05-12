@@ -117,34 +117,34 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
       return
     }
     setAvailable(false)
-    if (isPresent === null) {
-      setPresent(true)
+    // if (isPresent === null) {
+      setPresent(!isPresent)
       axios.post(`/api/absence/${studentInfo.student.studentID}`, {
-        state: true
+        state: !isPresent
       })
         .then(res => res.data)
         .then((data) => {
           setAvailable(true)
         })
-    }
-    else if (isPresent === true) {
-      setPresent(false)
-      axios.put(`/api/absence/${studentInfo.student.studentID}`, {
-        state: false
-      })
-        .then(res => res.data)
-        .then((data) => {
-          setAvailable(true)
-        })
-    }
-    else {
-      setPresent(null)
-      axios.delete(`/api/absence/${studentInfo.student.studentID}`)
-        .then(res => res.data)
-        .then((data) => {
-          setAvailable(true)
-        })
-    }
+    // }
+    // else if (isPresent === true) {
+    //   setPresent(false)
+    //   axios.put(`/api/absence/${studentInfo.student.studentID}`, {
+    //     state: false
+    //   })
+    //     .then(res => res.data)
+    //     .then((data) => {
+    //       setAvailable(true)
+    //     })
+    // }
+    // else {
+    //   setPresent(null)
+    //   axios.delete(`/api/absence/${studentInfo.student.studentID}`)
+    //     .then(res => res.data)
+    //     .then((data) => {
+    //       setAvailable(true)
+    //     })
+    // }
   }
 
   return (
