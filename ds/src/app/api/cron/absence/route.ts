@@ -7,15 +7,20 @@ import timezone from 'dayjs/plugin/timezone'
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const todayKST = dayjs().tz('Asia/Seoul').format('YYYY-MM-DD');
-
 const prisma = new PrismaClient()
 
 export async function GET(req: NextRequest) {
     const today = dayjs().tz('Asia/Seoul')
-    // if (date.getUTCHours() >= 16 || date.getUTCHours() <= 14) {
-    //     return NextResponse.json({ message: "Denied" }, { status: 401 })
-    // }
+    const init = await prisma.absenceLog.findFirst({
+        where: {
+            date: {
+                equals: new Date(today.year(), today.month(), today.date())
+            }
+        }
+    })
+    if (init) {
+        return NextResponse.json({ message: "Denied" }, { status: 401 })
+    }
     const students = await prisma.student.findMany({
         orderBy: {
             studentID: "asc"

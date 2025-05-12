@@ -2,10 +2,7 @@
     "cron": [
       {
         "path": "/api/cron/absence",
-        "schedule": "0 15 * * *",
-        "headers": {
-          "Authorization": "Bearer super-secret-token-1234"
-        }
+        "schedule": "0 15 * * *"
       }
     ]
   }
