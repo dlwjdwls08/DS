@@ -19,7 +19,7 @@ type MemoData = {
   time: string
 }
 
-type ClassData = Pick<NightClass, "start" | "end" | "className">
+type ClassData = Pick<NightClass, "className">
 
 function NameText({name}:{name:string}){
   let fontSize: string;
@@ -118,14 +118,14 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
     }
     setAvailable(false)
     // if (isPresent === null) {
-      setPresent(!isPresent)
       axios.post(`/api/absence/${studentInfo.student.studentID}`, {
         state: !isPresent
       })
-        .then(res => res.data)
-        .then((data) => {
-          setAvailable(true)
-        })
+      .then(res => res.data)
+      .then((data) => {
+        setAvailable(true)
+      })
+      setPresent(!isPresent)
     // }
     // else if (isPresent === true) {
     //   setPresent(false)

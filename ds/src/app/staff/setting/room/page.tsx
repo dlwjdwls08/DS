@@ -4,6 +4,7 @@ import Chang3 from "@/components/classtype/chang3";
 import { Chang8_1, Chang8_2 } from "@/components/classtype/chang8";
 import EOZ from "@/components/classtype/eoz";
 import Hyungsul from "@/components/classtype/hyungsul";
+import Library from "@/components/classtype/library";
 import { Check, Save } from "@mui/icons-material";
 import { Box, Button, Card, List, ListItem, ListItemButton, Paper, Snackbar, Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { Room } from "@prisma/client";
@@ -27,7 +28,7 @@ export default function RoomSettingPage() {
 
     const router = useRouter()
 
-    const componentList = [Hyungsul, EOZ, Chang3, Chang3, Chang8_1, Chang8_2]
+    const componentList = [Hyungsul, EOZ, Chang3, Library, Chang8_1, Chang8_2]
 
     useEffect(() => {
         axios.get("/api/staff/room")

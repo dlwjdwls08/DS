@@ -1,18 +1,18 @@
 import { PrismaClient } from "@prisma/client";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
 import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient()
 
 dayjs.extend(utc)
+dayjs.extend(timezone)
 
 export async function GET(req: NextRequest) {
     try {
         const today = dayjs().tz('Asia/Seoul')
-        const tomorrow = today.add(1, 'day')
         const today_date = new Date(today.year(), today.month(), today.date())
-        const tomorrow_date = new Date(tomorrow.year(), tomorrow.month(), tomorrow.date())
         const progress = await prisma.$queryRaw<{
             name: string,
             active_count: bigint,
@@ -20,13 +20,13 @@ export async function GET(req: NextRequest) {
         }[]>`
             SELECT
             R."name" as name,
-            COUNT(CASE WHEN AL.state IS NOT NULL THEN 1 END) as active_count,
+            COUNT(CASE WHEN AL.state = true THEN 1 END) as active_count,
             COUNT(*) as total_count
             FROM "Room" as R
             INNER JOIN "Student" as S
             ON R."name" = S."room"
             LEFT JOIN "AbsenceLog" as AL
-            ON S."studentID" = AL."studentID" AND AL.date >= ${today_date} AND AL.date <= ${tomorrow_date}
+            ON S."studentID" = AL."studentID" AND AL.date = ${today_date}
             GROUP BY R."name"
         `
         const progressData = progress.map((item) => ({

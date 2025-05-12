@@ -75,6 +75,7 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
         list.push(stdInfo)
       }
       setStudentList(list)
+      console.log(list)
       setLoading(false)
     }
 
@@ -97,9 +98,11 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
   }
 
   return (
-    <Stack
+    <Box
+      display="flex"
+      flexDirection="column"
       flex={1}
-    >
+      overflow="hidden">
       <Grid2 container alignItems="center">
 
         <Grid2 size={4} />
@@ -124,19 +127,23 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
 
       </Grid2>
       
-      <Stack
-        flex={1}
-      >
-        <TransformWrapper>
-          <TransformComponent>
-            <Box
+      <Box
+        display="flex"
+        flex="1 1 auto"
+        justifyContent="center"
+        alignItems="center"
+        width="100%"
+        overflow="hidden">
+        <TransformWrapper initialScale={0.45} minScale={0.45}>
+          <TransformComponent wrapperStyle={{display: "flex", height: "100%"}}>
+            {/* <Box
               justifySelf={"center"}
               alignSelf={"center"}
-              sx={{
-                transform: "scale(0.6)",
-                transformOrigin: "top center"
-              }}
-            >
+              // sx={{
+              //   transform: "scale(0.6)",
+              //   transformOrigin: "top center"
+              // }}
+            > */}
               {room?.type === 1 && <Hyungsul students={studentList} />}
               {room?.type === 2 && room?.name === "형3" && <EOZ students={studentList} floor={3}/>}
               {room?.type === 2 && room?.name === "형4" && <EOZ students={studentList} floor={4}/>}
@@ -144,11 +151,10 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
               {room?.type === 4 && <Library students={studentList}/>}
               {room?.type === 5 && <Chang8_1 students={studentList}/>}
               {room?.type === 6 && <Chang8_2 students={studentList}/>}
-            </Box>            
+            {/* </Box>             */}
           </TransformComponent>  
         </TransformWrapper>
-      </Stack>
-
-    </Stack>
+      </Box>
+    </Box>
   )
 }

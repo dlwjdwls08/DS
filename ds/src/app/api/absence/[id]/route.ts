@@ -3,12 +3,14 @@ import { PrismaClient } from "@prisma/client";
 import { Bold } from "lucide-react";
 import { removeRequestMeta } from "next/dist/server/request-meta";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone"
 import utc from "dayjs/plugin/utc";
 import { error } from "console";
 
 const prisma = new PrismaClient();
 
 dayjs.extend(utc)
+dayjs.extend(timezone)
 
 // return the state of the student
 export async function GET(req: NextRequest, {params}: { params: Promise<{ id: string }> }) {
@@ -42,7 +44,7 @@ export async function POST(req: NextRequest, {params} : {params: Promise<{id: st
 		const {id} = await params
 		// console.log(id)
 
-		let body: {targetState: boolean}
+		let body: {state: boolean}
 		try {
 			body = await req.json()
 		} catch {
@@ -52,12 +54,13 @@ export async function POST(req: NextRequest, {params} : {params: Promise<{id: st
 			)
 		}
 
-		const {targetState} = body
+		const {state} = body
 		const today = dayjs().tz('Asia/Seoul')
 		const date = new Date(today.year(), today.month(), today.date())
+		console.log(state)
 		await prisma.absenceLog.updateMany({
 			where:{ studentID: id, date: date },
-			data: { state: targetState }
+			data: { state: state }
 		});		  
 
 		return NextResponse.json({message: "Success"});

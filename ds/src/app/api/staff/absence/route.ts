@@ -24,16 +24,16 @@ export async function GET(req: NextRequest) {
         const absences = await prisma.$queryRaw`
         SELECT S.grade as grade, S."classNo" as classNo, S."studentID" as studentID, S.name as name, AL.date as date, AL.state as state, T.name as teacher, NC.day
         -- SELECT *
-        FROM "Student" as S
-        LEFT JOIN "AbsenceLog" as AL
+        FROM "AbsenceLog" as AL
+        INNER JOIN "Student" as S
         ON S."studentID" = AL."studentID" AND AL."date" >= ${start_date} AND AL."date" <= ${end_date}
         INNER JOIN "Teacher" as T
         ON S."classNo" = T."classNo" AND (S.grade = T.grade OR S."classNo" LIKE 'RAA%')
         LEFT JOIN "Leave" as L
         ON S."studentID" = L."studentID" AND AL.date = L.date
         LEFT JOIN "NightClass" as NC
-        ON S."studentID" = NC."studentID" AND NC.day + 1 = TO_CHAR(AL.date, 'D')
-        WHERE AL.state IS NULL AND L.id IS NULL AND NC.id IS NULL
+        ON S."studentID" = NC."studentID" AND NC.day = EXTRACT(DOW FROM AL.date)
+        WHERE AL.state = false AND L.id IS NULL AND NC.id IS NULL
         `
         return NextResponse.json(
             { absenceData: absences},

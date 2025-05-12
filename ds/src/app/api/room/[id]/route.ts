@@ -1,6 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone"
+
+dayjs.extend(timezone)
 
 const prisma = new PrismaClient()
 
@@ -110,7 +113,8 @@ export async function GET(req:NextRequest, {params}: { params: Promise<{ id: str
             }
         )
     }
-    catch {
+    catch (e) {
+        console.log(e)
         return NextResponse.json({ error: "DB Error" }, { status: 500 })
     }
 }

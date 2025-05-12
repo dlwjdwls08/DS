@@ -48,11 +48,7 @@ export default function NightClassSettingPage() {
     axios.get("/api/staff/night_class")
     .then((res) => res.data)
     .then((data: any[]) => {
-      setData(data.map(item => ({
-        ...item,
-        start: new Date(item.start),
-        end: new Date(item.end)
-      })))
+      setData(data)
     })
   }, [])
 
@@ -66,17 +62,18 @@ export default function NightClassSettingPage() {
       const data = new Uint8Array(event.target?.result as ArrayBuffer)
       const workbook = XLSX.read(data, { type: "array" })
 
-      const sheetName = workbook.SheetNames[0]
-      const worksheet = workbook.Sheets[sheetName]
-      const jsonData:NightClassRawData[] = XLSX.utils.sheet_to_json(worksheet, { header: ["id", "name", "class", "day", "time"] })
+      const worksheet = workbook.Sheets["night_class"]
+      const jsonData:NightClassRawData[] = XLSX.utils.sheet_to_json(worksheet, { header: ["id", "name", "class", "day"] })
       const fixedData: NightClassData[] = []
       const rows = jsonData.slice(1)
       for (const row of rows) {
+        console.log(row.day)
+        console.log("일월화수목금토".indexOf(row.day))
         fixedData.push({
             studentID: row.id,
             className: row.class,
             studentName: row.name,
-            day: Number(row.day)
+            day: Number("일월화수목금토".indexOf(row.day))
           })
       }
       setData(fixedData)
