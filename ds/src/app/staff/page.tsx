@@ -1,7 +1,7 @@
 'use client'
 
 import { Book, People, Room, School, Settings } from "@mui/icons-material"
-import { Backdrop, Box, Button, Card, Chip, Container, Paper, SpeedDial, SpeedDialAction, SpeedDialIcon, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material"
+import { Backdrop, Box, Button, Card, Chip, Container, Paper, Skeleton, SpeedDial, SpeedDialAction, SpeedDialIcon, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material"
 import axios from "axios"
 import { useRouter } from "next/navigation"
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react"
@@ -50,15 +50,16 @@ export default function StaffPage() {
   const [endDay, setEndDay] = useState(dayjs(new Date()).subtract(1, 'day'))
   const [getData, setData] = useState<LogData[]>([])
   const [page, setPage] = useState(0)
-  
+  const [isLoading, setLoading] = useState(true)
+
   const visibleData = useMemo(
     () => 
       [...getData]
-        .slice(page * 10, (page + 1) * 10),
+        .slice(page * 8, (page + 1) * 8),
       [page, getData]
   )
 
-  const emptyRows = Math.max(0, (1 + page) * 10 - getData.length)
+  const emptyRows = Math.max(0, (1 + page) * 8 - getData.length)
 
   const router = useRouter()
 
@@ -91,6 +92,7 @@ export default function StaffPage() {
         return x.grade - y.grade
       })
       setData(data.absenceData)
+      setLoading(false)
     })
     .catch((error) => {
       console.error(error)
@@ -99,6 +101,7 @@ export default function StaffPage() {
 
   const handleLoad = () => {
     const end = endDay.add(1, 'day')
+    setLoading(true)
     axios.get("/api/staff/absence", {
       params: {
         start: new Date(startDay.year(), startDay.month(), startDay.date()),
@@ -124,6 +127,7 @@ export default function StaffPage() {
         return x.grade - y.grade
       })
       setData(data.absenceData)
+      setLoading(false)
     })
     .catch((error) => {
       console.error(error)
@@ -197,7 +201,7 @@ export default function StaffPage() {
       gap="30px"
       padding="20px 30px 0">
       <Stack direction="row" flex={1} gap="10px">
-        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Stack
             gap="20px">
             <DatePicker 
@@ -233,7 +237,8 @@ export default function StaffPage() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {visibleData?.map((row, index) => (
+                  {!isLoading ? 
+                  visibleData?.map((row, index) => (
                     <TableRow
                       key={index}>
                       <TableCell>{row.grade}</TableCell>
@@ -247,8 +252,20 @@ export default function StaffPage() {
                           clickable/>
                       </TableCell>
                     </TableRow>
-                  ))}
-                  {emptyRows > 0 && (
+                  ))
+                  :
+                  [...Array(8)].map((_, index) => (
+                    <TableRow key={index} sx={{ height: "65px" }}>
+                      <TableCell><Skeleton variant="text" /></TableCell>
+                      <TableCell><Skeleton variant="text" /></TableCell>
+                      <TableCell><Skeleton variant="text" /></TableCell>
+                      <TableCell><Skeleton variant="text" /></TableCell>
+                      <TableCell><Skeleton variant="text" /></TableCell>
+                      <TableCell><Skeleton variant="rounded" /></TableCell>
+                    </TableRow>
+                  ))
+                  }
+                  {(!isLoading && emptyRows > 0) && (
                     <TableRow 
                       style={{
                         height: 52 * emptyRows
@@ -262,7 +279,7 @@ export default function StaffPage() {
             <TablePagination
               component="div"
               count={getData.length!}
-              rowsPerPage={10}
+              rowsPerPage={8}
               page={page}
               onPageChange={(e, newPage) => setPage(newPage)}
               rowsPerPageOptions={[]} />

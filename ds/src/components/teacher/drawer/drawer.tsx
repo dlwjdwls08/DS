@@ -67,7 +67,7 @@ export default function ClassDrawer() {
         width="200px"
         height="100vh">
         <Stack
-          height="80px"
+          height="95px"
           justifyContent="center"
           alignContent="center"
           textAlign="center"
