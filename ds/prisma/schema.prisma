@@ -34,9 +34,7 @@ model NightClass {
   id          Int     @id @default(autoincrement())
   studentID   String
   className   String
-  day         String
-  end         DateTime
-  start       DateTime
+  day         Int
   studentName String
 }
 

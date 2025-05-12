@@ -18,8 +18,8 @@ export async function GET(req:NextRequest, {params}: { params: Promise<{ id: str
             return NextResponse.json({ error: "Room not found" }, { status: 404 })
         }
 
-        const now = new Date()
-        const today = dayjs(now)
+        const today = dayjs().tz('Asia/Seoul')
+        const date = new Date(today.year(), today.month(), today.date())
 
 
         const students = await prisma.student.findMany({
@@ -58,9 +58,7 @@ export async function GET(req:NextRequest, {params}: { params: Promise<{ id: str
                 studentID: {
                     in: studentIDList
                 },
-                date: {
-                    equals: new Date(today.year(), today.month(), today.date())
-                }
+                date: date
             }
         })
 
@@ -69,17 +67,12 @@ export async function GET(req:NextRequest, {params}: { params: Promise<{ id: str
                 studentID: true,
                 className: true,
                 studentName: true,
-                start: true,
-                end: true
             },
             where: {
                 studentID: {
                     in: studentIDList
                 },
-                start: {
-                    gte: new Date(today.year(), today.month(), today.date()),
-                    lte: new Date(today.year(), today.month(), today.date())
-                }
+                day: today.day()
             }
         })
 
@@ -92,9 +85,7 @@ export async function GET(req:NextRequest, {params}: { params: Promise<{ id: str
                 studentID: {
                     in: studentIDList
                 },
-                date:{
-                    equals: new Date(today.year(), today.month(), today.date())
-                }
+                date: date
             }
         })
 

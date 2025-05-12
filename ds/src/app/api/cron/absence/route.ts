@@ -11,11 +11,10 @@ const prisma = new PrismaClient()
 
 export async function GET(req: NextRequest) {
     const today = dayjs().tz('Asia/Seoul')
+    const date = new Date(today.year(), today.month(), today.date())
     const init = await prisma.absenceLog.findFirst({
         where: {
-            date: {
-                equals: new Date(today.year(), today.month(), today.date())
-            }
+            date: date
         }
     })
     if (init) {
@@ -37,7 +36,7 @@ export async function GET(req: NextRequest) {
         data: students.map((v) => {
             return {
                 studentID: v.studentID,
-                date: new Date(today.year(), today.month(), today.date()),
+                date: date,
                 state: false
             }
         })

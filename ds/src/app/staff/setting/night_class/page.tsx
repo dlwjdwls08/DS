@@ -12,9 +12,7 @@ type NightClassData = {
   studentID: string,
   className: string,
   studentName: string,
-  day: string,
-  start: Date,
-  end: Date
+  day: number
 }
 
 type NightClassRawData = {
@@ -74,15 +72,11 @@ export default function NightClassSettingPage() {
       const fixedData: NightClassData[] = []
       const rows = jsonData.slice(1)
       for (const row of rows) {
-        const start = String(row.time).split(",").at(0)
-        const end = String(row.time).split(",").at(-1)
         fixedData.push({
             studentID: row.id,
             className: row.class,
             studentName: row.name,
-            day: row.day,
-            start: new Date("1970-01-01T" + (start == "10" ? "19:30+09:00" : "20:30:00+09:00")),
-            end: new Date("1970-01-01T" + (end == "10" ? "20:30+09:00" : "21:30:00+09:00"))
+            day: Number(row.day)
           })
       }
       setData(fixedData)
@@ -152,8 +146,6 @@ export default function NightClassSettingPage() {
                 <TableCell>이름</TableCell>
                 <TableCell>수업</TableCell>
                 <TableCell>요일</TableCell>
-                <TableCell>시작 시각</TableCell>
-                <TableCell>종료 시각</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -163,9 +155,7 @@ export default function NightClassSettingPage() {
                   <TableCell>{row.studentID}</TableCell>
                   <TableCell>{row.studentName}</TableCell>
                   <TableCell>{row.className}</TableCell>
-                  <TableCell>{row.day}</TableCell>
-                  <TableCell>{row.start.toLocaleTimeString('ko-KR', {hour: '2-digit', minute: '2-digit', hour12: false})}</TableCell>
-                  <TableCell>{row.end.toLocaleTimeString('ko-KR', {hour: '2-digit', minute: '2-digit', hour12: false})}</TableCell>
+                  <TableCell>{"일월화수목금토"[row.day]}</TableCell>
                 </TableRow>
               ))}
               {emptyRows > 0 && (

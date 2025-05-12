@@ -10,8 +10,6 @@ export async function GET(req: NextRequest) {
         studentName: true,
         className: true,
         day: true,
-        start: true,
-        end: true
     }
   });
   return NextResponse.json(nightClass)

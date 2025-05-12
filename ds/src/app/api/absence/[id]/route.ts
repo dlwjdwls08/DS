@@ -14,17 +14,12 @@ dayjs.extend(utc)
 export async function GET(req: NextRequest, {params}: { params: Promise<{ id: string }> }) {
 	try {
 		const {id} = await params
-		const today = dayjs(new Date())
-		const start = new Date(today.year(), today.month(), today.date());
-		const tomorrow = today.add(1, 'day')
-		const end = new Date(tomorrow.year(), tomorrow.month(), tomorrow.date());
+		const today = dayjs().tz('Asia/Seoul')
+		const date = new Date(today.year(), today.month(), today.date())
 		const info = await prisma.absenceLog.findFirst({
 			where: {
 				studentID: id,
-				date: {
-					gte: start,
-					lte: end,
-				},
+				date: date
 			},
 		})
 
@@ -58,10 +53,10 @@ export async function POST(req: NextRequest, {params} : {params: Promise<{id: st
 		}
 
 		const {targetState} = body
-		const now = new Date()
-		const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+		const today = dayjs().tz('Asia/Seoul')
+		const date = new Date(today.year(), today.month(), today.date())
 		await prisma.absenceLog.updateMany({
-			where:{ studentID: id, date: today },
+			where:{ studentID: id, date: date },
 			data: { state: targetState }
 		});		  
 

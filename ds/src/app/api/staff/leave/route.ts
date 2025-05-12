@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 
 export async function POST(req: NextRequest) {
     try {
-        const today = dayjs(new Date())
+        const today = dayjs().tz('Asia/Seoul')
         const body = await req.json()
         const data = []
         for (const row of body) {

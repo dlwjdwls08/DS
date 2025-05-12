@@ -9,11 +9,10 @@ dayjs.extend(utc)
 
 export async function GET(req: NextRequest) {
     try {
-        const now = dayjs.utc(new Date())
-        const today = new Date(now.year(), now.month(), now.date())
-        const new_now = now.add(1, 'day')
-        const tomorrow = new Date(new_now.year(), new_now.month(), new_now.date())
-        console.log(today)
+        const today = dayjs().tz('Asia/Seoul')
+        const tomorrow = today.add(1, 'day')
+        const today_date = new Date(today.year(), today.month(), today.date())
+        const tomorrow_date = new Date(tomorrow.year(), tomorrow.month(), tomorrow.date())
         const progress = await prisma.$queryRaw<{
             name: string,
             active_count: bigint,
@@ -27,7 +26,7 @@ export async function GET(req: NextRequest) {
             INNER JOIN "Student" as S
             ON R."name" = S."room"
             LEFT JOIN "AbsenceLog" as AL
-            ON S."studentID" = AL."studentID" AND AL.date >= ${today} AND AL.date <= ${tomorrow}
+            ON S."studentID" = AL."studentID" AND AL.date >= ${today_date} AND AL.date <= ${tomorrow_date}
             GROUP BY R."name"
         `
         const progressData = progress.map((item) => ({

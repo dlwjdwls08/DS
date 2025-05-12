@@ -9,41 +9,28 @@ const prisma = new PrismaClient()
 export async function GET(req: NextRequest, {params}: {params: Promise<{id: string}>}) {
     try {
         const { id } = await params
-        const now = new Date()
-        const nowKR = new Date(now.toLocaleString('en-US', {
-            timeZone: "Asia/Seoul"
-        }))
-        const time = new Date(Date.UTC(1970, 0, 1, now.getUTCHours(), now.getUTCMinutes()))
-        const day = "일월화수목금토"[nowKR.getDay()]
+        const today = dayjs().tz('Asia/Seoul')
         const nightClass = await prisma.nightClass.findFirst({
             select: {
                 className: true,
-                start: true,
-                end: true
             },
             where: {
                 studentID: {
                     equals: id
                 },
-                start: {
-                    lte: time
-                },
-                end: {
-                    gte: time
-                },
                 day: {
-                    equals: day
+                    equals: today.day()
                 }
             }
         })
-        const today = dayjs(now)
+        const date = new Date(today.year(), today.month(), today.date())
         const leave = await prisma.leave.findMany({
             where: {
                 studentID: {
                     equals: id
                 },
                 date: {
-                    equals: new Date(today.year(), today.month(), today.date())
+                    equals: date
                 }
             }
         })

@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth"
+import dayjs from "dayjs";
 
 const prisma = new PrismaClient()
 
@@ -41,11 +42,12 @@ export async function POST(req: NextRequest) {
         console.log(body)
         const session = await getServerSession(authOptions)
         const studentID = session?.user?.email?.slice(0, 6)
+        const now = dayjs().tz('Asia/Seoul')
         const memo = await prisma.memo.create({
             data: {
                 studentID: studentID!,
                 content: body.content,
-                time: new Date()
+                time: new Date(now.year(), now.month(), now.date(), now.hour(), now.minute(), now.second(), now.millisecond())
             }
         })
         return NextResponse.json(
