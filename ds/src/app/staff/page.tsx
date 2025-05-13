@@ -33,11 +33,8 @@ type LogData = {
 type LeaveDataRaw = {
   hakbun: string,
   kor_nm: string,
-  reason: string,
-  start_date: string,
-  start_time: string,
-  end_date: string,
-  end_time: string
+  gubun_nm: string,
+  reg_date: string
 }
 
 dayjs.locale("ko")
@@ -65,12 +62,11 @@ export default function StaffPage() {
 
 
   useEffect(() => {
-    const yesterday = dayjs(new Date()).subtract(1, 'day')
-    const today = dayjs(new Date())
+    const yesterday = dayjs().tz('Asia/Seoul').subtract(1, 'day')
     axios.get("/api/staff/absence", {
       params: {
         start: new Date(yesterday.year(), yesterday.month(), yesterday.date()),
-        end: new Date(today.year(), today.month(), today.date()),
+        end: new Date(yesterday.year(), yesterday.month(), yesterday.date()),
       }
     })
     .then((res) => res.data)
@@ -100,7 +96,7 @@ export default function StaffPage() {
   }, [])
 
   const handleLoad = () => {
-    const end = endDay.add(1, 'day')
+    const end = endDay
     setLoading(true)
     axios.get("/api/staff/absence", {
       params: {
@@ -151,7 +147,8 @@ export default function StaffPage() {
       for (const row of rows) {
         fixedData.push({
           studentID: row.hakbun,
-          studentName: row.kor_nm
+          studentName: row.kor_nm,
+          date: row.reg_date
         })
       }
       axios.post("/api/staff/leave", fixedData)
@@ -228,6 +225,7 @@ export default function StaffPage() {
               <Table>
                 <TableHead>
                   <TableRow>
+                    <TableCell>날짜</TableCell>
                     <TableCell>학년</TableCell>
                     <TableCell>반</TableCell>
                     <TableCell>담임교사</TableCell>
@@ -241,6 +239,7 @@ export default function StaffPage() {
                   visibleData?.map((row, index) => (
                     <TableRow
                       key={index}>
+                      <TableCell>{dayjs(row.date).tz('Asia/Seoul').format("MM/DD")}</TableCell>
                       <TableCell>{row.grade}</TableCell>
                       <TableCell>{row.classno}</TableCell>
                       <TableCell>{row.teacher}</TableCell>
