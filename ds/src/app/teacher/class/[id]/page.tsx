@@ -8,10 +8,11 @@ import { Chang8_1, Chang8_2 } from "@/components/classtype/chang8"
 import { Leave, Memo, NightClass, Room, Student, AbsenceLog } from "@prisma/client"
 import axios from "axios"
 import { useEffect, useState, use } from "react"
-import { Box, Button, Stack, Typography, Grid2 } from "@mui/material"
+import { Box, Button, Stack, Typography, Grid2, CircularProgress } from "@mui/material"
 import { StudentInfo } from "@/components/classtype/type"
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
-import { useAbsenceState } from "@/store/store"
+import { useAbsenceState, useClassState } from "@/store/store"
+import { useRouter } from "next/navigation"
 
 export default function ClassPage({ params }: { params: Promise<{ id: string }>}) {
   const [room, setRoom] = useState<Room>()
@@ -27,6 +28,9 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
 
   const { id } = use(params)
   const multiSet = useAbsenceState((s) => s.multiSet);
+
+  const router = useRouter();
+  const { classID, change } = useClassState();
 
   useEffect(() => {
     if (!id) return
@@ -77,7 +81,6 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
         list.push(stdInfo)
       }
       setStudentList(list)
-      console.log(list)
       setLoading(false)
     }
 
@@ -104,9 +107,16 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
 
   }
 
+  function handleChange(roomNo: number) {
+    if (roomNo <= 0) roomNo += 20
+    change(roomNo)
+    router.push(`/teacher/class/${roomNo}`)
+  }
 
   if (loading) {
-    return <Box sx={{justifySelf:'center', alignSelf:'center'}}>Loading...</Box>
+    return <Stack sx={{justifyContent:'center',alignContent:'center', height:'100%'}}>
+      <Box sx={{justifySelf:'center', alignSelf:'center',margin:'10px'}}>Loading...</Box>
+    </Stack>
   }
 
   return (
@@ -120,12 +130,30 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
         <Grid2 size={4} />
 
         <Grid2 size={4} container justifyContent={"center"}>
-          { room?.type === 1 &&
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding:'20px' }}>
-              <Typography style={{ margin: 0 }}>( {students[0].classNo.startsWith('RAA') ? '' : '1-'}{students[0].classNo} )</Typography>
-            </div>
-          }
-          <h1 style={{ textAlign: 'center' }}>{room?.name}</h1>
+          <Button sx={{ color:'black',
+            backgroundColor: 'transparent',
+            '&:hover': {
+              backgroundColor: 'transparent',
+            },}}
+            onClick={() => handleChange((classID - 1)%20)}
+            >◀</Button>
+
+          <Stack sx={{height:'100px'}}>
+            <h1 style={{ textAlign: 'center', marginBottom:'0px' }}>{room?.name}</h1>
+            { room?.type === 1 &&
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop:'5px' }}>
+                <Typography style={{ margin: 0 }}>( {students[0].classNo.startsWith('RAA') ? '' : '1-'}{students[0].classNo} )</Typography>
+              </div>
+            }
+          </Stack>
+
+          <Button sx={{ color:'black',
+            backgroundColor: 'transparent',
+            '&:hover': {
+              backgroundColor: 'transparent',
+            },}}
+            onClick={() => handleChange((classID + 1)%20)}
+            >▶</Button>
         </Grid2>
 
         <Grid2 size={4} container justifyContent="flex-end" spacing={1} padding={'10px'}>
@@ -146,25 +174,27 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
         alignItems="center"
         width="100%"
         overflow="hidden">
-        <TransformWrapper initialScale={0.45} minScale={0.45}>
-          <TransformComponent wrapperStyle={{display: "flex", height: "100%"}}>
-            {/* <Box
-              justifySelf={"center"}
-              alignSelf={"center"}
-              // sx={{
-              //   transform: "scale(0.6)",
-              //   transformOrigin: "top center"
-              // }}
-            > */}
-              {room?.type === 1 && <Hyungsul students={studentList} />}
-              {room?.type === 2 && room?.name === "형3" && <EOZ students={studentList} floor={3}/>}
-              {room?.type === 2 && room?.name === "형4" && <EOZ students={studentList} floor={4}/>}
-              {room?.type === 3 && <Chang3 students={studentList}/>}
-              {room?.type === 4 && <Library students={studentList}/>}
-              {room?.type === 5 && <Chang8_1 students={studentList}/>}
-              {room?.type === 6 && <Chang8_2 students={studentList}/>}
-            {/* </Box>             */}
-          </TransformComponent>  
+        <TransformWrapper
+          initialScale={
+            room?.type === 1 ? 0.9 :
+            room?.type === 2 ? 0.55 :
+            room?.type === 3 ? 0.75 :
+            room?.type === 4 ? 0.9 :
+            room?.type === 5 ? 0.7 :
+            room?.type === 6 ? 0.45 :
+            0.45
+          }
+          minScale={0.45}
+        >
+          <TransformComponent wrapperStyle={{ display: "flex", height: "100%" }}>
+            {room?.type === 1 && <Hyungsul students={studentList} />}
+            {room?.type === 2 && room?.name === "형3" && <EOZ students={studentList} floor={3} />}
+            {room?.type === 2 && room?.name === "형4" && <EOZ students={studentList} floor={4} />}
+            {room?.type === 3 && <Chang3 students={studentList} />}
+            {room?.type === 4 && <Library students={studentList} />}
+            {room?.type === 5 && <Chang8_1 students={studentList} />}
+            {room?.type === 6 && <Chang8_2 students={studentList} />}
+          </TransformComponent>
         </TransformWrapper>
       </Box>
     </Box>

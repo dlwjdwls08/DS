@@ -150,7 +150,7 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
           <Button
             sx={{
               display: "flex",
-              gap: "8px",
+              gap: studentInfo.student.name.length <= 3 ? "8px" : "2px",
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",

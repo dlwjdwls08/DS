@@ -10,9 +10,6 @@ import { StudentInfo } from "./type"
 
 export default function Hyungsul({ students }: { students: StudentInfo[] }) {
 
-  console.log(`HYUNGSUL~~ :`)
-  console.log(students)
-
   return (
     <Box sx={{
         width: '100%',

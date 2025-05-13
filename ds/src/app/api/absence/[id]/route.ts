@@ -57,7 +57,6 @@ export async function POST(req: NextRequest, {params} : {params: Promise<{id: st
 		const {targetState} = body
 		const today = dayjs().tz('Asia/Seoul')
 		const date = new Date(today.year(), today.month(), today.date())
-		console.log(targetState)
 		await prisma.absenceLog.updateMany({
 			where:{ studentID: id, date: date },
 			data: { state: targetState }

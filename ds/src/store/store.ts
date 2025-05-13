@@ -43,9 +43,3 @@ export const useAbsenceState = create<AbsenceState>((set) => ({
         map: Object.fromEntries(list.map((x) => [x.id, x.state])),
     })),
 }))
-
-if (process.env.NODE_ENV === 'development') {
-  useAbsenceState.subscribe((state, prev) => {
-    console.log('[Absence] changed →', state);
-  });
-}
