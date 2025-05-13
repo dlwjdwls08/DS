@@ -1,10 +1,15 @@
 import { Update } from "@mui/icons-material";
 import { Prisma, PrismaClient } from "@prisma/client";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone"
 import { stat } from "fs";
 import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient()
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 // 전부 체크 or 전부 제거
 export async function POST(req: NextRequest, {params} : {params: Promise<{id: string}>}) {
@@ -44,22 +49,16 @@ export async function POST(req: NextRequest, {params} : {params: Promise<{id: st
 
 		const studentIDs = students.map(student => student.studentID);
 
-		const now = new Date();
-		const today = dayjs(now)
-
+		const today = dayjs().tz('Asia/Seoul')
+		const date = new Date(today.year(), today.month(), today.date())
 
 		// absence 전체 수정
 		await prisma.absenceLog.updateMany({
 			where:{
-				date: {
-					gte : new Date(today.year(), today.month(), today.date()),
-					lt : new Date(today.year(), today.month(), today.date()+1)
-				},
+				date: date,
 				studentID: {in: studentIDs},
-				state: !targetState
 			},
 			data:{
-				date: now,
 				state: targetState
 			}
 		})

@@ -8,6 +8,8 @@ import { stat } from "fs"
 import { memo, TouchEvent, useEffect, useMemo, useRef, useState } from "react"
 import { StudentInfo } from "../classtype/type"
 import { time } from "console"
+import { useAbsenceState } from '@/store/store';
+import next from "next"
 
 export type StudentData = {
   studentInfo: Student
@@ -48,7 +50,9 @@ function NameText({name}:{name:string}){
 }
 
 export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo }) {
-  const [isPresent, setPresent] = useState<boolean | null>(null)
+  const isPresent = useAbsenceState((s) => s.map[studentInfo.student.studentID]);
+  const setAbsence = useAbsenceState((s) => s.set);
+  // const [isPresent, setPresent] = useState<boolean>(false)
   const [isAvailable, setAvailable] = useState<boolean>(true)
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
   const [memoData, setMemoData] = useState<MemoData[]>([])
@@ -61,7 +65,7 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-		setPresent(studentInfo.absence?.state ?? null)
+    setAbsence(studentInfo.student.studentID, studentInfo.absence?.state ?? false)
 		setLeaveData(studentInfo.leave)
 		setNightClassData(studentInfo.class)
     setMemoData(studentInfo.memo?.map(m => ({
@@ -70,11 +74,6 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
     })) ?? [])
   }, [])
 
-  // console.log(studentInfo)
-  // console.log(state)
-  // console.log(leaveData)
-  // console.log(nightClassData)
-  // console.log(memo)
 
   function StartHold() {
     holdTimeOut.current = setTimeout(() => {
@@ -112,39 +111,24 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
     }
   }
 
-  function handleStateChange() {
+  async function handleStateChange() {
     if (nightClassData || leaveData) {
       return
     }
+    const nextState = !isPresent
     setAvailable(false)
-    // if (isPresent === null) {
-      axios.post(`/api/absence/${studentInfo.student.studentID}`, {
-        state: !isPresent
+    setAbsence(studentInfo.student.studentID, nextState)
+
+    try{
+      await axios.post(`/api/absence/${studentInfo.student.studentID}`, {
+        targetState: nextState
       })
-      .then(res => res.data)
-      .then((data) => {
-        setAvailable(true)
-      })
-      setPresent(!isPresent)
-    // }
-    // else if (isPresent === true) {
-    //   setPresent(false)
-    //   axios.put(`/api/absence/${studentInfo.student.studentID}`, {
-    //     state: false
-    //   })
-    //     .then(res => res.data)
-    //     .then((data) => {
-    //       setAvailable(true)
-    //     })
-    // }
-    // else {
-    //   setPresent(null)
-    //   axios.delete(`/api/absence/${studentInfo.student.studentID}`)
-    //     .then(res => res.data)
-    //     .then((data) => {
-    //       setAvailable(true)
-    //     })
-    // }
+    } catch(e) {
+      setAbsence(studentInfo.student.studentID, isPresent ?? false);
+      console.error(e);
+    } finally {
+      setAvailable(true);
+    }
   }
 
   return (

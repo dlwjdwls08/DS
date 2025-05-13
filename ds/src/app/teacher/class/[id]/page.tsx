@@ -11,6 +11,7 @@ import { useEffect, useState, use } from "react"
 import { Box, Button, Stack, Typography, Grid2 } from "@mui/material"
 import { StudentInfo } from "@/components/classtype/type"
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch"
+import { useAbsenceState } from "@/store/store"
 
 export default function ClassPage({ params }: { params: Promise<{ id: string }>}) {
   const [room, setRoom] = useState<Room>()
@@ -25,6 +26,7 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
   const [absences, setAbsences] = useState<AbsenceLog[]>([])
 
   const { id } = use(params)
+  const multiSet = useAbsenceState((s) => s.multiSet);
 
   useEffect(() => {
     if (!id) return
@@ -83,13 +85,23 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
   }, [id])
 
   async function updateState(targetState:boolean) {
-    setLoading(true)
-    axios.post(`/api/absence/room/${id}`,{
-      state: targetState
-    }).then(res => res.data)
-      .then((data) => {
-        setLoading(false)
-      })
+
+    multiSet(
+      students.map((stu) => ({
+        id: stu.studentID,
+        state: targetState,
+      })),
+    );    
+
+
+    try {
+      await axios.post(`/api/absence/room/${id}`, { targetState });
+    } catch (e) {
+      console.error(e);
+    } finally {
+    }
+
+
   }
 
 

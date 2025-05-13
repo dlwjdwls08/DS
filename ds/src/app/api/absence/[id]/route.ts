@@ -42,9 +42,8 @@ export async function GET(req: NextRequest, {params}: { params: Promise<{ id: st
 export async function POST(req: NextRequest, {params} : {params: Promise<{id: string}>}) {
 	try {
 		const {id} = await params
-		// console.log(id)
 
-		let body: {state: boolean}
+		let body: {targetState: boolean}
 		try {
 			body = await req.json()
 		} catch {
@@ -54,13 +53,14 @@ export async function POST(req: NextRequest, {params} : {params: Promise<{id: st
 			)
 		}
 
-		const {state} = body
+		
+		const {targetState} = body
 		const today = dayjs().tz('Asia/Seoul')
 		const date = new Date(today.year(), today.month(), today.date())
-		console.log(state)
+		console.log(targetState)
 		await prisma.absenceLog.updateMany({
 			where:{ studentID: id, date: date },
-			data: { state: state }
+			data: { state: targetState }
 		});		  
 
 		return NextResponse.json({message: "Success"});
@@ -74,65 +74,3 @@ export async function POST(req: NextRequest, {params} : {params: Promise<{id: st
 	}
 	
 }
-
-// export async function DELETE(req: NextRequest, {params}: {params: Promise<{id: string}>}) {
-// 	const {id} = await params;
-// 	const today = dayjs(new Date())
-// 	const start = new Date(today.year(), today.month(), today.date());
-// 	const tomorrow = today.add(1, 'day')
-// 	const end = new Date(tomorrow.year(), tomorrow.month(), tomorrow.date());
-
-// 	await prisma.absenceLog.deleteMany({
-// 		where: {
-// 			studentID: id,
-// 			date: {
-// 				gte: start,
-// 				lte: end,
-// 			},
-// 		},
-// 	})
-
-// 	return NextResponse.json({ message: "Deleted successfully" }, { status: 201 });
-
-// }
-
-// export async function PUT(req: NextRequest, {params}: {params: Promise<{id: string}>}) {
-// 	try {
-// 		const { id } = await params
-// 		const body = await req.json()
-// 		if (body.state === undefined) {
-// 			return NextResponse.json(
-// 				{ error: "Parameter Missing" },
-// 				{ status: 500 }
-// 			)
-// 		}
-// 		const { state } = body
-// 		const today = dayjs(new Date())
-// 		const start = new Date(today.year(), today.month(), today.date());
-// 		const tomorrow = today.add(1, 'day')
-// 		const end = new Date(tomorrow.year(), tomorrow.month(), tomorrow.date());
-		
-// 		await prisma.absenceLog.updateMany({
-// 			where: {
-// 				studentID: id,
-// 				date: {
-// 					gte: start,
-// 					lte: end
-// 				}
-// 			},
-// 			data: {
-// 				state: state
-// 			}
-// 		})
-// 		return NextResponse.json(
-// 			{}
-// 		)
-// 	}
-// 	catch (e) {
-// 		console.log(e)
-// 		return NextResponse.json(
-// 			{ error: "DB Error" },
-// 			{ status: 500 }
-// 		)
-// 	}
-// }

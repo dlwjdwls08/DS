@@ -2,11 +2,13 @@ import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone"
+import utc from "dayjs/plugin/utc";
 
-dayjs.extend(timezone)
 
 const prisma = new PrismaClient()
 
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 // get Students + Data in the room
 export async function GET(req:NextRequest, {params}: { params: Promise<{ id: string }> }) {

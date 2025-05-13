@@ -26,3 +26,26 @@ export const useClassState = create<ClassState>((set) => ({
     classID: 0,
     change: (id) => set((state) => ({classID: id}))
 }))
+
+
+interface AbsenceState {
+    map: Record<string, boolean>;
+    set: (id:string, state:boolean) => void;
+    multiSet: (list: {id:string, state:boolean}[]) => void;
+}
+
+export const useAbsenceState = create<AbsenceState>((set) => ({
+    map: {},
+    set: (id,state) => 
+        set((s) => ({ map: { ...s.map, [id]: state } })),
+    multiSet: (list) =>
+        set(() => ({
+        map: Object.fromEntries(list.map((x) => [x.id, x.state])),
+    })),
+}))
+
+if (process.env.NODE_ENV === 'development') {
+  useAbsenceState.subscribe((state, prev) => {
+    console.log('[Absence] changed →', state);
+  });
+}
