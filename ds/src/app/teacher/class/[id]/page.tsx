@@ -27,6 +27,7 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
 
   const [isInteracting, setInteracting] = useState<boolean>(false)
 
+
   const { id } = use(params)
   const multiSet = useAbsenceState((s) => s.multiSet);
 
