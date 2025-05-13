@@ -19,12 +19,13 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
   const [loading, setLoading] = useState(true)
   const [studentList, setStudentList] = useState<StudentInfo[]>([])
 
-
   const [students, setStudents] = useState<Student[]>([])
   const [memos, setMemos] = useState<Memo[]>([])
   const [leaves, setLeaves] = useState<Leave[]>([])
   const [nightClasses, setNightClasses] = useState<NightClass[]>([])
   const [absences, setAbsences] = useState<AbsenceLog[]>([])
+
+  const [isInteracting, setInteracting] = useState<boolean>(false)
 
   const { id } = use(params)
   const multiSet = useAbsenceState((s) => s.multiSet);
@@ -185,15 +186,21 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
             0.45
           }
           minScale={0.45}
+          onZoomStart={() => setInteracting(true)}
+          onPanningStart={() => setInteracting(true)}
+          onZoomStop={() => setInteracting(false)}
+          onPanningStop={() => setInteracting(false)}
         >
           <TransformComponent wrapperStyle={{ display: "flex", height: "100%" }}>
-            {room?.type === 1 && <Hyungsul students={studentList} />}
-            {room?.type === 2 && room?.name === "형3" && <EOZ students={studentList} floor={3} />}
-            {room?.type === 2 && room?.name === "형4" && <EOZ students={studentList} floor={4} />}
-            {room?.type === 3 && <Chang3 students={studentList} />}
-            {room?.type === 4 && <Library students={studentList} />}
-            {room?.type === 5 && <Chang8_1 students={studentList} />}
-            {room?.type === 6 && <Chang8_2 students={studentList} />}
+            <Box>
+              {room?.type === 1 && <Hyungsul students={studentList} />}
+              {room?.type === 2 && room?.name === "형3" && <EOZ students={studentList} floor={3} />}
+              {room?.type === 2 && room?.name === "형4" && <EOZ students={studentList} floor={4} />}
+              {room?.type === 3 && <Chang3 students={studentList} />}
+              {room?.type === 4 && <Library students={studentList} />}
+              {room?.type === 5 && <Chang8_1 students={studentList} />}
+              {room?.type === 6 && <Chang8_2 students={studentList} />}
+            </Box>
           </TransformComponent>
         </TransformWrapper>
       </Box>

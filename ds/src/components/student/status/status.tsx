@@ -8,9 +8,18 @@ import { stat } from 'fs'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Leave, NightClass } from '@prisma/client'
+import dayjs from 'dayjs'
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
 
-type ClassData = Pick<NightClass, "start" | "end" | "className">
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
+type ClassData = Pick<NightClass, "day" | "className">
+
+type LeaveData = {
+	date: string
+}
 
 export default function StatusDiv(){
 
@@ -19,22 +28,24 @@ export default function StatusDiv(){
 	const name = session?.user?.name
 
 	
-	const [classData, setClassData] = useState<ClassData | null>()
-	const [leaveData, setLeaveData] = useState<Leave[] | null>()
+	const [classData, setClassData] = useState<ClassData[]>([])
+	const [leaveData, setLeaveData] = useState<LeaveData[]>([])
 	const [getStatus, setStatus] = useState<string>("자습중")
 
 	useEffect(() => {
 		if (sessionStatus !== "authenticated") return
-		const studentID = session?.user?.email?.slice(0, 6)
 		axios.get("/api/student/state")
 		.then((res) => res.data)
 		.then((data) => {
-			setLeaveData(data.leaveData)
-			if (data.leaveData.length) {
+			const today = dayjs().tz('Asia/Seoul')
+			const date = new Date(today.year(), today.month(), today.date())
+			const {leavedata, classdata} : {leavedata:LeaveData[], classdata:ClassData[]} = data
+			setLeaveData(leavedata)
+			if (leavedata.findIndex((v) => new Date(v.date).getTime() == date.getTime()) !== -1) {
 				setStatus("자습 이석")
 			}
-			setClassData(data.classData)
-			if (data.classData) {
+			setClassData(classdata)
+			if (classdata.findIndex((v) => v.day === today.day()) !== -1) {
 				setStatus("수업중")
 			}
 		})
@@ -56,18 +67,28 @@ export default function StatusDiv(){
 				display="flex"
 				flexDirection="column"
 				padding="0 20px">
-				{classData && (
+				{classData.length > 0 && (
 				<Box>
 					<h3>수업</h3>
-					<Box>
-						<Box>{classData.className}</Box>
-						<Box>{new Date(classData.start).toLocaleTimeString("ko-KR", { hour: '2-digit', minute: '2-digit'})} - {new Date(classData.end).toLocaleTimeString("ko-KR", { hour: '2-digit', minute: '2-digit'})}</Box>
+					{classData.map((cls, idx) => (
+					<Box key={idx}>
+						<Box>{cls.className} - {"일월화수목금토"[cls.day]}</Box>
 					</Box>
+					))
+					}
+				</Box>
+				)}
+				{leaveData.length > 0 && (
+				<Box>
+					<h3>이석</h3>
+					{leaveData.map((leave, idx) => (
+					<Box key={idx}>
+						<Box>{dayjs(leave.date).tz('Asia/Seoul').format("YYYY. MM. DD")}</Box>
+					</Box>
+					))}
 				</Box>
 				)}
 			</Box>
-			<div id='user-info'>
-			</div>
 		</Box>
 	</Paper>
 	)

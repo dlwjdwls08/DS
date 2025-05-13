@@ -4,12 +4,15 @@ import { Message } from "@mui/icons-material"
 import { Button, Dialog, DialogContent, DialogTitle, Paper, ToggleButton, ToggleButtonGroup, Box, Typography, IconButton, Backdrop, Stack, Card, CardMedia, CardContent, Table, TableRow, TableCell, List, ListItem, Badge } from "@mui/material"
 import { Student, AbsenceLog, Memo, NightClass, Leave } from "@prisma/client"
 import axios from "axios"
-import { stat } from "fs"
 import { memo, TouchEvent, useEffect, useMemo, useRef, useState } from "react"
 import { StudentInfo } from "../classtype/type"
-import { time } from "console"
 import { useAbsenceState } from '@/store/store';
-import next from "next"
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 export type StudentData = {
   studentInfo: Student
@@ -145,7 +148,7 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
         <Badge
           color="error"
           variant="dot"
-          invisible={!memoData || !(new Date(memoData[0]?.time) >= new Date(Date.now() - 10 * 60 * 1000))}>  
+          invisible={!memoData.length || !(dayjs(memoData[0].time) >= dayjs().subtract(10, 'minutes'))}>
 
           <Button
             sx={{
@@ -219,7 +222,7 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
                   key={idx}>
                   <Stack gap="10px">
                     <Typography fontSize="12pt">{memo.content}</Typography>
-                    <Typography fontSize="10pt" color="textDisabled">{new Date(memo.time).toLocaleTimeString("ko-KR", { year: "2-digit", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</Typography>
+                    <Typography fontSize="10pt" color="textDisabled">{dayjs(memo.time).format("YY. MM. DD. HH:mm")}</Typography>
                   </Stack>
                 </ListItem>
               ))}

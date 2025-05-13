@@ -2,6 +2,7 @@ import { Check, Create, Send } from "@mui/icons-material";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Input, InputBase, List, ListItem, Paper, Stack, TextField, Typography } from "@mui/material";
 import { Memo } from "@prisma/client";
 import axios from "axios";
+import dayjs from "dayjs";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 type MemoData = {
@@ -50,7 +51,7 @@ export default function MemoDiv() {
                     flex={1}
                     justifyContent="center"
                     alignItems="center">
-                    {memoData && (new Date(memoData[0]?.time) >= new Date(Date.now() - 10 * 60 * 1000)) ? (
+                    {memoData.length && (dayjs(memoData[0].time) >= dayjs().subtract(10, 'minutes')) ? (
                     <Typography variant="h4">
                         {memoData[0].content}
                     </Typography>
@@ -77,7 +78,7 @@ export default function MemoDiv() {
                             key={idx}>
                             <Stack gap="10px">
                                 <Typography fontSize="12pt">{memo.content}</Typography>
-                                <Typography fontSize="10pt" color="textDisabled">{new Date(memo.time).toLocaleTimeString("ko-KR", {year:"2-digit", month:"2-digit", day:"2-digit", hour: "2-digit", minute: "2-digit"})}</Typography>
+                                <Typography fontSize="10pt" color="textDisabled">{dayjs(memo.time).format("YY. MM. DD. HH:mm")}</Typography>
                             </Stack>
                         </ListItem>
                         ))}

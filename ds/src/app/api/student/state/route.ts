@@ -16,32 +16,39 @@ export async function GET(req: NextRequest) {
 		const session = await getServerSession(authOptions)
 		const studentID = session?.user?.email?.slice(0, 6)
 		const today = dayjs().tz('Asia/Seoul')
-		const nightClass = await prisma.nightClass.findFirst({
+		const nightClass = await prisma.nightClass.findMany({
 			select: {
 				className: true,
+				day: true
+			},
+			where: {
+				studentID: {
+					equals: studentID
+				}
+			},
+			orderBy: {
+				day: "asc"
+			}
+		})
+		const date = new Date(today.year(), today.month(), today.date())
+		const leave = await prisma.leave.findMany({
+			select: {
+				date: true
 			},
 			where: {
 				studentID: {
 					equals: studentID
 				},
-				day: {
-					equals: today.day()
-				}
-			}
-		})
-		const date = new Date(today.year(), today.month(), today.date())
-		const leave = await prisma.leave.findMany({
-			where: {
-				studentID: {
-					equals: studentID
-				},
 				date: {
-					equals: date
+					gte: date
 				}
+			},
+			orderBy: {
+				date: "desc"
 			}
 		})
 		return NextResponse.json(
-			{ classData: nightClass, leaveData: leave }
+			{ classdata: nightClass, leavedata: leave }
 		)
 	}
   catch {
