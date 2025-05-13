@@ -25,6 +25,8 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
   const [nightClasses, setNightClasses] = useState<NightClass[]>([])
   const [absences, setAbsences] = useState<AbsenceLog[]>([])
 
+  const [isInteracting, setInteracting] = useState<boolean>(false)
+
   const { id } = use(params)
   const multiSet = useAbsenceState((s) => s.multiSet);
 
@@ -173,16 +175,13 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
         alignItems="center"
         width="100%"
         overflow="hidden">
-        <TransformWrapper initialScale={0.45} minScale={0.45}>
-          <TransformComponent wrapperStyle={{display: "flex", height: "100%"}}>
-            {/* <Box
-              justifySelf={"center"}
-              alignSelf={"center"}
-              // sx={{
-              //   transform: "scale(0.6)",
-              //   transformOrigin: "top center"
-              // }}
-            > */}
+        <TransformWrapper initialScale={0.45} minScale={0.45} onZoomStart={() => setInteracting(true)} onZoomStop={() => setInteracting(false)} onPanningStart={() => setInteracting(true)} onPanningStop={() => setInteracting(false)}>
+          <TransformComponent wrapperStyle={{display: "flex", width:"100%", height: "100%"}}>
+            <Box
+              sx={{
+                zIndex: 10,
+                pointerEvents: isInteracting ? "none" : "auto"
+              }}>
               {room?.type === 1 && <Hyungsul students={studentList} />}
               {room?.type === 2 && room?.name === "형3" && <EOZ students={studentList} floor={3}/>}
               {room?.type === 2 && room?.name === "형4" && <EOZ students={studentList} floor={4}/>}
@@ -190,8 +189,8 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
               {room?.type === 4 && <Library students={studentList}/>}
               {room?.type === 5 && <Chang8_1 students={studentList}/>}
               {room?.type === 6 && <Chang8_2 students={studentList}/>}
-            {/* </Box>             */}
-          </TransformComponent>  
+            </Box>
+          </TransformComponent>
         </TransformWrapper>
       </Box>
     </Box>
