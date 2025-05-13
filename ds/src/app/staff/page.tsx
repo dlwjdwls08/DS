@@ -96,17 +96,17 @@ export default function StaffPage() {
   }, [])
 
   const handleLoad = () => {
-    const end = endDay
     setLoading(true)
+    console.log(startDay)
+    console.log(endDay)
     axios.get("/api/staff/absence", {
       params: {
         start: new Date(startDay.year(), startDay.month(), startDay.date()),
-        end: new Date(end.year(), end.month(), end.date()),
+        end: new Date(endDay.year(), endDay.month(), endDay.date()),
       }
     })
     .then((res) => res.data)
     .then((data: { absenceData: LogData[] }) => {
-      console.log(data)
       data.absenceData.sort((x, y) => {
         if (x.classno.startsWith("RAA")) {
           if (y.classno.startsWith("RAA")) {
@@ -198,21 +198,24 @@ export default function StaffPage() {
       gap="30px"
       padding="20px 30px 0">
       <Stack direction="row" flex={1} gap="10px">
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <LocalizationProvider dateAdapter={AdapterDayjs} localeText={koKR.components.MuiLocalizationProvider.defaultProps.localeText}>
           <Stack
             gap="20px">
             <DatePicker 
               label="From"
               value={startDay}
-              onChange={(e) => setStartDay(dayjs(e))}/>
+              onChange={(e) => {
+                setStartDay(dayjs(e))
+                handleLoad()
+              }}
+              onAccept={handleLoad}/>
             <DatePicker 
               label="To"
               value={endDay}
-              onChange={(e) => setEndDay(dayjs(e))}/>
-            <Button
-              onClick={handleLoad}>
-      `       로드
-            </Button>
+              onChange={(e) => {
+                setEndDay(dayjs(e))
+              }}
+              onAccept={handleLoad}/>
           </Stack>
         </LocalizationProvider>
         <Box
