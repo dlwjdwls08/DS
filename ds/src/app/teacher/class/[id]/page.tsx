@@ -27,6 +27,7 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
 
   const [isInteracting, setInteracting] = useState<boolean>(false)
 
+
   const { id } = use(params)
   const multiSet = useAbsenceState((s) => s.multiSet);
 
@@ -192,19 +193,16 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
           onPanningStop={() => setInteracting(false)}
         >
           <TransformComponent wrapperStyle={{ display: "flex", height: "100%" }}>
-            <Box
-              sx={{
-                zIndex: 10,
-                pointerEvents: isInteracting ? "none" : "auto"
-              }}>
-              {room?.type === 2 && room?.name === "형3" && <EOZ students={studentList} floor={3}/>}
-              {room?.type === 2 && room?.name === "형4" && <EOZ students={studentList} floor={4}/>}
-              {room?.type === 3 && <Chang3 students={studentList}/>}
-              {room?.type === 4 && <Library students={studentList}/>}
-              {room?.type === 5 && <Chang8_1 students={studentList}/>}
-              {room?.type === 6 && <Chang8_2 students={studentList}/>}
-            </Box>            
-          </TransformComponent>  
+            <Box>
+              {room?.type === 1 && <Hyungsul students={studentList} />}
+              {room?.type === 2 && room?.name === "형3" && <EOZ students={studentList} floor={3} />}
+              {room?.type === 2 && room?.name === "형4" && <EOZ students={studentList} floor={4} />}
+              {room?.type === 3 && <Chang3 students={studentList} />}
+              {room?.type === 4 && <Library students={studentList} />}
+              {room?.type === 5 && <Chang8_1 students={studentList} />}
+              {room?.type === 6 && <Chang8_2 students={studentList} />}
+            </Box>
+          </TransformComponent>
         </TransformWrapper>
       </Box>
     </Box>
