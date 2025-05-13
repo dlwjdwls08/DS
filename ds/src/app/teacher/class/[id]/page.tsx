@@ -193,7 +193,11 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
           onPanningStop={() => setInteracting(false)}
         >
           <TransformComponent wrapperStyle={{ display: "flex", height: "100%" }}>
-            <Box>
+            <Box
+              zIndex={10}
+              sx={{
+                pointerEvents: isInteracting ? "none" : "auto"
+              }}>
               {room?.type === 1 && <Hyungsul students={studentList} />}
               {room?.type === 2 && room?.name === "형3" && <EOZ students={studentList} floor={3} />}
               {room?.type === 2 && room?.name === "형4" && <EOZ students={studentList} floor={4} />}
