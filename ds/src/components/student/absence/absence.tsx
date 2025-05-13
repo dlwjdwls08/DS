@@ -1,13 +1,20 @@
 import { ThumbUp } from "@mui/icons-material";
-import { Box, Divider, IconButton, List, ListItem, Paper } from "@mui/material";
+import { Box, CircularProgress, Divider, IconButton, List, ListItem, Paper } from "@mui/material";
 import { AbsenceLog } from "@prisma/client";
 import axios from "axios";
+import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 type AbsenceData = Pick<AbsenceLog, "date">
 
 export default function AbsenceDiv() {
     const [absenceData, setAbsenceData] = useState<AbsenceData[]>([])
+    const [absenceLoading, setAbsenceLoading] = useState(true)
 
     const thumbButton = useRef<HTMLButtonElement>(null)
     const [thumbButtonSize, setThumbButtonSize] = useState(50)
@@ -17,6 +24,7 @@ export default function AbsenceDiv() {
         .then((res) => res.data)
         .then((data) => {
             setAbsenceData(data.absenceData)
+            setAbsenceLoading(false)
         })
     }, [])
 
@@ -48,7 +56,16 @@ export default function AbsenceDiv() {
                     <h3>{absenceData.length}회</h3>
                 </div>
                 <Divider />
-                {absenceData.length ? (
+                {absenceLoading ? (
+                    <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        height="100%">
+                        <CircularProgress />
+                    </Box>
+                ) :
+                absenceData.length ? (
                 <List
                     sx={{
                         display: "flex",
@@ -60,14 +77,17 @@ export default function AbsenceDiv() {
                         },
                         '&::-webkit-scrollbar-track': {
                             backgroundColor: "transparent"
+                        },
+                        '&::-webkit-scrollbar-button': {
+                            display: "none"
                         }
                     }}>
                     {absenceData.map((absence, idx) => {
-                        const time = new Date(absence.date)
+                        const time = dayjs(absence.date).tz('Asia/Seoul')
                         return (
                             <ListItem
                                 key={idx}>
-                                {time.getUTCMonth() + 1}/{time.getUTCDate()} ({"일월화수목금토"[time.getUTCDay()]})
+                                {time.month()}/{time.date()} ({"일월화수목금토"[time.day()]})
                             </ListItem>
                         )
                     })}

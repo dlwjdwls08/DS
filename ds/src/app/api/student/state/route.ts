@@ -3,8 +3,10 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth"
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
 
+dayjs.extend(utc)
 dayjs.extend(timezone)
 
 const prisma = new PrismaClient()
