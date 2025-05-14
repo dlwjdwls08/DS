@@ -43,7 +43,7 @@ export async function POST(req: NextRequest, {params} : {params: Promise<{id: st
 	try {
 		const {id} = await params
 
-		let body: {targetState: boolean}
+		let body: {targetState: boolean, date?: string}
 		try {
 			body = await req.json()
 		} catch {
@@ -55,8 +55,9 @@ export async function POST(req: NextRequest, {params} : {params: Promise<{id: st
 
 		
 		const {targetState} = body
-		const today = dayjs().tz('Asia/Seoul')
+		const today = body.date ? dayjs(body.date).tz('Asia/Seoul') : dayjs().tz('Asia/Seoul')
 		const date = new Date(today.year(), today.month(), today.date())
+		console.log(date)
 		await prisma.absenceLog.updateMany({
 			where:{ studentID: id, date: date },
 			data: { state: targetState }

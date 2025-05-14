@@ -19,6 +19,8 @@ import "dayjs/locale/ko"
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar"
 import { AbsenceLog, Leave } from "@prisma/client"
 import { PickerValue } from "@mui/x-date-pickers/internals"
+import { PieChart } from "@mui/x-charts/PieChart"
+import { LineChart } from "@mui/x-charts"
 
 type LogData = {
   grade: number,
@@ -37,6 +39,13 @@ type LeaveDataRaw = {
   reg_date: string
 }
 
+type AbsenceChartData = {
+  absence: number,
+  attend: number,
+  date: string,
+  penalty: number
+}
+
 dayjs.locale("ko")
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -48,6 +57,7 @@ export default function StaffPage() {
   const [getData, setData] = useState<LogData[]>([])
   const [page, setPage] = useState(0)
   const [isLoading, setLoading] = useState(true)
+  const [absenceChartData, setAbsenceChartData] = useState<AbsenceChartData[]>([{absence: 10, attend: 100, penalty: 5, date: ""}])
 
   const visibleData = useMemo(
     () => 
@@ -190,6 +200,11 @@ export default function StaffPage() {
     URL.revokeObjectURL(url);
   }
 
+  const deleteAbsence = (index:number) => {
+    axios.post(`/api/absence/${getData[index].studentid}`, {targetState: true, date: getData[index].date})
+    setData((prev) => prev.filter((_, i) => i !== index))
+  }
+
   return (
     <Box
       display="flex"
@@ -216,6 +231,36 @@ export default function StaffPage() {
                 setEndDay(dayjs(e))
               }}
               onAccept={handleLoad}/>
+            {startDay.isSame(endDay) ? (
+              <PieChart
+                hideLegend
+                series={[
+                  {
+                    data: [
+                      {id: 1, label: "출석", value: absenceChartData[0].attend},
+                      {id: 2, label: "불참", value: absenceChartData[0].absence - absenceChartData[0].penalty},
+                      {id: 3, label: "불참(벌점)", value: absenceChartData[0].penalty}
+                    ]
+                  }
+                ]}>
+
+              </PieChart>
+            ) : (
+              <LineChart
+                yAxis={[{data: [0, 50, 100, 150, 200, 250, 300, 350, 400, 450]}]}
+                series={[
+                  {
+                    data: absenceChartData.map((v) => v.absence)
+                  },
+                  {
+                    data: absenceChartData.map((v) => v.penalty)
+                  }
+                ]}>
+
+              </LineChart>
+            )
+
+            }
           </Stack>
         </LocalizationProvider>
         <Box
@@ -251,7 +296,8 @@ export default function StaffPage() {
                       <TableCell>
                         <Chip 
                           label="결석"
-                          clickable/>
+                          clickable
+                          onDelete={() => deleteAbsence(page * 8 + index)}/>
                       </TableCell>
                     </TableRow>
                   ))
