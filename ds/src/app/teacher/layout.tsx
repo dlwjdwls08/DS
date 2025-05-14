@@ -5,11 +5,7 @@ import ClassDrawer from "@/components/teacher/drawer/drawer";
 import { Box, Dialog, Stack, useScrollTrigger } from "@mui/material";
 import Fab from "@mui/material/Fab";
 import { Chat } from "@mui/icons-material";
-<<<<<<< Updated upstream
 import MemoDialog from "@/components/teacher/dialog/memoDialog";
-=======
-import MemoDialog from "@/components/teacher/dialog/chatDialog";
->>>>>>> Stashed changes
 import { useState } from "react";
 
 export default function teacherLayout({

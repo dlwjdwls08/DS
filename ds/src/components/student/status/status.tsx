@@ -12,16 +12,8 @@ import dayjs from 'dayjs'
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
 
-<<<<<<< Updated upstream
 dayjs.extend(utc)
 dayjs.extend(timezone)
-=======
-type ClassData = {
-	className: string,
-	start: Date,
-	end: Date
-}
->>>>>>> Stashed changes
 
 type ClassData = Pick<NightClass, "day" | "className">
 

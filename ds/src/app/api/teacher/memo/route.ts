@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 import { PrismaClient } from "@prisma/client";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone"
@@ -40,6 +39,3 @@ export async function GET(request: Request) {
         { memoData: memos }
     )
 }
-=======
-..
->>>>>>> Stashed changes
