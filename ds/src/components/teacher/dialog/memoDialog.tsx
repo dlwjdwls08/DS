@@ -1,5 +1,6 @@
 'use client'
 
+<<<<<<< Updated upstream
 import { useClassState } from "@/store/store";
 import { Dialog, Box, Typography, Stack, ButtonBase } from "@mui/material";
 // import { Memo } from "@prisma/client";
@@ -40,6 +41,19 @@ export default function MemoDialog({open,onClose}: {open: boolean, onClose: () =
     onClose();
   }
 
+=======
+import { Dialog, Box, Typography } from "@mui/material";
+import axios from "axios";
+import { useEffect, useState } from "react";
+
+
+export default function MemoDialog({open,onClose}: {open: boolean, onClose: () => void}) {
+
+  useEffect(() => { 
+    const {memoList} = axios.get("api/teacher/memo/")
+  }, [open]);
+
+>>>>>>> Stashed changes
   return (
    <Dialog open={open} onClose={onClose}>
       <Box
@@ -55,12 +69,18 @@ export default function MemoDialog({open,onClose}: {open: boolean, onClose: () =
         <Box
           sx={{
             height: "calc(100% - 60px)",
+<<<<<<< Updated upstream
             paddingTop: 2,
+=======
+            backgroundColor: "lightgray",
+            padding: 2,
+>>>>>>> Stashed changes
             alignSelf: "center",
             justifySelf: "center",
             overflowY: "scroll",
           }}
         >
+<<<<<<< Updated upstream
           {memoList.map((M:Memo, index: number) => (
             <ButtonBase
               key={M.id || index}
@@ -90,6 +110,9 @@ export default function MemoDialog({open,onClose}: {open: boolean, onClose: () =
               <Typography fontSize={18} sx={{ justifySelf: "flex-end" }}> {M.content} </Typography>
             </ButtonBase>
           ))}
+=======
+          {memoList.map((memo) => (}
+>>>>>>> Stashed changes
         </Box>
       </Box>
    </Dialog>
