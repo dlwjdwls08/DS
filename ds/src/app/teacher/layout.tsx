@@ -8,7 +8,7 @@ import { Chat } from "@mui/icons-material";
 import MemoDialog from "@/components/teacher/dialog/memoDialog";
 import { useState } from "react";
 
-export default function teacherLayout({
+export default function TeacherLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
