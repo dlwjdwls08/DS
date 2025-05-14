@@ -30,7 +30,7 @@ export default function StatusDiv(){
 	
 	const [classData, setClassData] = useState<ClassData[]>([])
 	const [leaveData, setLeaveData] = useState<LeaveData[]>([])
-	const [getStatus, setStatus] = useState<string>("자습중")
+	const [getStatus, setStatus] = useState<"출석 완료" | "수업 중" | "자습 이석">("출석 완료")
 
 	useEffect(() => {
 		if (sessionStatus !== "authenticated") return
@@ -46,7 +46,7 @@ export default function StatusDiv(){
 			}
 			setClassData(classdata)
 			if (classdata.findIndex((v) => v.day === today.day()) !== -1) {
-				setStatus("수업중")
+				setStatus("수업 중")
 			}
 		})
 		.catch((error) => {
@@ -56,13 +56,21 @@ export default function StatusDiv(){
 
 	// 나중에 API로 상태 받아오기
 
+	const colors = {
+		"출석 완료": ["#EEF064", "#A5E66C", "#4CAF50"],
+		"수업 중": ["#90CAF9", "#1E88E5", "#0D47A1"],
+		"자습 이석": ["#90CAF9", "#1E88E5", "#0D47A1"],
+		// "결석" : [],
+	}
 
 	return(
-	<Paper id='layout-box' elevation={3}>
+	<Paper id='layout-box' elevation={3} sx={{display: "flex", justifyContent:'space-between'}}>
 		<Box
 			display="grid"
-			gridTemplateRows="auto auto 50px">
+			gridTemplateRows="auto auto 50px"
+			sx={{ position: "relative", borderRadius: 12, overflow: "hidden",flex:1 }}>
 			<h1 id='title'> {getStatus} </h1>
+
 			<Box
 				display="flex"
 				flexDirection="column"
@@ -88,6 +96,36 @@ export default function StatusDiv(){
 					))}
 				</Box>
 				)}
+			</Box>
+
+			<Box
+				component="svg"
+				viewBox="0 0 320 240"
+				preserveAspectRatio="none"
+				sx={{
+					position: "absolute",
+					bottom: 0,
+					left: 0,
+					pointerEvents: "none",
+					alignSelf: "flex-end",
+					justifySelf: "flex-end",
+					overflow: "hidden",
+				}}
+			>
+				<path
+					d="M0 60 C60 0 140 100 220 40 C280 10 320 70 320 70 L320 240 L0 240Z"
+					fill={colors[getStatus][0]}
+				/>
+
+				<path
+					d="M0 105 C40 130 120 30 200 105 C260 140 320 60 320 80 L320 240 L0 240Z"
+					fill={colors[getStatus][1]}
+				/>
+
+				<path
+					d="M0 150 C35 85 95 215 155 145 C215 105 275 225 320 165 L320 240 L0 240Z"
+					fill={colors[getStatus][2]}
+				/>
 			</Box>
 		</Box>
 	</Paper>
