@@ -6,53 +6,56 @@ import axios from "axios";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-import { Box, Button, Paper, Stack, SwipeableDrawer } from "@mui/material";
+import { Alert, AlertTitle, Box, Button, Collapse, IconButton, Paper, Stack, SwipeableDrawer, TextField, Zoom } from "@mui/material";
 import { useDrawerState } from "@/store/store";
 import { Teacher } from "@prisma/client";
+import { Close } from "@mui/icons-material";
 
 
 export default function TeacherPage() {
 	const [teacherList, setTeacherList] = useState<Teacher[]>([])
-  
-  useEffect(() => {
-    axios.get("/api/teacher")
-    .then(res => res.data)
-    .then((data) => {
-      setTeacherList(data.teacherData)
-    })
-  }, [])
+  const [getName, setName] = useState<string>("")
+  const [inputActive, SetInputActive] = useState<boolean>(true)
 
-  function handleClick() {
-    
+  const handleClick = () => {
+    axios.post("/api/teacher/name", {name: getName})
+    .then(res => res.data)
+    .then(data => {
+      SetInputActive(false)
+    })
   }
 
   return (
     <Box
       display="flex"
+      flex="1 0 0"
       flexWrap="wrap"
       gap="20px"
       padding="50px"
-      onClick={handleClick}>
-      {teacherList.map((v, idx) => (
-        <Paper
-          key={idx}
-          sx={{
-            display: "flex",
-            width: "100px",
-            height: "100px"
-          }}>
+      justifyContent="center"
+      alignContent="center">
+      <Stack gap="10px" justifyContent="center" alignItems="center">
+        <TextField placeholder="성함" value={getName} onChange={(e) => setName(e.target.value)} variant="standard" sx={{width: "200px", textAlign: "center"}} helperText={false} />
+        <Collapse in={inputActive}>
           <Button
-            color="inherit"
-            sx={{
-              flex: 1
-            }}>
-            <Stack justifyContent="center" alignItems="center">
-              <Box>{v.name}</Box>
-              <Box>{v.grade} - {v.classNo}</Box>
-            </Stack>
+            onClick={handleClick}
+            fullWidth>
+            완료
           </Button>
-        </Paper>
-      ))}
+        </Collapse>
+        <Zoom in={!inputActive}>
+          <Alert
+            severity="success"
+            onClose={() => SetInputActive(true)}>
+            <AlertTitle>확인되었습니다</AlertTitle>
+            안녕하세요, {getName} 선생님
+          </Alert>
+        </Zoom>
+        
+        
+        
+      </Stack>
+
     </Box>
   )
 }

@@ -68,5 +68,11 @@ model Memo {
   time        DateTime
 }
 
+model TeacherName {
+  id          Int   @id @default(autoincrement())
+  name        String
+  date        DateTime @unique
+}
+
 //npx prisma generate
 //npx prisma migrate dev
