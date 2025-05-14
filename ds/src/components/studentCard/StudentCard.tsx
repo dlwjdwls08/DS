@@ -6,7 +6,7 @@ import { Student, AbsenceLog, Memo, NightClass, Leave } from "@prisma/client"
 import axios from "axios"
 import { memo, TouchEvent, useEffect, useMemo, useRef, useState } from "react"
 import { StudentInfo } from "../classtype/type"
-import { useAbsenceState } from '@/store/store';
+import { useAbsenceState, useClassState } from '@/store/store';
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
@@ -61,6 +61,8 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
   const [memoData, setMemoData] = useState<MemoData[]>([])
   const [leaveData, setLeaveData] = useState<Leave>()
   const [nightClassData, setNightClassData] = useState<ClassData>()
+
+  const { highlight, setHighlight } = useClassState();
 
   const holdTimeOut = useRef<NodeJS.Timeout | null>(null)
   const holdThreshold = 1000
@@ -164,7 +166,8 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
               maxHeight: "80px",
               '& .MuiTouchRipple-root .MuiTouchRipple-rippleVisible': {
                 animationDuration: `${holdThreshold}ms`
-              }
+              },
+              animation: highlight === studentInfo.student.studentID ? "highlight 5s" : "",
             }}
             ref={buttonRef}
             onMouseDown={StartHold}

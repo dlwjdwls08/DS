@@ -132,3 +132,24 @@ body {
   height: 100%;
   margin: 0;
 }
+
+@keyframes highlight {
+  10% {
+    transform: translateY(-20px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  0% {
+    box-shadow: 0 0 0 0 #ffe066;
+    background-color: #ffe066;
+  }
+  70% {
+    box-shadow: 0 0 20px 10px #ffe066;
+    background-color: #fffbe6;
+  }
+  100% {
+    box-shadow: 0 0 0 0 #ffe066;
+    background-color: #ffffff;
+  }
+}
