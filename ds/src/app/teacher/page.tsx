@@ -21,7 +21,8 @@ export default function TeacherPage() {
     axios.post("/api/teacher/name", {name: getName})
     .then(res => res.data)
     .then(data => {
-      SetInputActive(false)
+      SetInputActive(false);
+      window.dispatchEvent(new Event("teacherNameChanged")); // 커스텀 이벤트 발생
     })
   }
 
@@ -35,7 +36,7 @@ export default function TeacherPage() {
       justifyContent="center"
       alignContent="center">
       <Stack gap="10px" justifyContent="center" alignItems="center">
-        <TextField placeholder="성함" value={getName} onChange={(e) => setName(e.target.value)} variant="standard" sx={{width: "200px", textAlign: "center"}} helperText={false} />
+        <TextField placeholder="성함" disabled={!inputActive} value={getName} onChange={(e) => setName(e.target.value)} variant="standard" sx={{width: "200px", textAlign: "center"}} helperText={false} />
         <Collapse in={inputActive}>
           <Button
             onClick={handleClick}

@@ -4,11 +4,12 @@ import Link from 'next/link'
 import './style.css'
 import { signOut, useSession } from 'next-auth/react'
 import { Menu } from '@mui/icons-material'
-import { Box, IconButton } from '@mui/material'
+import { Box, Button, IconButton, Typography } from '@mui/material'
 import { useDrawerState } from '@/store/store'
 
 export default function Navbar() {
   const { flip } = useDrawerState()
+  const { data: session } = useSession()
 
   return (
     <nav id="navbar">
@@ -23,7 +24,10 @@ export default function Navbar() {
 
       <div
         style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
-        <div id="logout" onClick={() => signOut({callbackUrl:"/landing"})}>로그아웃</div>
+        <Typography sx={{fontSize:'16px', color:'black', fontWeight:'bold' }}>{session?.user?.name}</Typography>
+        <Button id="logout" onClick={() => signOut({callbackUrl:"/landing"})}>
+          <Typography sx={{color:"black"}}>로그아웃</Typography>
+        </Button>
       </div>
     </nav>
   )

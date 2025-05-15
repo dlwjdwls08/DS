@@ -36,3 +36,21 @@ export async function POST(req: NextRequest) {
         )
     }
 }
+
+export async function GET(req: NextRequest) {
+    try {
+        const today = dayjs().tz('Asia/Seoul')
+        const date = new Date(today.year(), today.month(), today.date())
+        const teacherName = await prisma.teacherName.findUnique({
+            where: { date: date }
+        })
+        if (!teacherName) {
+            return NextResponse.json({ error: "Not Found" }, { status: 404 })
+        }
+        return NextResponse.json({ name: teacherName.name })
+    }
+    catch (e) {
+        console.error(e)
+        return NextResponse.json({ error: "DB Error" }, { status: 500 })
+    }
+}
