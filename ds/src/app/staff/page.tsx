@@ -75,11 +75,11 @@ export default function StaffPage() {
 
 
   useEffect(() => {
-    const yesterday = dayjs().tz('Asia/Seoul').subtract(1, 'day')
+    const yesterday = dayjs().tz('Asia/Seoul').subtract(1, 'day').startOf('day').toISOString()
     axios.get("/api/staff/absence", {
       params: {
-        start: new Date(yesterday.year(), yesterday.month(), yesterday.date()),
-        end: new Date(yesterday.year(), yesterday.month(), yesterday.date()),
+        start: yesterday,
+        end: yesterday,
       }
     })
     .then((res) => res.data)
@@ -114,8 +114,8 @@ export default function StaffPage() {
     })
     axios.get("/api/staff/absence/statistic", {
       params: {
-        start: new Date(yesterday.year(), yesterday.month(), yesterday.date()),
-        end: new Date(yesterday.year(), yesterday.month(), yesterday.date()),
+        start: yesterday,
+        end: yesterday,
       }
     })
     .then(res => res.data)
@@ -135,8 +135,8 @@ export default function StaffPage() {
     console.log(endDay)
     axios.get("/api/staff/absence", {
       params: {
-        start: new Date(startDay.year(), startDay.month(), startDay.date()),
-        end: new Date(endDay.year(), endDay.month(), endDay.date()),
+        start: startDay.tz('Asia/Seoul').startOf('day').toISOString(),
+        end: endDay.tz('Asia/Seoul').startOf('day').toISOString(),
       }
     })
     .then((res) => res.data)
@@ -170,8 +170,8 @@ export default function StaffPage() {
     })
     axios.get("/api/staff/absence/statistic", {
       params: {
-        start: new Date(startDay.year(), startDay.month(), startDay.date()),
-        end: new Date(endDay.year(), endDay.month(), endDay.date()),
+        start: startDay.tz('Asia/Seoul').startOf('day').toISOString(),
+        end: endDay.tz('Asia/Seoul').startOf('day').toISOString(),
       }
     })
     .then(res => res.data)
