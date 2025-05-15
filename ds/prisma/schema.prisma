@@ -3,42 +3,41 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  relationMode = "prisma"   
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Student {
-  id         Int          @id @default(autoincrement())
-  name       String
-  studentID  String       @unique
-  grade      Int
-  room       String
-  classNo    String
-  seat       Int
-
-  memos      Memo[]
+  id        Int    @id @default(autoincrement())
+  name      String
+  studentID String @unique
+  grade     Int
+  room      String
+  classNo   String
+  seat      Int
+  memos     Memo[]
 }
 
 model Room {
-  id      Int    @id @default(autoincrement())
-  name    String @unique
-  type    Int
-  grade   Int
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  type  Int
+  grade Int
 }
 
 model RoomType {
-  id      Int   @id @default(autoincrement())
-  name    String
-  type    Int @unique
+  id   Int    @id @default(autoincrement())
+  name String
+  type Int    @unique
 }
 
 model NightClass {
-  id          Int     @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   studentID   String
   className   String
-  day         Int
   studentName String
+  day         Int
 }
 
 model Teacher {
@@ -53,8 +52,8 @@ model Teacher {
 model Leave {
   id          Int      @id @default(autoincrement())
   studentID   String
-  date        DateTime
   studentName String
+  date        DateTime
 }
 
 model AbsenceLog {
@@ -65,18 +64,16 @@ model AbsenceLog {
 }
 
 model Memo {
-  id          Int   @id @default(autoincrement())
-  studentID   String
-  student     Student  @relation(fields: [studentID], references: [studentID])
-  content     String
-  time        DateTime
+  id        Int      @id @default(autoincrement())
+  studentID String
+  content   String
+  time      DateTime
+  read      Boolean  @default(false)
+  student   Student  @relation(fields: [studentID], references: [studentID])
 }
 
 model TeacherName {
-  id          Int   @id @default(autoincrement())
-  name        String
-  date        DateTime @unique
+  id   Int      @id @default(autoincrement())
+  name String
+  date DateTime @unique
 }
-
-//npx prisma generate
-//npx prisma migrate dev

@@ -35,6 +35,21 @@ export async function GET(req: NextRequest, {params}: {params: Promise<{id: stri
             },
             orderBy: {
                 time: "desc"
+            },
+        })
+
+        await prisma.memo.updateMany({
+            where: {
+                studentID: {
+                    equals: id
+                },
+                time: {
+                    gte: date,
+                    lt: nextDate
+                }
+            },
+            data: {
+                read: true
             }
         })
 
@@ -44,7 +59,8 @@ export async function GET(req: NextRequest, {params}: {params: Promise<{id: stri
         )
     }
     
-    catch {
+    catch(e) {
+        console.error(e)
         return NextResponse.json(
             { error: "DB Error" },
             { status: 500 }
