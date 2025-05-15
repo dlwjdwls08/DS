@@ -16,8 +16,8 @@ dayjs.extend(timezone)
 export async function GET(req: NextRequest, {params}: { params: Promise<{ id: string }> }) {
 	try {
 		const {id} = await params
-		const today = dayjs().tz('Asia/Seoul')
-		const date = new Date(today.year(), today.month(), today.date())
+		const today = dayjs().tz('Asia/Seoul').startOf('day')
+		const date = new Date(today.toISOString())
 		const info = await prisma.absenceLog.findFirst({
 			where: {
 				studentID: id,
@@ -55,8 +55,8 @@ export async function POST(req: NextRequest, {params} : {params: Promise<{id: st
 
 		
 		const {targetState} = body
-		const today = body.date ? dayjs(body.date).tz('Asia/Seoul') : dayjs().tz('Asia/Seoul')
-		const date = new Date(today.year(), today.month(), today.date())
+		const today = body.date ? dayjs.utc(body.date).tz('Asia/Seoul').startOf('day') : dayjs().tz('Asia/Seoul').startOf('day')
+		const date = new Date(today.toISOString())
 		console.log(date)
 		await prisma.absenceLog.updateMany({
 			where:{ studentID: id, date: date },
