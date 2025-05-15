@@ -187,10 +187,10 @@ export default function ClassPage({ params }: { params: Promise<{ id: string }>}
             0.45
           }
           minScale={0.45}
-          onZoomStart={() => setInteracting(true)}
-          onPanningStart={() => setInteracting(true)}
-          onZoomStop={() => setInteracting(false)}
-          onPanningStop={() => setInteracting(false)}
+          // onZoomStart={() => {setInteracting(true); console.log("here")}}
+          // onPanningStart={() => {setInteracting(true); console.log('here')}}
+          // onZoomStop={() => setInteracting(false)}
+          // onPanningStop={() => setInteracting(false)}
         >
           <TransformComponent wrapperStyle={{ display: "flex", height: "100%" }}>
             <Box
