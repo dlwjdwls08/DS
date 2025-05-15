@@ -20,7 +20,6 @@ import MemoDiv from "@/components/student/memo/memo";
 export default function StudentPage() {
 	const session = useSession()
 	
-	
 	return (
     <>
 			<div id='large-div'>

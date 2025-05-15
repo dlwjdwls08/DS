@@ -13,6 +13,8 @@ type DrawerState = {
 type ClassState = {
     classID: number
     change: (id:number) => void
+    highlight: string | null
+    setHighlight: (id: string | null) => void
 }
 
 export const useDrawerState = create<DrawerState>((set) => ({
@@ -24,7 +26,9 @@ export const useDrawerState = create<DrawerState>((set) => ({
 
 export const useClassState = create<ClassState>((set) => ({
     classID: 0,
-    change: (id) => set((state) => ({classID: id}))
+    change: (id) => set((state) => ({classID: id})),
+    highlight: null,
+    setHighlight: (id) => set(() => ({ highlight: id }))
 }))
 
 
