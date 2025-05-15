@@ -269,38 +269,6 @@ export default function StaffPage() {
               onChange={(e) => {
                 setEndDay(dayjs(e))
               }}/>
-            {isChartLoading ? (
-              <CircularProgress />
-            ) : 
-            startDay.isSame(endDay) ? (
-              <PieChart
-                hideLegend
-                series={[
-                  {
-                    data: [
-                      {id: 1, label: "출석", value: absenceChartData[0]?.attend ?? 0},
-                      {id: 2, label: "불참", value: (absenceChartData[0]?.absence ?? 0) - (absenceChartData[0]?.penalty ?? 0)},
-                      {id: 3, label: "불참(벌점)", value: absenceChartData[0]?.penalty ?? 0}
-                    ]
-                  }
-                ]}>
-
-              </PieChart>
-            ) : (
-              <LineChart
-                series={[
-                  {
-                    data: absenceChartData.map((v) => v.absence)
-                  },
-                  {
-                    data: absenceChartData.map((v) => v.penalty)
-                  }
-                ]}>
-
-              </LineChart>
-            )
-
-            }
           </Stack>
         </LocalizationProvider>
         <Box
