@@ -15,6 +15,10 @@ export async function GET(req: NextRequest) {
                 { status: 500 }
             )
         }
+        const start = dayjs(start_param)
+        const end = dayjs(end_param)
+        console.log(start)
+        console.log(end)
         const start_date = new Date(start_param)
         const end_date = new Date(end_param)
         console.log(start_date)
