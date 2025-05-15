@@ -15,10 +15,8 @@ export async function GET(req: NextRequest) {
                 { status: 500 }
             )
         }
-        const start = dayjs(start_param)
-        const end = dayjs(end_param)
-        const start_date = new Date(start.year(), start.month(), start.date())
-        const end_date = new Date(end.year(), end.month(), end.date())
+        const start_date = new Date(start_param)
+        const end_date = new Date(end_param)
         console.log(start_date)
         console.log(end_date)
         const absences = await prisma.$queryRaw`
