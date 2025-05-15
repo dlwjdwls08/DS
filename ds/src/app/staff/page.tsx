@@ -1,7 +1,7 @@
 'use client'
 
 import { Book, People, Room, School, Settings } from "@mui/icons-material"
-import { Backdrop, Box, Button, Card, Chip, Container, Paper, Skeleton, SpeedDial, SpeedDialAction, SpeedDialIcon, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material"
+import { Backdrop, Box, Button, Card, Chip, CircularProgress, Container, Paper, Skeleton, SpeedDial, SpeedDialAction, SpeedDialIcon, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material"
 import axios from "axios"
 import { useRouter } from "next/navigation"
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react"
@@ -51,13 +51,16 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 
 export default function StaffPage() {
+  const yesterdayjs = dayjs().tz('Asia/Seoul').subtract(1, 'day')
+
   const [speedDialOpen, setSpeedDialOpen] = useState(false)
-  const [startDay, setStartDay] = useState(dayjs(new Date()).subtract(1, 'day'))
-  const [endDay, setEndDay] = useState(dayjs(new Date()).subtract(1, 'day'))
+  const [startDay, setStartDay] = useState(yesterdayjs)
+  const [endDay, setEndDay] = useState(yesterdayjs)
   const [getData, setData] = useState<LogData[]>([])
   const [page, setPage] = useState(0)
   const [isLoading, setLoading] = useState(true)
-  const [absenceChartData, setAbsenceChartData] = useState<AbsenceChartData[]>([{absence: 10, attend: 100, penalty: 5, date: ""}])
+  const [absenceChartData, setAbsenceChartData] = useState<AbsenceChartData[]>([])
+  const [isChartLoading, setChartLoading] = useState(true)
 
   const visibleData = useMemo(
     () => 
@@ -83,6 +86,12 @@ export default function StaffPage() {
     .then((data: {absenceData: LogData[]}) => {
       console.log(data)
       data.absenceData.sort((x, y) => {
+        if (dayjs(x.date).isAfter(dayjs(y.date))) {
+          return -1
+        }
+        else if (dayjs(x.date).isBefore(dayjs(y.date))) {
+          return 1
+        }
         if (x.classno.startsWith("RAA")) {
           if (y.classno.startsWith("RAA")) {
             return Number(x.classno.at(-1)) - Number(y.classno.at(-1))
@@ -102,6 +111,17 @@ export default function StaffPage() {
     })
     .catch((error) => {
       console.error(error)
+    })
+    axios.get("/api/staff/absence/statistic", {
+      params: {
+        start: new Date(yesterday.year(), yesterday.month(), yesterday.date()),
+        end: new Date(yesterday.year(), yesterday.month(), yesterday.date()),
+      }
+    })
+    .then(res => res.data)
+    .then(data => {
+      setAbsenceChartData(data)
+      setChartLoading(false)
     })
   }, [])
 
@@ -122,6 +142,12 @@ export default function StaffPage() {
     .then((res) => res.data)
     .then((data: { absenceData: LogData[] }) => {
       data.absenceData.sort((x, y) => {
+        if (dayjs(x.date).isAfter(dayjs(y.date))) {
+          return -1
+        }
+        else if (dayjs(x.date).isBefore(dayjs(y.date))) {
+          return 1
+        }
         if (x.classno.startsWith("RAA")) {
           if (y.classno.startsWith("RAA")) {
             return Number(x.classno.at(-1)) - Number(y.classno.at(-1))
@@ -141,6 +167,17 @@ export default function StaffPage() {
     })
     .catch((error) => {
       console.error(error)
+    })
+    axios.get("/api/staff/absence/statistic", {
+      params: {
+        start: new Date(startDay.year(), startDay.month(), startDay.date()),
+        end: new Date(endDay.year(), endDay.month(), endDay.date()),
+      }
+    })
+    .then(res => res.data)
+    .then(data => {
+      setAbsenceChartData(data)
+      setChartLoading(false)
     })
   }
 
@@ -176,7 +213,7 @@ export default function StaffPage() {
   }
 
   const handleFileDownload = () => {
-    const worksheet = XLSX.utils.json_to_sheet(getData);
+    const worksheet = XLSX.utils.json_to_sheet(getData.map((v) => ({"날짜": v.date, "반": v.classno, "학번": v.studentid, "이름": v.name, "담임": v.teacher})));
 
     // 워크북 생성
     const workbook = XLSX.utils.book_new();
@@ -232,7 +269,10 @@ export default function StaffPage() {
               onChange={(e) => {
                 setEndDay(dayjs(e))
               }}/>
-            {startDay.isSame(endDay) ? (
+            {isChartLoading ? (
+              <CircularProgress />
+            ) : 
+            startDay.isSame(endDay) ? (
               <PieChart
                 hideLegend
                 series={[
@@ -248,7 +288,6 @@ export default function StaffPage() {
               </PieChart>
             ) : (
               <LineChart
-                yAxis={[{data: [0, 50, 100, 150, 200, 250, 300, 350, 400, 450]}]}
                 series={[
                   {
                     data: absenceChartData.map((v) => v.absence)

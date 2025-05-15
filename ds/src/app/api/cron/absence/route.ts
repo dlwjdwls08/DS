@@ -12,6 +12,7 @@ const prisma = new PrismaClient()
 export async function GET(req: NextRequest) {
     const today = dayjs().tz('Asia/Seoul')
     const date = new Date(today.year(), today.month(), today.date())
+    console.log(date)
     const init = await prisma.absenceLog.findFirst({
         where: {
             date: date

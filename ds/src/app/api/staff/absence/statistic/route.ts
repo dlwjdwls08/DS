@@ -19,24 +19,35 @@ export async function GET(req: NextRequest) {
         const end = dayjs(end_param)
         const start_date = new Date(start.year(), start.month(), start.date())
         const end_date = new Date(end.year(), end.month(), end.date())
-        console.log(start_date)
-        console.log(end_date)
-        const absences = await prisma.$queryRaw`
-        SELECT S.grade as grade, S."classNo" as classNo, S."studentID" as studentID, S.name as name, AL.date as date, AL.state as state, T.name as teacher, NC.day
-        -- SELECT *
-        FROM "AbsenceLog" as AL
-        INNER JOIN "Student" as S
-        ON S."studentID" = AL."studentID" AND AL."date" >= ${start_date} AND AL."date" <= ${end_date}
-        INNER JOIN "Teacher" as T
-        ON S."classNo" = T."classNo" AND (S.grade = T.grade OR S."classNo" LIKE 'RAA%')
-        LEFT JOIN "Leave" as L
-        ON S."studentID" = L."studentID" AND AL.date = L.date
-        LEFT JOIN "NightClass" as NC
-        ON S."studentID" = NC."studentID" AND NC.day = EXTRACT(DOW FROM AL.date)
-        WHERE AL.state = false AND L.id IS NULL AND NC.id IS NULL
+        const absences:{attend: bigint, absence: bigint, penalty: bigint, date: string}[] = await prisma.$queryRaw`
+        SELECT
+        AL.date AS "date",
+        COUNT(*) FILTER (
+            WHERE AL.state = true
+        ) AS attend,
+        
+        COUNT(*) FILTER (
+            WHERE AL.state = false
+        ) AS absence,
+        
+        COUNT(*) FILTER (
+            WHERE AL.state = false
+            AND (
+                SELECT COUNT(*)
+                FROM "AbsenceLog" prev
+                WHERE prev."studentID" = AL."studentID"
+                AND prev."date" <= AL."date" AND prev."date" >= ${start_date}
+                AND prev.state = false
+            ) % 3 = 0
+        ) AS penalty
+
+        FROM "AbsenceLog" AL
+        WHERE AL."date" >= ${start_date} AND AL."date" <= ${end_date}
+        GROUP BY AL."date"
+        ORDER BY AL."date"
         `
         return NextResponse.json(
-            { absenceData: absences},
+            absences.map((v) => {return {attend: Number(v.attend), absence: Number(v.absence), penalty: Number(v.penalty), date: v.date}}),
             { status: 200 }
         )
     }
