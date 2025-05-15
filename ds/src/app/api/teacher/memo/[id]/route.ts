@@ -15,9 +15,9 @@ export async function GET(req: NextRequest, {params}: {params: Promise<{id: stri
     try {
         const { id } = await params
     
-        const today = dayjs().tz('Asia/Seoul')
-        const date = new Date(today.year(), today.month(), today.date())
-        const nextDate = new Date(today.year(), today.month(), today.date() + 1)
+        const today = dayjs().tz('Asia/Seoul').startOf('day')
+        const date = new Date(today.toISOString())
+        const nextDate = new Date(today.add(1, 'day').toISOString())
         
         const memos = await prisma.memo.findMany({
             select: {

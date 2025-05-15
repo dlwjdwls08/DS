@@ -12,8 +12,8 @@ const prisma = new PrismaClient()
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json()
-        const today = dayjs().tz('Asia/Seoul')
-        const date = new Date(today.year(), today.month(), today.date())
+        const today = dayjs().tz('Asia/Seoul').startOf('day')
+        const date = new Date(today.toISOString())
         await prisma.teacherName.upsert({
             where: {
                 date: date
@@ -39,8 +39,8 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
     try {
-        const today = dayjs().tz('Asia/Seoul')
-        const date = new Date(today.year(), today.month(), today.date())
+        const today = dayjs().tz('Asia/Seoul').startOf('day')
+        const date = new Date(today.toISOString())
         const teacherName = await prisma.teacherName.findUnique({
             where: { date: date }
         })

@@ -25,8 +25,8 @@ export async function GET(req:NextRequest, {params}: { params: Promise<{ id: str
             return NextResponse.json({ error: "Room not found" }, { status: 404 })
         }
 
-        const today = dayjs().tz('Asia/Seoul')
-        const date = new Date(today.year(), today.month(), today.date())
+        const today = dayjs().tz('Asia/Seoul').startOf('day')
+        const date = new Date(today.toISOString())
 
 
         const students = await prisma.student.findMany({

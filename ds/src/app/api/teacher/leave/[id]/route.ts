@@ -28,7 +28,7 @@ export async function GET(req: NextRequest, {params}: {params: Promise<{id: stri
                 }
             }
         })
-        const date = new Date(today.year(), today.month(), today.date())
+        const date = new Date(today.startOf('day').toISOString())
         const leave = await prisma.leave.findMany({
             where: {
                 studentID: {

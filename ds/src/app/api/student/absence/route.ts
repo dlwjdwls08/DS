@@ -15,8 +15,8 @@ export async function GET(req: NextRequest) {
     try {
         const session = await getServerSession(authOptions)
         const studentID = session?.user?.email?.slice(0, 6)
-        const today = dayjs().tz('Asia/Seoul')
-        const date = new Date(today.year(), today.month(), today.date())
+        const today = dayjs().tz('Asia/Seoul').startOf('day')
+        const date = new Date(today.toISOString())
         const absences = await prisma.absenceLog.findMany({
             select: {
                 date: true

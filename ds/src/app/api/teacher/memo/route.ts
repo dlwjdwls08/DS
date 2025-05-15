@@ -12,9 +12,9 @@ const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
     
-    const today = dayjs().tz('Asia/Seoul')
-    const date = new Date(today.year(), today.month(), today.date())
-    const nextDate = new Date(today.year(), today.month(), today.date() + 1)
+    const today = dayjs().tz('Asia/Seoul').startOf('day')
+    const date = new Date(today.toISOString())
+    const nextDate = new Date(today.add(1, 'day').toISOString())
             
     const memos = await prisma.memo.findMany({
         distinct: ['studentID'],

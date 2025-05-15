@@ -44,7 +44,6 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json()
-        console.log(body)
         const session = await getServerSession(authOptions)
         const studentID = session?.user?.email?.slice(0, 6)
         const now = dayjs().tz('Asia/Seoul')
@@ -52,7 +51,7 @@ export async function POST(req: NextRequest) {
             data: {
                 studentID: studentID!,
                 content: body.content,
-                time: new Date(now.year(), now.month(), now.date(), now.hour(), now.minute(), now.second(), now.millisecond())
+                time: new Date(now.toISOString())
             }
         })
         return NextResponse.json(

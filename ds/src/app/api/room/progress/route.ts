@@ -11,8 +11,8 @@ dayjs.extend(timezone)
 
 export async function GET(req: NextRequest) {
     try {
-        const today = dayjs().tz('Asia/Seoul')
-        const today_date = new Date(today.year(), today.month(), today.date())
+        const today = dayjs().tz('Asia/Seoul').startOf('day')
+        const today_date = new Date(today.toISOString())
         const progress = await prisma.$queryRaw<{
             name: string,
             active_count: bigint,
