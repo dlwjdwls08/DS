@@ -54,11 +54,17 @@ export default function MemoDialog({open,onClose}: {open: boolean, onClose: () =
         <Typography>Chat</Typography>
         <Box
           sx={{
+            width: '100%',
             height: "calc(100% - 60px)",
             paddingTop: 2,
             alignSelf: "center",
             justifySelf: "center",
             overflowY: "scroll",
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            '&::-webkit-scrollbar': {
+              display: 'none'
+            }
           }}
         >
           {memoList.map((M:Memo, index: number) => (
