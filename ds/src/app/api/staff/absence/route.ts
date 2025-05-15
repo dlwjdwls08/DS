@@ -34,6 +34,7 @@ export async function GET(req: NextRequest) {
         LEFT JOIN "NightClass" as NC
         ON S."studentID" = NC."studentID" AND NC.day = EXTRACT(DOW FROM AL.date)
         WHERE AL.state = false AND L.id IS NULL AND NC.id IS NULL
+        ORDER BY AL."date", AL."studentID"
         `
         return NextResponse.json(
             { absenceData: absences},

@@ -105,6 +105,10 @@ export default function StaffPage() {
     })
   }, [])
 
+  useEffect(() => {
+    handleLoad()
+  }, [startDay, endDay])
+
   const handleLoad = () => {
     setLoading(true)
     console.log(startDay)
@@ -221,16 +225,13 @@ export default function StaffPage() {
               value={startDay}
               onChange={(e) => {
                 setStartDay(dayjs(e))
-                handleLoad()
-              }}
-              onAccept={handleLoad}/>
+              }}/>
             <DatePicker 
               label="To"
               value={endDay}
               onChange={(e) => {
                 setEndDay(dayjs(e))
-              }}
-              onAccept={handleLoad}/>
+              }}/>
             {startDay.isSame(endDay) ? (
               <PieChart
                 hideLegend

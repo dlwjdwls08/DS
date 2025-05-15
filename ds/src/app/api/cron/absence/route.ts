@@ -25,13 +25,6 @@ export async function GET(req: NextRequest) {
             studentID: "asc"
         }
     })
-    await prisma.absenceLog.deleteMany({
-        where: {
-            date: {
-                equals: new Date(today.year(), today.month(), today.date())
-            }
-        }
-    })
     await prisma.absenceLog.createMany({
         data: students.map((v) => {
             return {
