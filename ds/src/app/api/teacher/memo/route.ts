@@ -17,6 +17,7 @@ export async function GET(request: Request) {
     const nextDate = new Date(today.year(), today.month(), today.date() + 1)
             
     const memos = await prisma.memo.findMany({
+        distinct: ['studentID'],
         select: {
             studentID: true,
             student: { select: { name: true, room: true } },
@@ -26,15 +27,16 @@ export async function GET(request: Request) {
             time: {
                 gte: date,
                 lt: nextDate
+            },
+            read: {
+                equals: false
             }
         },
-        orderBy:{
+        orderBy: {
             time: 'desc'
         }
     })
     
-    console.log("memos")
-    console.log(memos)
     return NextResponse.json(
         { memoData: memos }
     )
