@@ -21,7 +21,8 @@ export type StudentData = {
 
 type MemoData = {
   content: string,
-  time: string
+  time: string,
+  read: boolean
 }
 
 type ClassData = Pick<NightClass, "className">
@@ -75,7 +76,8 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
 		setNightClassData(studentInfo.class)
     setMemoData(studentInfo.memo?.map(m => ({
       content: m.content,
-      time: m.time.toString()
+      time: m.time.toString(),
+      read: m.read
     })) ?? [])
   }, [])
 
@@ -136,6 +138,15 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
     }
   }
 
+  function memoExists() {
+    const validMemo = memoData.filter(memo => {
+      const memoTime = dayjs(memo.time)
+      const now = dayjs()
+      return memoTime.isAfter(now.subtract(10, 'minutes')) && memo.read === false
+    })
+    return validMemo.length > 0
+  }
+  
   return (
     <>
        <Paper
@@ -150,7 +161,7 @@ export default function StudentCard({ studentInfo }: { studentInfo: StudentInfo 
         <Badge
           color="error"
           variant="dot"
-          invisible={!memoData.length || !(dayjs(memoData[0].time) >= dayjs().subtract(10, 'minutes'))}>
+          invisible={memoExists() || !memoData.length || !(dayjs(memoData[0].time) >= dayjs().subtract(10, 'minutes'))}>
 
           <Button
             sx={{
