@@ -27,7 +27,7 @@ export default function LandingPage() {
           </div>
           <div>
             <div className="sub-title-text">
-              한국과학영재학교 정보부
+              한국과학영재학교 DS
             </div>
           </div>
         </div>
