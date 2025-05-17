@@ -10,7 +10,6 @@ export default withAuth(
     if (!token || !token.email) {
       return NextResponse.redirect(new URL("/landing", req.url))
     }
-    console.log("a")
     const matcher = {
       "/staff": /ksattendstaff\d*@gmail\.com/,
       "/teacher": /ksattendteacher\d*@gmail\.com/,
@@ -20,13 +19,11 @@ export default withAuth(
     const start = "/" + req.nextUrl.pathname.split('/')[1]
     const regex = matcher[start as keyof typeof matcher]
     if (regex && regex.test(token.email)) {
-      console.log("b")
       return NextResponse.next()
     }
     else if (regex || start === "/") {
       for (const key of Object.keys(matcher)) {
         if (matcher[key as keyof typeof matcher].test(token.email)) {
-          console.log("c")
           return NextResponse.redirect(new URL(key, req.url))
         }
       }
@@ -45,10 +42,10 @@ export const config = {
   matcher: [
     "/",
     "/staff",
-    "/staff/:path",
+    "/staff/:path*",
     "/teacher",
-    "/teacher/:path",
+    "/teacher/:path*",
     "/student",
-    "/student/:path"
+    "/student/:path*"
   ],
 }
