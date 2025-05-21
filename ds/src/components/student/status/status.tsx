@@ -21,6 +21,10 @@ type LeaveData = {
 	date: string
 }
 
+type AbsenceData = {
+	state: boolean
+}
+
 export default function StatusDiv(){
 
 	const { data: session, status: sessionStatus } = useSession()
@@ -30,7 +34,7 @@ export default function StatusDiv(){
 	
 	const [classData, setClassData] = useState<ClassData[]>([])
 	const [leaveData, setLeaveData] = useState<LeaveData[]>([])
-	const [getStatus, setStatus] = useState<"출석 완료" | "수업 중" | "자습 이석">("출석 완료")
+	const [getStatus, setStatus] = useState<"자습 중" | "출석 완료" | "수업 중" | "자습 이석">("자습 중")
 
 	useEffect(() => {
 		if (sessionStatus !== "authenticated") return
@@ -39,15 +43,24 @@ export default function StatusDiv(){
 		.then((data) => {
 			const today = dayjs().tz('Asia/Seoul')
 			const date = new Date(today.year(), today.month(), today.date())
-			const {leavedata, classdata} : {leavedata:LeaveData[], classdata:ClassData[]} = data
+			const {leavedata, classdata, absencedata} : {leavedata:LeaveData[], classdata:ClassData[], absencedata:AbsenceData} = data
 			setLeaveData(leavedata)
+			setClassData(classdata)
 			if (leavedata.findIndex((v) => new Date(v.date).getTime() == date.getTime()) !== -1) {
 				setStatus("자습 이석")
 			}
-			setClassData(classdata)
-			if (classdata.findIndex((v) => v.day === today.day()) !== -1) {
+			else if (classdata.findIndex((v) => v.day === today.day()) !== -1) {
 				setStatus("수업 중")
 			}
+			else{
+				if(absencedata.state == true){
+					setStatus("출석 완료")
+				}
+				else {
+					setStatus("자습 중")
+				}
+			}
+
 		})
 		.catch((error) => {
 			console.error(error)
@@ -57,6 +70,7 @@ export default function StatusDiv(){
 	// 나중에 API로 상태 받아오기
 
 	const colors = {
+		"자습 중": ["#EEF064", "#A5E66C", "#4CAF50"],
 		"출석 완료": ["#EEF064", "#A5E66C", "#4CAF50"],
 		"수업 중": ["#90CAF9", "#1E88E5", "#0D47A1"],
 		"자습 이석": ["#90CAF9", "#1E88E5", "#0D47A1"],

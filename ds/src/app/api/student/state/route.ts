@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth"
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
+import { equal } from "assert";
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -47,8 +48,18 @@ export async function GET(req: NextRequest) {
 				date: "desc"
 			}
 		})
+		const absence = await prisma.absenceLog.findFirst({
+			select: {
+				state: true,
+			},
+			where: {
+				date: date,
+				studentID: studentID
+			}
+		})
+			
 		return NextResponse.json(
-			{ classdata: nightClass, leavedata: leave }
+			{ classdata: nightClass, leavedata: leave, absencedata: absence }
 		)
 	}
   catch {
